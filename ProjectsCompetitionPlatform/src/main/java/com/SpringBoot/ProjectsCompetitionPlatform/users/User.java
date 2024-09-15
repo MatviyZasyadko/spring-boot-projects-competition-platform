@@ -1,9 +1,11 @@
 package com.SpringBoot.ProjectsCompetitionPlatform.users;
 
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class User{
 
-    private final String firstName, lastName;
+    private String firstName, lastName;
 
     public User(String firstName, String lastName){
         this.firstName = firstName;
