@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Competition createCompetition(String name, String description, Date beginDate, Integer prizePool, User creator) {
-        return new Competition(name, description, beginDate, prizePool, creator);
+        return new Competition(name, description, beginDate, prizePool);
     }
 
 
