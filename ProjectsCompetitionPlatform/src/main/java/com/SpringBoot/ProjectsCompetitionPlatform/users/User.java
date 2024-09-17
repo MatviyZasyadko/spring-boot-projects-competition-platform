@@ -30,28 +30,6 @@ public class User{
         this.status = status;
     }
 
-    public Project createProject(String name, Competition competition, User... users){
-        this.setStatus("Developer");
-        for(User u : users){
-            u.setStatus("Developer");
-        }
-
-        List<User> allUsers = new ArrayList<>(List.of(users));
-        allUsers.add(this);
-
-        Project newProject = new Project(name, allUsers, competition);
-        competition.addProject(newProject);
-        return newProject;
-    }
-
-    public Competition createCompetition(String name, String description, Date beginDate, Integer prizePool){
-        return new Competition(name, description, beginDate, prizePool, this);
-    }
-
-    public Vote makeVote(Project project){
-        return new Vote(project, this, new Date());
-    }
-
     public String getName(){
         return firstName + " " + lastName;
     }
