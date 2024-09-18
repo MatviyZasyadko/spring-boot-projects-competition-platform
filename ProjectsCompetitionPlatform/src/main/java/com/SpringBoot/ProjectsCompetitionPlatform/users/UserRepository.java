@@ -17,9 +17,10 @@ public class UserRepository {
         return allUsers;
     }
 
-    public User getUserByName(String name){
+    public User getUserByName(String firstName, String lastName){
+        String fullName = firstName + " " + lastName;
         return allUsers.stream()
-                .filter(user -> user.getName().equals(name))
+                .filter(user -> user.getName().equals(fullName))
                 .findFirst().orElse(null);
     }
 
