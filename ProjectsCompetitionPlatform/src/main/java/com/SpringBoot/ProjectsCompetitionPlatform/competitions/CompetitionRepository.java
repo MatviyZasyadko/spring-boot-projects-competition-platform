@@ -14,8 +14,8 @@ public class CompetitionRepository {
 
     List<Competition> competitions = new ArrayList<>(List.of(
         new Competition(
-            "Name",
-            "First competition",
+            "competition 1",
+            "competition 1!!!",
             new ArrayList<>(),
             new Date(),
             2000

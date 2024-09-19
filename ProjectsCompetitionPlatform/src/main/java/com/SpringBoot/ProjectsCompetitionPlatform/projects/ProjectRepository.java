@@ -50,6 +50,10 @@ public class ProjectRepository {
         )
     ));
 
+    public boolean create(Project project) {
+        return projects.add(project);
+    }
+
     public List<Project> getAll() {
         return projects;
     }

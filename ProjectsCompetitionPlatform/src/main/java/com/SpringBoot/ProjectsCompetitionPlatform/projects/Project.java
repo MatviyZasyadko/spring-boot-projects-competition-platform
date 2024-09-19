@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -19,4 +20,13 @@ public class Project {
     String name = "default name";
     List<User> participants;
     Competition competition;
+
+    @Override
+    public String toString() {
+        return "Project(" +
+               "name='" + name + '\'' +
+               ", participants=" + participants +
+               ", competition=" + competition.getName() +
+               ')';
+    }
 }
