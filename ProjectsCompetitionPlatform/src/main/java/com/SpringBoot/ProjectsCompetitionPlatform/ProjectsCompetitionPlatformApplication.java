@@ -4,7 +4,6 @@ import com.SpringBoot.ProjectsCompetitionPlatform.competitions.Competition;
 import com.SpringBoot.ProjectsCompetitionPlatform.competitions.CompetitionService;
 import com.SpringBoot.ProjectsCompetitionPlatform.projects.Project;
 import com.SpringBoot.ProjectsCompetitionPlatform.projects.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

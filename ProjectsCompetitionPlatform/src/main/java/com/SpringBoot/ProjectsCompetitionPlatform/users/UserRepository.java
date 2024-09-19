@@ -1,10 +1,11 @@
 package com.SpringBoot.ProjectsCompetitionPlatform.users;
 
-import com.SpringBoot.ProjectsCompetitionPlatform.votes.Vote;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserRepository {
 
     List<User> allUsers = new ArrayList<>();
