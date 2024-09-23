@@ -19,6 +19,7 @@ public class User{
     @Getter
     private String status = "User";
 
+
     public User(String firstName, String lastName){
         this.firstName = firstName;
         this.lastName = lastName;
