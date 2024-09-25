@@ -5,11 +5,13 @@ import com.SpringBoot.ProjectsCompetitionPlatform.competitions.CompetitionReposi
 import com.SpringBoot.ProjectsCompetitionPlatform.projects.Project;
 import com.SpringBoot.ProjectsCompetitionPlatform.votes.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService{
 
     @Autowired
@@ -50,15 +52,15 @@ public class UserServiceImpl implements UserService{
         }
 
         List<User> allUsers = new ArrayList<>(List.of(users));
-
-        Project newProject = new Project(name, allUsers, competition);
-        competition.addProject(newProject);
-        return newProject;
+        // поки закоментував, бо я змінив ці класи і з'явились помилки
+        //Project newProject = new Project(name, allUsers, competition);
+        //competition.addProject(newProject);
+        return null;
     }
 
     @Override
     public Competition createCompetition(String name, String description, Date beginDate, Integer prizePool, User creator) {
-        return new Competition(name, description, beginDate, prizePool);
+        return null;
     }
 
 

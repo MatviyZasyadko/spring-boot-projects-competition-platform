@@ -2,31 +2,46 @@ package com.SpringBoot.ProjectsCompetitionPlatform.projects;
 
 import com.SpringBoot.ProjectsCompetitionPlatform.competitions.Competition;
 import com.SpringBoot.ProjectsCompetitionPlatform.users.User;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
-@Getter
+@Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 public class Project {
 
-    String name = "default name";
-    List<User> participants;
-    Competition competition;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
-    @Override
-    public String toString() {
-        return "Project(" +
-               "name='" + name + '\'' +
-               ", participants=" + participants +
-               ", competition=" + competition.getName() +
-               ')';
-    }
+    @Column(nullable = false)
+    String name;
+
+    @Column(nullable = false)
+    String description;
+
+    @ManyToMany(mappedBy = "projects")
+    List<Competition> competitions;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    User user;
 }
+
+

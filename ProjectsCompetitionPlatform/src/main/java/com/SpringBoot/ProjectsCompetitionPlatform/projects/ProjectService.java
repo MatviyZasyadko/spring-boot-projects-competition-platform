@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface ProjectService {
 
-    boolean create(Project project);
-    List<Project> getAllByCompetitionName(String competitionName);
-    Project getByName(String name);
-    void deleteByName(String name);
+    void save(Project project);
+    List<Project> findAll();
+    Project findOneById(String id);
+    void deleteById(String name);
 }

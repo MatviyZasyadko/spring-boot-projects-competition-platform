@@ -17,23 +17,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public void create(Vote vote) {
-        Vote checkVote = getAll().stream()
-            .filter(createPredicate(vote))
-            .findFirst()
-            .orElse(null);
-        if (checkVote == null) {
-            boolean userVotedForHimself = vote.getProject()
-                .getParticipants()
-                .stream()
-                .anyMatch(participant -> participant.getName().equalsIgnoreCase(vote.getUser().getName()));
-            if (userVotedForHimself) {
-                throw new IllegalArgumentException("user is voting for his own project");
-            } else {
-                voteRepository.create(vote);
-            }
-        } else {
-            throw new IllegalArgumentException("user already voted for this project");
-        }
+
     }
 
     private Predicate<Vote> createPredicate(Vote vote) {

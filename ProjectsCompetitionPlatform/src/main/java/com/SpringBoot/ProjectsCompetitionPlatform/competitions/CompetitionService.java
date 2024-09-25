@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface CompetitionService {
 
-    boolean create(Competition competition);
-    List<Competition> getAll();
-    Competition getOneByName(String name);
-    Competition updateByName(String name, Competition competition);
-    boolean deleteByName(String name);
+    void save(Competition competition);
+    List<Competition> findAll();
+    Competition findOneById(String id);
+    Competition updateOneById(String name, Competition competition);
+    void deleteById(String name);
 }
