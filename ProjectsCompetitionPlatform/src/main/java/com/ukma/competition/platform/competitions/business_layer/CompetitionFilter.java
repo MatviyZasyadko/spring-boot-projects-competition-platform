@@ -1,4 +1,4 @@
-package com.ukma.competition.platform.competitions;
+package com.ukma.competition.platform.competitions.business_layer;
 
 import lombok.AccessLevel;
 import lombok.Getter;

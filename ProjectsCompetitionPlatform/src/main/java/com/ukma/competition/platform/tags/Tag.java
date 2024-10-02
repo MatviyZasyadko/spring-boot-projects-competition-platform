@@ -1,6 +1,6 @@
 package com.ukma.competition.platform.tags;
 
-import com.ukma.competition.platform.competitions.Competition;
+import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.Project;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import jakarta.persistence.Column;
@@ -34,5 +34,5 @@ public class Tag extends IdentifiableEntity {
     List<Project> projects;
 
     @ManyToMany(mappedBy = "tags")
-    List<Competition> competitions;
+    List<CompetitionEntity> competitionEntities;
 }

@@ -1,6 +1,6 @@
 package com.ukma.competition.platform.images;
 
-import com.ukma.competition.platform.competitions.Competition;
+import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.Project;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import jakarta.persistence.Column;
@@ -34,7 +34,7 @@ public class Image extends IdentifiableEntity {
     String publicId;
 
     @ManyToMany(mappedBy = "images")
-    List<Competition> competitions;
+    List<CompetitionEntity> competitionEntities;
 
     @ManyToMany(mappedBy = "images")
     List<Project> projects;

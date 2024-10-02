@@ -1,6 +1,6 @@
 package com.ukma.competition.platform.projects;
 
-import com.ukma.competition.platform.competitions.Competition;
+import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.images.Image;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.tags.Tag;
@@ -45,7 +45,7 @@ public class Project extends IdentifiableEntity {
     User user;
 
     @ManyToMany(mappedBy = "projects")
-    List<Competition> competitions;
+    List<CompetitionEntity> competitionEntities;
 
     @ManyToMany
     @JoinTable(

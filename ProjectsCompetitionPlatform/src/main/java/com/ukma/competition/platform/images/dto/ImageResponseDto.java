@@ -1,6 +1,6 @@
 package com.ukma.competition.platform.images.dto;
 
-import com.ukma.competition.platform.shared.dto.BaseResponseDto;
+import com.ukma.competition.platform.shared.dto.BaseDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ImageResponseDto extends BaseResponseDto {
+public class ImageResponseDto extends BaseDto {
 
     String url;
     String publicId;

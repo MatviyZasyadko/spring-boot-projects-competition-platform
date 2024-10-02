@@ -1,6 +1,6 @@
 package com.ukma.competition.platform.payments;
 
-import com.ukma.competition.platform.competitions.Competition;
+import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.users.User;
 import jakarta.persistence.Column;
@@ -41,7 +41,7 @@ public class Payment extends IdentifiableEntity {
 
     @JoinColumn(name = "competition_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    Competition competition;
+    CompetitionEntity competition;
 
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,4 +1,4 @@
-package com.ukma.competition.platform.competitions;
+package com.ukma.competition.platform.competitions.database_layer;
 
 import com.ukma.competition.platform.images.Image;
 import com.ukma.competition.platform.payments.Payment;
@@ -32,7 +32,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class Competition extends IdentifiableEntity {
+public class CompetitionEntity extends IdentifiableEntity {
 
     @Column(nullable = false)
     String name;
