@@ -22,37 +22,21 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
-
-@Entity
-@Table(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 @Setter
+
 public class User extends IdentifiableEntity {
 
-    @Column(nullable = false, unique = true)
     String email;
 
-    @Column(nullable = false)
     String fullName;
 
-    @Column(nullable = false)
     String password;
 
-    @OneToMany(mappedBy = "user")
     List<Payment> payments;
 
-    @OneToMany(mappedBy = "user")
     List<Project> projects;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-        name = "images_users",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
     List<Image> images;
 }
