@@ -5,6 +5,7 @@ import com.ukma.competition.platform.images.Image;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.tags.Tag;
 import com.ukma.competition.platform.users.User;
+import com.ukma.competition.platform.users.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,7 +43,7 @@ public class Project extends IdentifiableEntity {
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    User user;
+    UserEntity user;
 
     @ManyToMany(mappedBy = "projects")
     List<CompetitionEntity> competitionEntities;

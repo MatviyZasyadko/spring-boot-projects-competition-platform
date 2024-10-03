@@ -2,6 +2,7 @@ package com.ukma.competition.platform.reports;
 
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.users.User;
+import com.ukma.competition.platform.users.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,5 +41,5 @@ public class Report extends IdentifiableEntity {
 
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
-    User user;
+    UserEntity user;
 }

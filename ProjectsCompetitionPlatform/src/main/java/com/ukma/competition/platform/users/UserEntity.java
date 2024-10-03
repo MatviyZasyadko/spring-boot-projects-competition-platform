@@ -31,6 +31,9 @@ public class UserEntity extends IdentifiableEntity {
     String fullName;
 
     @Column(nullable = false)
+    String userName;
+
+    @Column(nullable = false)
     String password;
 
     @OneToMany(mappedBy = "user")
