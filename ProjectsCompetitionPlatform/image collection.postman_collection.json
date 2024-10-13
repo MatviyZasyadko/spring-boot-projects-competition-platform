@@ -1,0 +1,376 @@
+{
+	"info": {
+		"_postman_id": "bde482c1-68bf-451d-9fb8-acec2ab46edb",
+		"name": "image collection (spring boot lab №5)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27681627"
+	},
+	"item": [
+		{
+			"name": "get all images",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('request for getting all images is successful and a result list is not empty ', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    pm.expect(pm.response).to.be.json;\r",
+							"    pm.expect(pm.response.json()).has.length.at.least(1);\r",
+							"    pm.response.json().forEach(image => {\r",
+							"        pm.expect(image.id).not.null;\r",
+							"        pm.expect(image.id).not.null.and.to.be.string;\r",
+							"        pm.expect(image.createdAt).not.null.and.to.be.string;\r",
+							"        pm.expect(image.updatedAt).not.null.and.to.be.string;\r",
+							"        pm.expect(image.url).not.null.and.to.be.string;\r",
+							"        pm.expect(image.publicId).not.null.and.to.be.string;                  \r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{DEV_BASE_URL}}/api/images",
+					"host": [
+						"{{DEV_BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"images"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get one by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{DEV_BASE_URL}}/api/images/f1be8f3f-e5f4-410d-a662-60880d9b4224",
+					"host": [
+						"{{DEV_BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"images",
+						"f1be8f3f-e5f4-410d-a662-60880d9b4224"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload image successfully",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('image successfully uploaded with correct fields', () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"\r",
+							"    pm.expect(pm.response).to.be.json;\r",
+							"    pm.expect(pm.response.json()).has.property('id').not.null;\r",
+							"    pm.expect(pm.response.json()).has.property('publicId').not.null;\r",
+							"    pm.expect(pm.response.json()).has.property('url').not.null;\r",
+							"\r",
+							"    pm.expect(pm.response.json()).has.property('createdAt').not.null;\r",
+							"    pm.expect(pm.response.json()).has.property('updatedAt').not.null;\r",
+							"    pm.expect(pm.response.json().createdAt).to.be.equal(pm.response.json().updatedAt);\r",
+							"});\r",
+							"\r",
+							"pm.test('image uploading takes at least 0.5 second', () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    pm.expect(pm.response.responseTime).to.be.above(500);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "postman-cloud:///1ef896a3-3378-4530-ac73-26feeaa5ebc7"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{DEV_BASE_URL}}/api/images/_upload",
+					"host": [
+						"{{DEV_BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"images",
+						"_upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload image null image",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('failed request because image is null', () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"\r",
+							"    pm.expect(pm.response).to.be.json;\r",
+							"\r",
+							"    pm.expect(pm.response.json()).has.property('message').to.be.not.null;\r",
+							"    pm.expect(pm.response.json()).has.property('message').to.be.equal('Image should not be null!');\r",
+							"    pm.expect(pm.response.json()).has.property('fieldErrors').to.be.an('array');\r",
+							"    pm.expect(pm.response.json()).has.property('fieldErrors').has.length(1);\r",
+							"    pm.expect(pm.response.json()).has.property('exceptionClass').to.contain('MethodArgumentNotValidException');\r",
+							"});\r",
+							"\r",
+							"pm.test('failed request is proccessed within a second', () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{DEV_BASE_URL}}/api/images/_upload",
+					"host": [
+						"{{DEV_BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"images",
+						"_upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload image empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/C:/Users/chotk/Desktop/empty file.txt"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{DEV_BASE_URL}}/api/images/_upload",
+					"host": [
+						"{{DEV_BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"images",
+						"_upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete one by id successful",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"    url: pm.collectionVariables.get('DEV_BASE_URL') + '/api/images',\r",
+							"    method: 'GET',\r",
+							"}, function (err, res) {\r",
+							"    if (res?.json()[0]) {\r",
+							"        console.log(res.json()[0])\r",
+							"        pm.collectionVariables.set(\"IMAGE_PATH_VARIABLE\", res.json()[0].id);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('image successfully deleted', () => {\r",
+							"    pm.response.to.have.status(204);\r",
+							"\r",
+							"    pm.expect(pm.response).is.not.json;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{DEV_BASE_URL}}/api/images/{{IMAGE_PATH_VARIABLE}}",
+					"host": [
+						"{{DEV_BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"images",
+						"{{IMAGE_PATH_VARIABLE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete one by id failed with non existent id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('failed request because image with such id does not exist', () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"\r",
+							"    pm.expect(pm.response).to.be.json;\r",
+							"\r",
+							"    pm.expect(pm.response.json()).has.property('message').to.be.not.null;\r",
+							"    pm.expect(pm.response.json()).has.property('exceptionClass').to.contain('NoSuchElementException');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{DEV_BASE_URL}}/api/images/non_existent_id",
+					"host": [
+						"{{DEV_BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"images",
+						"non_existent_id"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "DEV_BASE_URL",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "IMAGE_PATH_VARIABLE",
+			"value": ""
+		}
+	]
+}

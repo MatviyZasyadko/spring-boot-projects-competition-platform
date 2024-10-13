@@ -14,13 +14,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -54,6 +52,17 @@ public class GlobalControllerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
             ExceptionDto.builder()
                 .message("There is no file with such id! Maybe it was already deleted. FileId: " + exception.getFileId())
+                .exceptionClass(exception.getClass().getName())
+                .exceptionTime(Instant.now())
+                .build()
+        );
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ExceptionDto> noSuchElementExceptionHandler(NoSuchElementException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            ExceptionDto.builder()
+                .message(exception.getMessage())
                 .exceptionClass(exception.getClass().getName())
                 .exceptionTime(Instant.now())
                 .build()

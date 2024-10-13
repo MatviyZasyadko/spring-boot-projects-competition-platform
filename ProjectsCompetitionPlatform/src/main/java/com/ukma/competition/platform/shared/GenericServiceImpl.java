@@ -1,5 +1,6 @@
 package com.ukma.competition.platform.shared;
 
+import com.ukma.competition.platform.shared.exception.ImageNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -40,6 +42,9 @@ public abstract class GenericServiceImpl<T extends IdentifiableEntity, ID extend
 
     @Override
     public void deleteById(ID id) {
+        if (!this.existsById(id)) {
+            throw new NoSuchElementException("Record is not found while trying to delete");
+        }
         repository.deleteById(id);
     }
 }

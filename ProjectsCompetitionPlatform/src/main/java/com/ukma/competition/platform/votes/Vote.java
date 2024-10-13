@@ -3,7 +3,6 @@ package com.ukma.competition.platform.votes;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.Project;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
-import com.ukma.competition.platform.users.User;
 import com.ukma.competition.platform.users.UserEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

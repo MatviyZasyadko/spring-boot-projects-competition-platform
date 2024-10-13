@@ -2,18 +2,12 @@ package com.ukma.competition.platform.competitions.business_layer;
 
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
-import com.ukma.competition.platform.competitions.presentation_layer.CompetitionDto;
-import com.ukma.competition.platform.images.Image;
-import com.ukma.competition.platform.images.dto.ImageResponseDto;
-import com.ukma.competition.platform.images.dto.ImageUpdateDto;
-import com.ukma.competition.platform.shared.GenericServiceImpl;
 import com.ukma.competition.platform.shared.exception.ImageNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
