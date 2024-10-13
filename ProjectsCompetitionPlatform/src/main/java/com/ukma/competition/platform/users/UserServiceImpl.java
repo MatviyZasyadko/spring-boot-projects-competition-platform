@@ -5,6 +5,7 @@ import com.ukma.competition.platform.users.dto.UserRequestDto;
 import com.ukma.competition.platform.users.dto.UserResponseDto;
 import com.ukma.competition.platform.users.dto.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,9 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
 
     private static UserRepository userRepository;
 
+    @Value("${user.password.min-length}")
+    private int minPasswordLength;
+
     @Autowired
     public UserServiceImpl(UserRepository repository) {
         super(repository);
@@ -23,6 +27,9 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
     }
 
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
+        if (userRequestDto.getPassword().length() < minPasswordLength) {
+            throw new IllegalArgumentException("Password must be at least " + minPasswordLength + " characters long.");
+        }
         UserEntity newUser = UserEntity.builder()
                 .email(userRequestDto.getEmail())
                 .fullName(userRequestDto.getFullName())
