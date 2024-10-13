@@ -41,4 +41,9 @@ public class Image extends IdentifiableEntity {
 
     @ManyToMany(mappedBy = "images")
     List<Project> users;
+
+    public Image(String url, String publicId) {
+        this.url = url;
+        this.publicId = publicId;
+    }
 }

@@ -28,7 +28,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @Getter
 @Setter
-public class Payment extends IdentifiableEntity {
+public class
+Payment extends IdentifiableEntity {
 
     @Column(nullable = false)
     Double sum = 0.;

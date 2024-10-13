@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 public class CompetitionFilter {
-
     String name;
     String description;
 }
