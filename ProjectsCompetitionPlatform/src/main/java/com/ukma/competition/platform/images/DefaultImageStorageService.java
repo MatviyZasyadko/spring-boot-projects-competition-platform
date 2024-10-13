@@ -12,21 +12,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-// Реалізація, для майбутньої імплементації різних способів збереження зображень, наприклад у хмарі або локально і тд
 @Service
 @ConditionalOnMissingBean(ImageStorageService.class) // Завантажити, якщо немає іншого ImageStorageService
 public class DefaultImageStorageService implements ImageStorageService {
 
     private final String storageDirectory = "uploaded_images"; // Директорія для зберігання зображень
-
-
     public DefaultImageStorageService() {
         File directory = new File(storageDirectory);
         if (!directory.exists()) {
             directory.mkdirs();
         }
     }
-
     @Override
     public Image storeImage(MultipartFile imageFile) throws IOException {
         String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();

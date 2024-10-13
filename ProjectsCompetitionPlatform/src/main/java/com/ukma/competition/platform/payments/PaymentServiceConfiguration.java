@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
         @Bean
         @ConditionalOnProperty(name = "payment.enabled", havingValue = "true", matchIfMissing = true)
-        // Перевірка на доступність певного методу оплати
         public PaymentService paymentService(PaymentRepository paymentRepository) {
             return new PaymentServiceImpl(paymentRepository);
         }
-    }
+        }
