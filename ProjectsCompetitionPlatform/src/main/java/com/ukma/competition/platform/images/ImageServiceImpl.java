@@ -36,8 +36,10 @@ public class ImageServiceImpl extends GenericServiceImpl<Image, String, ImageRep
 
     ObjectMapper objectMapper;
 
+    CloudinaryService cloudinaryService;
+
     @Autowired
-    public ImageServiceImpl(ImageRepository repository, ObjectMapper objectMapper) {
+    public ImageServiceImpl(ImageRepository repository, ObjectMapper objectMapper, CloudinaryService cloudinaryService) {
         super(repository);
         this.objectMapper = objectMapper;
     }
@@ -50,9 +52,11 @@ public class ImageServiceImpl extends GenericServiceImpl<Image, String, ImageRep
             throw new FileEmptyException(imageFromRequest.getOriginalFilename());
         } else {
             Image newImage = uploadImageApiRequest(imageFromRequest);
-            super.save(newImage);
+            String publicId = cloudinaryService.upload(file, "projects");
 
-            return convertImageToDto(newImage);
+            return convertImageToDto(Image.builder()
+                .publicId(publicId)
+                .build());
         }
     }
 
