@@ -2,27 +2,31 @@ package com.ukma.competition.platform.competitions.business_layer;
 
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
+import com.ukma.competition.platform.projects.Project;
 import com.ukma.competition.platform.shared.exception.ImageNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
 @Component
+@Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CompetitionServiceImpl implements CompetitionService {
 
     CompetitionRepository competitionRepository;
+    CompetitionProperties competitionProperties;
 
     @Autowired
-    public CompetitionServiceImpl(CompetitionRepository repository) {
-       competitionRepository = repository;
+    public CompetitionServiceImpl(CompetitionRepository repository, CompetitionProperties competitionProperties) {
+        this.competitionRepository = repository;
+        this.competitionProperties = competitionProperties;
     }
-
     public Competition updateById(String id, Competition competition) {
         Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(id);
 
@@ -48,6 +52,34 @@ public class CompetitionServiceImpl implements CompetitionService {
             throw new EntityNotFoundException("Competition not found with ID: " + id);
         }
     }
+
+    public boolean canAddProject(Competition competition) {
+        int currentProjects = competition.getProjects().size();
+        return currentProjects < competitionProperties.getMaxProjects();
+    }
+
+    public Competition addProjectToCompetition(String competitionId, Project project) {
+        Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(competitionId);
+
+        if (optionalCompetitionEntity.isPresent()) {
+            CompetitionEntity competitionEntity = optionalCompetitionEntity.get();
+
+            Competition competition = convertEntityToCompetition(competitionEntity);
+
+            if (!canAddProject(competition)) {
+                throw new IllegalArgumentException("Cannot add more projects: limit reached");
+            }
+
+            competitionEntity.getProjects().add(project);
+
+            competitionRepository.save(competitionEntity);
+
+            return convertEntityToCompetition(competitionEntity);
+        } else {
+            throw new EntityNotFoundException("Competition not found with ID: " + competitionId);
+        }
+    }
+
 
 
     private Competition convertEntityToCompetition(CompetitionEntity entity) {
