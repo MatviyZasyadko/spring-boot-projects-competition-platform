@@ -30,7 +30,7 @@ public class Image extends IdentifiableEntity {
     @Column(nullable = false)
     String url;
 
-    @Column(nullable = false)
+    @Column
     String publicId;
 
     @ManyToMany(mappedBy = "images")

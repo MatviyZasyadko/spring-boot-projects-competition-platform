@@ -3,7 +3,6 @@ package com.ukma.competition.platform.competitions.business_layer;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.Project;
-import com.ukma.competition.platform.shared.exception.ImageNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -101,6 +100,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     private Optional<Competition> convertEntityToCompetition(Optional<CompetitionEntity> entity) {
+
         return entity.isEmpty() ? Optional.empty() : convertEntityToCompetition(entity);
     }
 
