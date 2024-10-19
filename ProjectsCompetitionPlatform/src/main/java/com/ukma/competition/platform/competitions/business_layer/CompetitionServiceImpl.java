@@ -2,7 +2,7 @@ package com.ukma.competition.platform.competitions.business_layer;
 
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
-import com.ukma.competition.platform.projects.Project;
+import com.ukma.competition.platform.projects.ProjectEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -57,7 +57,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         return currentProjects < competitionProperties.getMaxProjects();
     }
 
-    public Competition addProjectToCompetition(String competitionId, Project project) {
+    public Competition addProjectToCompetition(String competitionId, ProjectEntity project) {
         Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(competitionId);
 
         if (optionalCompetitionEntity.isPresent()) {

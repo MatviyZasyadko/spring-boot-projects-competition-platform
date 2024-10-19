@@ -1,10 +1,9 @@
 package com.ukma.competition.platform.projects;
 
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
-import com.ukma.competition.platform.images.Image;
+import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
-import com.ukma.competition.platform.tags.Tag;
-import com.ukma.competition.platform.users.User;
+import com.ukma.competition.platform.tags.TagEntity;
 import com.ukma.competition.platform.users.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -33,7 +32,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class Project extends IdentifiableEntity {
+public class ProjectEntity extends IdentifiableEntity {
 
     @Column(nullable = false)
     String name;
@@ -54,7 +53,7 @@ public class Project extends IdentifiableEntity {
         joinColumns = @JoinColumn(name = "project_id"),
         inverseJoinColumns = @JoinColumn(name = "image_id")
     )
-    List<Image> images;
+    List<ImageEntity> images;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
@@ -62,7 +61,7 @@ public class Project extends IdentifiableEntity {
         joinColumns = @JoinColumn(name = "competition_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    List<Tag> tags;
+    List<TagEntity> tags;
 }
 
 

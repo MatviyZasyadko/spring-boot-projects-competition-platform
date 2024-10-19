@@ -1,10 +1,10 @@
 package com.ukma.competition.platform.competitions.database_layer;
 
-import com.ukma.competition.platform.images.Image;
-import com.ukma.competition.platform.payments.Payment;
-import com.ukma.competition.platform.projects.Project;
+import com.ukma.competition.platform.images.ImageEntity;
+import com.ukma.competition.platform.payments.PaymentEntity;
+import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
-import com.ukma.competition.platform.tags.Tag;
+import com.ukma.competition.platform.tags.TagEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
@@ -64,7 +64,7 @@ public class CompetitionEntity extends IdentifiableEntity {
         joinColumns = @JoinColumn(name = "competition_id"),
         inverseJoinColumns = @JoinColumn(name = "image_id")
     )
-    List<Image> images;
+    List<ImageEntity> images;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
@@ -72,7 +72,7 @@ public class CompetitionEntity extends IdentifiableEntity {
         joinColumns = @JoinColumn(name = "competition_id"),
         inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    List<Project> projects;
+    List<ProjectEntity> projects;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
@@ -80,8 +80,8 @@ public class CompetitionEntity extends IdentifiableEntity {
         joinColumns = @JoinColumn(name = "competition_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    List<Tag> tags;
+    List<TagEntity> tags;
 
     @OneToMany(mappedBy = "competition")
-    List<Payment> payments;
+    List<PaymentEntity> payments;
 }

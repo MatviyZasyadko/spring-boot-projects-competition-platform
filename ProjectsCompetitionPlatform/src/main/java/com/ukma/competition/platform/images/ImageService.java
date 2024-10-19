@@ -8,7 +8,7 @@ import com.ukma.competition.platform.shared.GenericService;
 import java.io.IOException;
 import java.util.List;
 
-public interface ImageService extends GenericService<Image, String> {
+public interface ImageService extends GenericService<ImageEntity, String> {
 
     ImageResponseDto uploadImage(ImageRequestDto imageRequestDto) throws IOException;
     List<ImageResponseDto> findAllAsDto();

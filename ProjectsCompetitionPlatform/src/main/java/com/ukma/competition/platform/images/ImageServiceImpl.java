@@ -21,7 +21,7 @@ import java.util.List;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ImageServiceImpl extends GenericServiceImpl<Image, String, ImageRepository> implements ImageService {
+public class ImageServiceImpl extends GenericServiceImpl<ImageEntity, String, ImageRepository> implements ImageService {
 
     @Value("${spring.cloudinary.folder}")
     String CLOUDINARY_FOLDER;
@@ -49,7 +49,7 @@ public class ImageServiceImpl extends GenericServiceImpl<Image, String, ImageRep
             throw new FileEmptyException(imageFromRequest.getOriginalFilename());
         } else {
             String url = cloudinaryService.upload(imageFromRequest, CLOUDINARY_FOLDER);
-            Image newImage = Image.builder()
+            ImageEntity newImage = ImageEntity.builder()
                 .url(url)
                 .build();
             super.save(newImage);
@@ -75,7 +75,7 @@ public class ImageServiceImpl extends GenericServiceImpl<Image, String, ImageRep
     @Override
     @Transactional
     public ImageResponseDto updateById(String id, ImageUpdateDto imageUpdateDto) {
-        Image imageToUpdate = super.findById(id)
+        ImageEntity imageToUpdate = super.findById(id)
             .orElseThrow(() -> new ImageNotFoundException("Image is not found!", id));
         if (imageUpdateDto.getUrl() != null) {
             imageToUpdate.setUrl(imageUpdateDto.getUrl());
@@ -85,7 +85,7 @@ public class ImageServiceImpl extends GenericServiceImpl<Image, String, ImageRep
         return convertImageToDto(imageToUpdate);
     }
 
-    private ImageResponseDto convertImageToDto(Image image) {
+    private ImageResponseDto convertImageToDto(ImageEntity image) {
         return ImageResponseDto
             .builder()
             .url(image.getUrl())
