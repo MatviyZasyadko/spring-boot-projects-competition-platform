@@ -1,0 +1,3 @@
+EXPERIMENTAL 2024-10-19 23:38:45.727 [http-nio-8080-exec-2] INFO  ImageController - got all images as dto
+EXPERIMENTAL 2024-10-19 23:38:46.745 [http-nio-8080-exec-3] INFO  ImageController - got all images as dto
+EXPERIMENTAL 2024-10-19 23:38:47.440 [http-nio-8080-exec-4] INFO  ImageController - got all images as dto

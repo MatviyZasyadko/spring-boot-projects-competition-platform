@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" packages="com.ukma.competition.platform.logging">
+
+    <Appenders>
+        <Console name="CONSOLE_APPENDER" target="SYSTEM_OUT">
+            <CustomLayout/>
+        </Console>
+
+        <CustomFileAppender name="FILE_APPENDER" filePath="logs/all_logs.log">
+            <CustomLayout/>
+        </CustomFileAppender>
+
+        <CustomFileAppender name="EXPERIMENTAL_APPENDER" filePath="logs/experimental_logs.log">
+            <PatternLayout pattern="EXPERIMENTAL %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c{1} - %m%n"/>
+        </CustomFileAppender>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.ukma.competition.platform.images" level="DEBUG" additivity="true">
+            <AppenderRef ref="EXPERIMENTAL_APPENDER"/>
+        </Logger>
+
+        <Logger name="com.ukma.competition.platform" level="INFO" additivity="false">
+            <AppenderRef ref="FILE_APPENDER"/>
+            <AppenderRef ref="CONSOLE_APPENDER"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="FILE_APPENDER"/>
+            <AppenderRef ref="CONSOLE_APPENDER"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

@@ -34,6 +34,7 @@ dependencies {
     implementation("com.ukma.edu:spring-boot-starter-cloudinary:0.0.1-SNAPSHOT")
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2
     implementation("org.springframework.boot:spring-boot-starter-log4j2:3.3.4")
+//    implementation("org.apache.logging.log4j:log4j-bom:2.24.1")
     modules {
         module("org.springframework.boot:spring-boot-starter-logging") {
             replacedBy("org.springframework.boot:spring-boot-starter-log4j2", "Use Log4j2 instead of Logback")

@@ -16,6 +16,8 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +43,7 @@ import java.util.List;
 public class ImageController {
 
     ImageService imageService;
+    private static final Logger logger = LogManager.getLogger(ImageController.class);
 
     @Operation(
         description = "Uploads image from form-data as a request body to the cloud storage \"Cloudinary\"",
@@ -92,6 +95,7 @@ public class ImageController {
     )
     @GetMapping
     public List<ImageResponseDto> findAll() {
+        logger.info("got all images as dto");
         return imageService.findAllAsDto();
     }
 
