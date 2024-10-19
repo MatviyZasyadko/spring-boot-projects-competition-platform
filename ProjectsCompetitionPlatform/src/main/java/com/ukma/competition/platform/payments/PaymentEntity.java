@@ -1,7 +1,7 @@
-package com.ukma.competition.platform.reports;
+package com.ukma.competition.platform.payments;
 
+import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
-import com.ukma.competition.platform.users.User;
 import com.ukma.competition.platform.users.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,26 +20,30 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "reports")
+@Table(name = "payments")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
-public class Report extends IdentifiableEntity {
+public class PaymentEntity extends IdentifiableEntity {
 
     @Column(nullable = false)
-    String topic;
-
-    @Column(nullable = false)
-    String description;
+    Double sum = 0.;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    ReportStatus reportStatus;
+    PaymentStatus paymentStatus;
 
-    @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column
+    String failReason;
+
+    @JoinColumn(name = "competition_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    CompetitionEntity competition;
+
+    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     UserEntity user;
 }

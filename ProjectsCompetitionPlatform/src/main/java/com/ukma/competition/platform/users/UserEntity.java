@@ -1,8 +1,8 @@
 package com.ukma.competition.platform.users;
 
-import com.ukma.competition.platform.images.Image;
-import com.ukma.competition.platform.payments.Payment;
-import com.ukma.competition.platform.projects.Project;
+import com.ukma.competition.platform.images.ImageEntity;
+import com.ukma.competition.platform.payments.PaymentEntity;
+import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,10 +37,10 @@ public class UserEntity extends IdentifiableEntity {
     String password;
 
     @OneToMany(mappedBy = "user")
-    List<Payment> payments;
+    List<PaymentEntity> payments;
 
     @OneToMany(mappedBy = "user")
-    List<Project> projects;
+    List<ProjectEntity> projects;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
@@ -48,5 +48,5 @@ public class UserEntity extends IdentifiableEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
-    List<Image> images;
+    List<ImageEntity> images;
 }

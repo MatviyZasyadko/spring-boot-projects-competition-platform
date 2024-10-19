@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TagServiceImpl extends GenericServiceImpl<Tag, String, TagRepository> implements TagService {
+public class TagServiceImpl extends GenericServiceImpl<TagEntity, String, TagRepository> implements TagService {
 
     @Autowired
     public TagServiceImpl(TagRepository repository) {

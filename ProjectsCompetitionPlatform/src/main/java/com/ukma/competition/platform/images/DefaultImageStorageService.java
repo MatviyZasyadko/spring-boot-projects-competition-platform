@@ -24,13 +24,13 @@ public class DefaultImageStorageService implements ImageStorageService {
         }
     }
     @Override
-    public Image storeImage(MultipartFile imageFile) throws IOException {
+    public ImageEntity storeImage(MultipartFile imageFile) throws IOException {
         String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
         Path imagePath = Paths.get(storageDirectory, imageName);
 
         Files.copy(imageFile.getInputStream(), imagePath);
 
-        return Image.builder()
+        return ImageEntity.builder()
             .url(imageName)
             .publicId(imagePath.toString())
             .build();

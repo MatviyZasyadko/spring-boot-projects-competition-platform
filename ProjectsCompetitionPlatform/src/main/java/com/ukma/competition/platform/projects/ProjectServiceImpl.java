@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProjectServiceImpl extends GenericServiceImpl<Project, String, ProjectRepository> implements ProjectService {
+public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String, ProjectRepository> implements ProjectService {
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository repository) {

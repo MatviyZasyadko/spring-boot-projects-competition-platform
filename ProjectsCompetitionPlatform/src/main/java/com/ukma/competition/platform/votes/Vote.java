@@ -1,7 +1,7 @@
 package com.ukma.competition.platform.votes;
 
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
-import com.ukma.competition.platform.projects.Project;
+import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.users.UserEntity;
 import jakarta.persistence.Entity;
@@ -38,5 +38,5 @@ public class Vote extends IdentifiableEntity {
 
     @JoinColumn(nullable = false, name = "project_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    Project project;
+    ProjectEntity project;
 }

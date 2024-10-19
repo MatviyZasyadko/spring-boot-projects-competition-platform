@@ -1,13 +1,12 @@
 package com.ukma.competition.platform.competitions.presentation_layer;
 
 import com.fasterxml.jackson.annotation.JsonProperty; // Importing the Jackson annotation
-import com.ukma.competition.platform.images.Image;
-import com.ukma.competition.platform.payments.Payment;
-import com.ukma.competition.platform.projects.Project;
-import com.ukma.competition.platform.shared.IdentifiableEntity;
+import com.ukma.competition.platform.images.ImageEntity;
+import com.ukma.competition.platform.payments.PaymentEntity;
+import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.dto.BaseDto;
 import com.ukma.competition.platform.shared.validations.WithinTwoYears;
-import com.ukma.competition.platform.tags.Tag;
+import com.ukma.competition.platform.tags.TagEntity;
 import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -59,14 +58,14 @@ public class CompetitionDto extends BaseDto {
     private Double prizePool;
 
     @JsonProperty("competition_images")
-    private List<Image> images;
+    private List<ImageEntity> images;
 
     @JsonProperty("associated_projects")
-    private List<Project> projects;
+    private List<ProjectEntity> projects;
 
     @JsonProperty("tags")
-    private List<Tag> tags;
+    private List<TagEntity> tags;
 
     @JsonProperty("payments")
-    private List<Payment> payments;
+    private List<PaymentEntity> payments;
 }

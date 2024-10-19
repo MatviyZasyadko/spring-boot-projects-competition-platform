@@ -12,7 +12,7 @@ public class DatabaseReportStorageService implements ReportStorageService {
     }
 
     @Override
-    public void storeReport(Report report) {
+    public void storeReport(ReportEntity report) {
         if (report.getReportStatus() == ReportStatus.APPROVED) {
             reportRepository.save(report);
             System.out.println("Звіт збережено: " + report.getTopic());

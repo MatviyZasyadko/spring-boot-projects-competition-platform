@@ -1,10 +1,10 @@
 package com.ukma.competition.platform.competitions.business_layer;
 
-import com.ukma.competition.platform.images.Image;
-import com.ukma.competition.platform.payments.Payment;
-import com.ukma.competition.platform.projects.Project;
+import com.ukma.competition.platform.images.ImageEntity;
+import com.ukma.competition.platform.payments.PaymentEntity;
+import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
-import com.ukma.competition.platform.tags.Tag;
+import com.ukma.competition.platform.tags.TagEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -25,8 +25,8 @@ public class Competition extends IdentifiableEntity {
     Boolean hasPrizePool;
     String priceDescription;
     Double prizePool;
-    List<Image> images;
-    List<Project> projects;
-    List<Tag> tags;
-    List<Payment> payments;
+    List<ImageEntity> images;
+    List<ProjectEntity> projects;
+    List<TagEntity> tags;
+    List<PaymentEntity> payments;
 }
