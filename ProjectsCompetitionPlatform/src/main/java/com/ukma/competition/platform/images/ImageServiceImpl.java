@@ -10,6 +10,7 @@ import com.ukma.competition.platform.shared.exception.ImageNotFoundException;
 import com.ukma.edu.spring.boot.starter.cloudinary.service.CloudinaryService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ import java.util.List;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImageServiceImpl extends GenericServiceImpl<ImageEntity, String, ImageRepository> implements ImageService {
+
+    private static final Logger logger = LogManager.getLogger(ImageServiceImpl.class);
+    private static final Marker IMAGE_MARKER = MarkerManager.getMarker("IMAGE");
 
     @Value("${spring.cloudinary.folder}")
     String CLOUDINARY_FOLDER;
@@ -48,12 +52,15 @@ public class ImageServiceImpl extends GenericServiceImpl<ImageEntity, String, Im
         if (imageFromRequest.isEmpty()) {
             throw new FileEmptyException(imageFromRequest.getOriginalFilename());
         } else {
+            ThreadContext.put("imageName", imageFromRequest.getOriginalFilename());
+
             String url = cloudinaryService.upload(imageFromRequest, CLOUDINARY_FOLDER);
             ImageEntity newImage = ImageEntity.builder()
                 .url(url)
                 .build();
             super.save(newImage);
-
+            logger.info(IMAGE_MARKER, "Uploaded image: {}", imageFromRequest.getOriginalFilename());
+            ThreadContext.clearAll();
             return convertImageToDto(newImage);
         }
     }
@@ -75,13 +82,15 @@ public class ImageServiceImpl extends GenericServiceImpl<ImageEntity, String, Im
     @Override
     @Transactional
     public ImageResponseDto updateById(String id, ImageUpdateDto imageUpdateDto) {
+        ThreadContext.put("imageID", id);
+        logger.info(IMAGE_MARKER, "Updating image with ID: {}", id);
         ImageEntity imageToUpdate = super.findById(id)
             .orElseThrow(() -> new ImageNotFoundException("Image is not found!", id));
         if (imageUpdateDto.getUrl() != null) {
             imageToUpdate.setUrl(imageUpdateDto.getUrl());
         }
         super.save(imageToUpdate);
-
+        ThreadContext.clearAll();
         return convertImageToDto(imageToUpdate);
     }
 

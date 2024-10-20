@@ -3,9 +3,11 @@ package com.ukma.competition.platform.competitions.business_layer;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
+import com.ukma.competition.platform.users.UserServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,9 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CompetitionServiceImpl implements CompetitionService {
 
+    private static final Logger logger = LogManager.getLogger(CompetitionServiceImpl.class);
+    private static final Marker COMPETITION_MARKER = MarkerManager.getMarker("COMPETITION");
+
     CompetitionRepository competitionRepository;
     CompetitionProperties competitionProperties;
 
@@ -27,6 +32,15 @@ public class CompetitionServiceImpl implements CompetitionService {
         this.competitionProperties = competitionProperties;
     }
     public Competition updateById(String id, Competition competition) {
+
+        Marker updateMarker = MarkerManager.getMarker("COMPETITION_UPDATE");
+
+        ThreadContext.put("competitionID", id);
+        ThreadContext.put("competitionName", competition.getName());
+
+        logger.info(updateMarker, "Updating competition with ID: {}, Name: {}", id, competition.getName());
+
+
         Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(id);
 
         if (optionalCompetitionEntity.isPresent()) {
@@ -46,8 +60,15 @@ public class CompetitionServiceImpl implements CompetitionService {
             existingCompetitionEntity.setPayments(competition.getPayments());
 
             CompetitionEntity updatedCompetitionEntity = competitionRepository.save(existingCompetitionEntity);
+
+            logger.info(updateMarker, "Successfully updated competition with ID: {}", id);
+
+            ThreadContext.clearAll();
+
             return convertEntityToCompetition(updatedCompetitionEntity);
         } else {
+            logger.error(updateMarker, "Failed to update competition with ID: {}. Not found.", id);
+            ThreadContext.clearAll();
             throw new EntityNotFoundException("Competition not found with ID: " + id);
         }
     }
@@ -130,7 +151,13 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public List<Competition> findAll() {
+        ThreadContext.put("methodName", "findAll");
+        logger.info(COMPETITION_MARKER, "Retrieving all competitions");
+
         List<CompetitionEntity> allCompetitionEntities = competitionRepository.findAll();
+
+        ThreadContext.clearAll();
+
         return allCompetitionEntities.stream()
                 .map(this::convertEntityToCompetition)
                 .toList();

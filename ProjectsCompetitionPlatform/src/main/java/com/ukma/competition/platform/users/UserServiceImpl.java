@@ -4,6 +4,7 @@ import com.ukma.competition.platform.shared.GenericServiceImpl;
 import com.ukma.competition.platform.users.dto.UserRequestDto;
 import com.ukma.competition.platform.users.dto.UserResponseDto;
 import com.ukma.competition.platform.users.dto.UserUpdateDto;
+import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, UserRepository> implements UserService {
 
     private static UserRepository userRepository;
+    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
+    private static final Marker USER_MARKER = MarkerManager.getMarker("USER");
+
 
     @Value("${user.password.min-length}")
     private int minPasswordLength;
@@ -27,6 +31,9 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
     }
 
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
+
+        ThreadContext.put("email", userRequestDto.getEmail());
+
         if (userRequestDto.getPassword().length() < minPasswordLength) {
             throw new IllegalArgumentException("Password must be at least " + minPasswordLength + " characters long.");
         }
@@ -37,6 +44,11 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
                 .build();
 
         UserEntity savedUser = userRepository.save(newUser);
+
+        logger.info("User created successfully");
+
+        ThreadContext.clearAll();
+
         return mapToUserResponseDto(savedUser);
     }
 
@@ -48,13 +60,18 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
     }
 
     public List<UserResponseDto> findAllUsers() {
-        return userRepository.findAll().stream()
+        List<UserResponseDto> users = userRepository.findAll().stream()
                 .map(UserServiceImpl::mapToUserResponseDto)
                 .collect(Collectors.toList());
+
+        logger.info(USER_MARKER, "Retrieved all users: {}", users.size());
+        return users;
     }
 
     @Transactional
     public UserResponseDto updateUser(String id, UserUpdateDto userUpdateDto) {
+        ThreadContext.put("userID", id);
+
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " not found."));
 
@@ -62,6 +79,11 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
         existingUser.setPassword(userUpdateDto.getPassword());
 
         UserEntity updatedUser = userRepository.save(existingUser);
+
+        logger.info("User updated successfully");
+
+        ThreadContext.clearAll();
+
         return mapToUserResponseDto(updatedUser);
     }
 
