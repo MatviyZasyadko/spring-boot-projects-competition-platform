@@ -33,6 +33,8 @@ public class SecurityConfig {
                 SecurityConstants.PUBLIC_ENDPOINTS.forEach(endpoint -> requests.requestMatchers(endpoint).permitAll());
                 requests.requestMatchers("/ui/main").authenticated();
                 requests.requestMatchers("/ui/admin").hasRole(UserRole.ADMIN.name());
+                requests.requestMatchers("/api/**").authenticated();
+                requests.anyRequest().authenticated();
             })
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
