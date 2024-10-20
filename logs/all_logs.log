@@ -1,0 +1,106 @@
+SONYA'S LAYOUT [2024-10-19 23:20:43] [INFO ] org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+SONYA'S LAYOUT [2024-10-19 23:20:43] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - Starting ProjectsCompetitionPlatformApplication using Java 21.0.4 with PID 14133 (/Users/sonyabudilova/Documents/NaUKMA/4_year/spring boot/spring-boot-projects-competition-platform/ProjectsCompetitionPlatform/build/classes/java/main started by sonyabudilova in /Users/sonyabudilova/Documents/NaUKMA/4_year/spring boot/spring-boot-projects-competition-platform)
+SONYA'S LAYOUT [2024-10-19 23:20:43] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - No active profile set, falling back to 1 default profile: "default"
+SONYA'S LAYOUT [2024-10-19 23:20:43] [INFO ] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+SONYA'S LAYOUT [2024-10-19 23:20:43] [INFO ] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 41 ms. Found 8 JPA repository interfaces.
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.28]
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 834 ms
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.2.Final
+SONYA'S LAYOUT [2024-10-19 23:20:44] [INFO ] org.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+SONYA'S LAYOUT [2024-10-19 23:20:45] [INFO ] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+SONYA'S LAYOUT [2024-10-19 23:20:45] [INFO ] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+SONYA'S LAYOUT [2024-10-19 23:20:45] [INFO ] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+SONYA'S LAYOUT [2024-10-19 23:20:46] [WARN ] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+SONYA'S LAYOUT [2024-10-19 23:20:46] [INFO ] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+SONYA'S LAYOUT [2024-10-19 23:20:46] [INFO ] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+SONYA'S LAYOUT [2024-10-19 23:20:46] [INFO ] org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+SONYA'S LAYOUT [2024-10-19 23:20:46] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - Started ProjectsCompetitionPlatformApplication in 2.836 seconds (process running for 3.405)
+SONYA'S LAYOUT [2024-10-19 23:21:04] [INFO ] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+SONYA'S LAYOUT [2024-10-19 23:21:04] [WARN ] org.springframework.beans.factory.support.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+SONYA'S LAYOUT [2024-10-19 23:21:04] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+SONYA'S LAYOUT [2024-10-19 23:21:04] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+SONYA'S LAYOUT [2024-10-19 23:37:40.932] [INFO ] org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+SONYA'S LAYOUT [2024-10-19 23:37:40.959] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - Starting ProjectsCompetitionPlatformApplication using Java 21.0.4 with PID 14370 (/Users/sonyabudilova/Documents/NaUKMA/4_year/spring boot/spring-boot-projects-competition-platform/ProjectsCompetitionPlatform/build/classes/java/main started by sonyabudilova in /Users/sonyabudilova/Documents/NaUKMA/4_year/spring boot/spring-boot-projects-competition-platform)
+SONYA'S LAYOUT [2024-10-19 23:37:40.963] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - No active profile set, falling back to 1 default profile: "default"
+SONYA'S LAYOUT [2024-10-19 23:37:40.991] [INFO ] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+SONYA'S LAYOUT [2024-10-19 23:37:40.991] [INFO ] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+SONYA'S LAYOUT [2024-10-19 23:37:41.493] [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+SONYA'S LAYOUT [2024-10-19 23:37:41.544] [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 46 ms. Found 8 JPA repository interfaces.
+SONYA'S LAYOUT [2024-10-19 23:37:41.881] [INFO ] org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+SONYA'S LAYOUT [2024-10-19 23:37:41.889] [INFO ] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+SONYA'S LAYOUT [2024-10-19 23:37:41.892] [INFO ] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+SONYA'S LAYOUT [2024-10-19 23:37:41.892] [INFO ] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.28]
+SONYA'S LAYOUT [2024-10-19 23:37:41.918] [INFO ] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+SONYA'S LAYOUT [2024-10-19 23:37:41.919] [INFO ] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 927 ms
+SONYA'S LAYOUT [2024-10-19 23:37:41.944] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+SONYA'S LAYOUT [2024-10-19 23:37:42.053] [INFO ] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+SONYA'S LAYOUT [2024-10-19 23:37:42.054] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+SONYA'S LAYOUT [2024-10-19 23:37:42.061] [INFO ] org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+SONYA'S LAYOUT [2024-10-19 23:37:42.154] [INFO ] org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+SONYA'S LAYOUT [2024-10-19 23:37:42.192] [INFO ] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.2.Final
+SONYA'S LAYOUT [2024-10-19 23:37:42.215] [INFO ] org.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+SONYA'S LAYOUT [2024-10-19 23:37:42.415] [INFO ] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+SONYA'S LAYOUT [2024-10-19 23:37:43.141] [INFO ] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+SONYA'S LAYOUT [2024-10-19 23:37:43.189] [INFO ] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+SONYA'S LAYOUT [2024-10-19 23:37:43.569] [WARN ] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+SONYA'S LAYOUT [2024-10-19 23:37:43.796] [INFO ] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+SONYA'S LAYOUT [2024-10-19 23:37:43.813] [INFO ] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+SONYA'S LAYOUT [2024-10-19 23:37:43.825] [INFO ] org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+SONYA'S LAYOUT [2024-10-19 23:37:43.833] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - Started ProjectsCompetitionPlatformApplication in 3.062 seconds (process running for 3.74)
+SONYA'S LAYOUT [2024-10-19 23:37:59.201] [INFO ] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+SONYA'S LAYOUT [2024-10-19 23:37:59.201] [INFO ] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+SONYA'S LAYOUT [2024-10-19 23:37:59.202] [INFO ] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+SONYA'S LAYOUT [2024-10-19 23:37:59.224] [INFO ] com.ukma.competition.platform.images.ImageController - my custom custom message
+SONYA'S LAYOUT [2024-10-19 23:38:32.100] [INFO ] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+SONYA'S LAYOUT [2024-10-19 23:38:32.112] [WARN ] org.springframework.beans.factory.support.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+SONYA'S LAYOUT [2024-10-19 23:38:32.112] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+SONYA'S LAYOUT [2024-10-19 23:38:32.114] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+SONYA'S LAYOUT [2024-10-19 23:38:37.283] [INFO ] org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+SONYA'S LAYOUT [2024-10-19 23:38:37.303] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - Starting ProjectsCompetitionPlatformApplication using Java 21.0.4 with PID 14400 (/Users/sonyabudilova/Documents/NaUKMA/4_year/spring boot/spring-boot-projects-competition-platform/ProjectsCompetitionPlatform/build/classes/java/main started by sonyabudilova in /Users/sonyabudilova/Documents/NaUKMA/4_year/spring boot/spring-boot-projects-competition-platform)
+SONYA'S LAYOUT [2024-10-19 23:38:37.305] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - No active profile set, falling back to 1 default profile: "default"
+SONYA'S LAYOUT [2024-10-19 23:38:37.328] [INFO ] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+SONYA'S LAYOUT [2024-10-19 23:38:37.328] [INFO ] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+SONYA'S LAYOUT [2024-10-19 23:38:37.794] [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+SONYA'S LAYOUT [2024-10-19 23:38:37.845] [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 45 ms. Found 8 JPA repository interfaces.
+SONYA'S LAYOUT [2024-10-19 23:38:38.175] [INFO ] org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+SONYA'S LAYOUT [2024-10-19 23:38:38.183] [INFO ] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+SONYA'S LAYOUT [2024-10-19 23:38:38.185] [INFO ] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+SONYA'S LAYOUT [2024-10-19 23:38:38.186] [INFO ] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.28]
+SONYA'S LAYOUT [2024-10-19 23:38:38.212] [INFO ] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+SONYA'S LAYOUT [2024-10-19 23:38:38.213] [INFO ] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 883 ms
+SONYA'S LAYOUT [2024-10-19 23:38:38.239] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+SONYA'S LAYOUT [2024-10-19 23:38:38.343] [INFO ] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+SONYA'S LAYOUT [2024-10-19 23:38:38.344] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+SONYA'S LAYOUT [2024-10-19 23:38:38.352] [INFO ] org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+SONYA'S LAYOUT [2024-10-19 23:38:38.439] [INFO ] org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+SONYA'S LAYOUT [2024-10-19 23:38:38.473] [INFO ] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.2.Final
+SONYA'S LAYOUT [2024-10-19 23:38:38.493] [INFO ] org.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+SONYA'S LAYOUT [2024-10-19 23:38:38.689] [INFO ] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+SONYA'S LAYOUT [2024-10-19 23:38:39.401] [INFO ] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+SONYA'S LAYOUT [2024-10-19 23:38:39.446] [INFO ] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+SONYA'S LAYOUT [2024-10-19 23:38:39.818] [WARN ] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+SONYA'S LAYOUT [2024-10-19 23:38:40.095] [INFO ] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+SONYA'S LAYOUT [2024-10-19 23:38:40.110] [INFO ] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+SONYA'S LAYOUT [2024-10-19 23:38:40.121] [INFO ] org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+SONYA'S LAYOUT [2024-10-19 23:38:40.128] [INFO ] com.ukma.competition.platform.ProjectsCompetitionPlatformApplication - Started ProjectsCompetitionPlatformApplication in 2.997 seconds (process running for 3.551)
+SONYA'S LAYOUT [2024-10-19 23:38:45.706] [INFO ] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+SONYA'S LAYOUT [2024-10-19 23:38:45.707] [INFO ] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+SONYA'S LAYOUT [2024-10-19 23:38:45.708] [INFO ] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+SONYA'S LAYOUT [2024-10-19 23:38:45.727] [INFO ] com.ukma.competition.platform.images.ImageController - got all images as dto
+SONYA'S LAYOUT [2024-10-19 23:38:46.745] [INFO ] com.ukma.competition.platform.images.ImageController - got all images as dto
+SONYA'S LAYOUT [2024-10-19 23:38:47.440] [INFO ] com.ukma.competition.platform.images.ImageController - got all images as dto
+SONYA'S LAYOUT [2024-10-19 23:38:52.072] [INFO ] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+SONYA'S LAYOUT [2024-10-19 23:38:52.082] [WARN ] org.springframework.beans.factory.support.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+SONYA'S LAYOUT [2024-10-19 23:38:52.083] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+SONYA'S LAYOUT [2024-10-19 23:38:52.084] [INFO ] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
