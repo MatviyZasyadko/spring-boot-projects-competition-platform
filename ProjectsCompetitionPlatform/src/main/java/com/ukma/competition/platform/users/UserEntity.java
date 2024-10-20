@@ -7,7 +7,10 @@ import com.ukma.competition.platform.shared.IdentifiableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -18,23 +21,20 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class UserEntity extends IdentifiableEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+public class UserEntity extends IdentifiableEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)
     String email;
 
-    @Column(nullable = false)
+    @Column
     String fullName;
 
     @Column(nullable = false)
-    String userName;
+    String password;
 
     @Column(nullable = false)
-    String password;
+    @Enumerated(EnumType.STRING)
+    UserRole userRole;
 
     @OneToMany(mappedBy = "user")
     List<PaymentEntity> payments;
@@ -44,9 +44,19 @@ public class UserEntity extends IdentifiableEntity {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
-            name = "images_users",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
+        name = "images_users",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "image_id")
     )
     List<ImageEntity> images;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(this.userRole);
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
 }

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -73,6 +74,7 @@ public class ImageController {
     )
     @PostMapping("/_upload")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public ImageResponseDto save(@ModelAttribute @Valid ImageRequestDto imageRequestDto) throws IOException {
         return imageService.uploadImage(imageRequestDto);
     }
@@ -144,6 +146,7 @@ public class ImageController {
         }
     )
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ImageResponseDto updateById(
         @PathVariable("id") String id,
         @RequestBody @Valid ImageUpdateDto imageUpdateDto
@@ -174,6 +177,7 @@ public class ImageController {
     )
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteById(@PathVariable("id") String id) {
         imageService.deleteById(id);
     }

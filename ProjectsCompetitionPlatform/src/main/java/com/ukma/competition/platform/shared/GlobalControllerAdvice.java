@@ -68,19 +68,4 @@ public class GlobalControllerAdvice {
                 .build()
         );
     }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationFailDto> validationFailDto(MethodArgumentNotValidException exception) {
-        BindingResult result = exception.getBindingResult();
-        List<FieldError> errors = result.getFieldErrors();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-            ValidationFailDto.validationFailBuilder()
-                .message(errors.isEmpty() ? "" : errors.getFirst().getDefaultMessage())
-                .fieldErrors(errors.stream().map(FieldError::getDefaultMessage).toList())
-                .exceptionClass(exception.getClass().getName())
-                .exceptionTime(Instant.now())
-                .build()
-        );
-    }
 }
