@@ -31,9 +31,15 @@ public class CustomLayout extends AbstractStringLayout {
         StringBuilder threadContextInfo = new StringBuilder();
         ReadOnlyStringMap contextData = event.getContextData();
         if (!contextData.isEmpty()) {
-            threadContextInfo.append("[ThreadContext: ");
+            threadContextInfo.append("[");
+            int count = 0;
+            int size = contextData.toMap().size();
             for (Map.Entry<String, String> entry : contextData.toMap().entrySet()) {
-                threadContextInfo.append(entry.getKey()).append("=").append(entry.getValue()).append(" ");
+                threadContextInfo.append(entry.getKey()).append("=").append(entry.getValue());
+                count++;
+                if (count < size) {
+                    threadContextInfo.append(", ");
+                }
             }
             threadContextInfo.append("]");
         }
