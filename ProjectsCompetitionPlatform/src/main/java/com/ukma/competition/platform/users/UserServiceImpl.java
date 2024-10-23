@@ -17,9 +17,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, UserRepository> implements UserService {
 
     private static UserRepository userRepository;
-    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
     private static final Marker USER_MARKER = MarkerManager.getMarker("USER");
-
 
     @Value("${user.password.min-length}")
     private int minPasswordLength;
@@ -70,7 +68,6 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
 
     @Transactional
     public UserResponseDto updateUser(String id, UserUpdateDto userUpdateDto) {
-        ThreadContext.put("userID", id);
 
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " not found."));
@@ -81,8 +78,6 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
         UserEntity updatedUser = userRepository.save(existingUser);
 
         logger.info("User updated successfully");
-
-        ThreadContext.clearAll();
 
         return mapToUserResponseDto(updatedUser);
     }

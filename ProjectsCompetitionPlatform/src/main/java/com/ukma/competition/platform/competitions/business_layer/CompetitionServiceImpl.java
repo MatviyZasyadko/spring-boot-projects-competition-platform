@@ -20,7 +20,6 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CompetitionServiceImpl implements CompetitionService {
 
-    private static final Logger logger = LogManager.getLogger(CompetitionServiceImpl.class);
     private static final Marker COMPETITION_MARKER = MarkerManager.getMarker("COMPETITION");
 
     CompetitionRepository competitionRepository;
@@ -35,11 +34,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
         Marker updateMarker = MarkerManager.getMarker("COMPETITION_UPDATE");
 
-        ThreadContext.put("competitionID", id);
-        ThreadContext.put("competitionName", competition.getName());
-
-        logger.info(updateMarker, "Updating competition with ID: {}, Name: {}", id, competition.getName());
-
+        logger.info(updateMarker, "Updating competition");
 
         Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(id);
 
@@ -62,8 +57,6 @@ public class CompetitionServiceImpl implements CompetitionService {
             CompetitionEntity updatedCompetitionEntity = competitionRepository.save(existingCompetitionEntity);
 
             logger.info(updateMarker, "Successfully updated competition with ID: {}", id);
-
-            ThreadContext.clearAll();
 
             return convertEntityToCompetition(updatedCompetitionEntity);
         } else {
@@ -151,12 +144,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public List<Competition> findAll() {
-        ThreadContext.put("methodName", "findAll");
-        logger.info(COMPETITION_MARKER, "Retrieving all competitions");
+        Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
+
+        logger.info(findMarker, "Retrieving all competitions");
 
         List<CompetitionEntity> allCompetitionEntities = competitionRepository.findAll();
-
-        ThreadContext.clearAll();
 
         return allCompetitionEntities.stream()
                 .map(this::convertEntityToCompetition)
@@ -166,6 +158,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public Optional<Competition> findById(String id) {
         Optional<CompetitionEntity> competitionEntity = competitionRepository.findById(id);
+
+        Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
+
+        logger.info(findMarker, "Searching for competition");
+
         return convertEntityToCompetition(competitionEntity);
     }
 

@@ -2,6 +2,7 @@ package com.ukma.competition.platform.competitions.presentation_layer;
 
 import com.ukma.competition.platform.competitions.business_layer.Competition;
 import com.ukma.competition.platform.competitions.business_layer.CompetitionService;
+import com.ukma.competition.platform.competitions.business_layer.CompetitionServiceImpl;
 import com.ukma.competition.platform.images.dto.ImageResponseDto;
 import com.ukma.competition.platform.images.dto.ImageUpdateDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,6 +10,9 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,17 +37,25 @@ public class CompetitionController {
 
     @GetMapping
     public ResponseEntity<List<CompetitionDto>> findAll() {
+        competitionService.logger.info("Received request to retrieve all competitions");
+        // !!!!!!!!! Прибрати
+        ThreadContext.put("methodName", "findAll");
+        ThreadContext.put("id", "1");
         List<Competition> allCompetitions = competitionService.findAll();
         List<CompetitionDto> allCompetitionDtos = allCompetitions.stream()
                 .map(this::convertCompetitionToDto)
                 .toList();
-
+        ThreadContext.clearAll();
         return ResponseEntity.ok(allCompetitionDtos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CompetitionDto> findById(@PathVariable("id") String id) {
         Optional<Competition> optionalCompetition = competitionService.findById(id);
+
+        competitionService.logger.info("Received request to retrieve competition with ID: {}", id);
+
+        ThreadContext.put("competitionID", id);
 
         if (optionalCompetition.isPresent()) {
             CompetitionDto competitionDto = convertCompetitionToDto(optionalCompetition.get());
@@ -58,12 +70,20 @@ public class CompetitionController {
             @PathVariable("id") String id,
             @RequestBody @Valid CompetitionDto competitionDto
     ) {
+
+        competitionService.logger.info("Received request to update competition with ID: {}", id);
+        ThreadContext.put("competitionID", id);
+        ThreadContext.put("competitionName", competitionDto.getName());
+
         Competition competition = convertDtoToCompetition(competitionDto);
         try {
             Competition updatedCompetition = competitionService.updateById(id, competition);
             CompetitionDto updatedCompetitionDto = convertCompetitionToDto(updatedCompetition);
+            ThreadContext.clearAll();
             return ResponseEntity.ok(updatedCompetitionDto);
         } catch (EntityNotFoundException e) {
+            competitionService.logger.error("Failed to update competition. Competition with ID: {} not found", id);
+            ThreadContext.clearAll();
             return ResponseEntity.notFound().build();
         }
     }
