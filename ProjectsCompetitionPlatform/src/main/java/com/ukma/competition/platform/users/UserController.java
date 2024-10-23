@@ -6,6 +6,7 @@ import com.ukma.competition.platform.users.dto.UserUpdateDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,10 @@ public class UserController {
             @PathVariable("id") String id,
             @RequestBody @Valid UserUpdateDto userUpdateDto
     ) {
-        return userService.updateUser(id, userUpdateDto);
+        ThreadContext.put("userID", id);
+        UserResponseDto user = userService.updateUser(id, userUpdateDto);
+        ThreadContext.clearAll();
+        return user;
     }
 
     @DeleteMapping("/{id}")
