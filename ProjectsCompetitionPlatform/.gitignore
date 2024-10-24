@@ -43,3 +43,5 @@ secrets.yml
 node_modules
 
 /.idea
+
+application-dev.properties

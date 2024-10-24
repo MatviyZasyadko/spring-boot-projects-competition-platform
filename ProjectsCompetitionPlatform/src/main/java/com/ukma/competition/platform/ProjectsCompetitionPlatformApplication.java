@@ -1,5 +1,6 @@
 package com.ukma.competition.platform;
 
+import com.ukma.competition.platform.auth.oauth.AuthenticationProvider;
 import com.ukma.competition.platform.users.UserRole;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserRepository;
@@ -28,6 +29,7 @@ public class ProjectsCompetitionPlatformApplication implements CommandLineRunner
             .email("admin@mail.com")
             .password(passwordEncoder.encode("admin"))
             .userRole(UserRole.ADMIN)
+            .authenticationProvider(AuthenticationProvider.NATIVE)
             .build();
 
         userRepository.save(admin);

@@ -1,5 +1,6 @@
 package com.ukma.competition.platform.users;
 
+import com.ukma.competition.platform.auth.oauth.AuthenticationProvider;
 import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.payments.PaymentEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
@@ -35,6 +36,10 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     UserRole userRole;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    AuthenticationProvider authenticationProvider;
 
     @OneToMany(mappedBy = "user")
     List<PaymentEntity> payments;

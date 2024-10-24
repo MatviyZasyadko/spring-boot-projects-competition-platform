@@ -54,8 +54,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private List<Cookie> generateTokenPair(UserEntity user) {
-        List<Cookie> cookies = new ArrayList<>();
-
         String accessToken = jwtService.generateAccessToken(
             Map.of("role", user.getUserRole().name()),
             user.getUsername()

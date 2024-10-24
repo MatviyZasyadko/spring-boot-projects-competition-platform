@@ -12,6 +12,7 @@ public class SecurityConstants {
         "/*.js",
         "/ui/login",
         "/ui/registration",
-        "/favicon.ico"
+        "/favicon.ico",
+        "/content/**"
     );
 }
