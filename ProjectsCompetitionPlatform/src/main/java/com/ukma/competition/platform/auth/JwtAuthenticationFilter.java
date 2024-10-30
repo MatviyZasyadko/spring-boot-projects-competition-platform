@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
-        return SecurityConstants.PUBLIC_ENDPOINTS.stream().anyMatch(pattern -> this.uriMatches(pattern, request.getRequestURI()));
+        return EndpointConstants.PUBLIC_ENDPOINTS.stream().anyMatch(pattern -> this.uriMatches(pattern, request.getRequestURI()));
     }
 
     @Override

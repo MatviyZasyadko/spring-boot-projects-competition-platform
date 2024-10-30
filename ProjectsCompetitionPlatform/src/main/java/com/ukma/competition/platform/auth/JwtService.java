@@ -3,10 +3,8 @@ package com.ukma.competition.platform.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -25,9 +23,9 @@ public class JwtService {
     @Value("${jwt.expiration.duration.refresh}")
     Duration JWT_REFRESH_TOKEN_EXPIRATION_DURATION;
 
-    KeyProvider keyProvider;
+    SecretKeyProvider keyProvider;
 
-    public JwtService(KeyProvider keyProvider) {
+    public JwtService(SecretKeyProvider keyProvider) {
         this.keyProvider = keyProvider;
     }
 

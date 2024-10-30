@@ -40,7 +40,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Tag(name = "Images")
-@ConditionalOnExpression("#{${image.rest.controller.enabled}==true}")
 public class ImageController {
 
     ImageService imageService;

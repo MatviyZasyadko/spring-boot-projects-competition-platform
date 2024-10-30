@@ -1,6 +1,7 @@
 package com.ukma.competition.platform.auth;
 
-import com.ukma.competition.platform.auth.dto.AuthDto;
+import com.ukma.competition.platform.auth.dto.LoginRequestDto;
+import com.ukma.competition.platform.auth.dto.RegistrationRequestDto;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,7 +9,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -32,14 +33,15 @@ public class AuthenticationController {
     @GetMapping("/registration")
     public String registrationPage(Model model) {
         if (model.asMap().isEmpty()) {
-            model.addAttribute("authDto", new AuthDto());
+            model.addAttribute("authDto", new LoginRequestDto());
         }
         return "auth/registration";
     }
 
     @PostMapping("/registration")
     public String registrationCallback(
-        @Valid @ModelAttribute("authDto") AuthDto authDto,
+        @Valid @ModelAttribute("authDto")
+        RegistrationRequestDto authDto,
         BindingResult bindingResult,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes
@@ -67,21 +69,33 @@ public class AuthenticationController {
             "org.springframework.validation.BindingResult.authDto",
             bindingResult
         );
-        return "redirect:/ui/login";
+        return "redirect:" + EndpointConstants.LOGIN_PAGE_ENDPOINT;
     }
 
 
     @GetMapping("/login")
-    public String loginPage(Model model) {
+    public String loginPage(
+        Model model,
+        HttpServletResponse response,
+        @RequestParam(value = "oauth_error", required = false)
+        String oauthError
+    ) {
         if (model.asMap().isEmpty()) {
-            model.addAttribute("authDto", new AuthDto());
+            model.addAttribute("authDto", new LoginRequestDto());
+            if (oauthError != null) {
+                model.addAttribute("oauth_error", oauthError);
+                Cookie oauthErrorCookieReset = new Cookie("oauth_error", "");
+                oauthErrorCookieReset.setMaxAge(0);
+                response.addCookie(oauthErrorCookieReset);
+            }
         }
         return "auth/login";
     }
 
     @PostMapping("/login")
     public String authenticateCallback(
-        @Valid @ModelAttribute("authDto") AuthDto authDto,
+        @Valid @ModelAttribute("authDto")
+        LoginRequestDto authDto,
         BindingResult bindingResult,
         HttpServletResponse response,
         RedirectAttributes redirectAttributes
@@ -91,7 +105,7 @@ public class AuthenticationController {
                 "org.springframework.validation.BindingResult.authDto",
                 bindingResult
             );
-            return "redirect:/ui/login";
+            return "redirect:" + EndpointConstants.LOGIN_PAGE_ENDPOINT;
         }
         try {
             List<Cookie> tokenCookies = authenticationService.login(authDto);
@@ -109,7 +123,7 @@ public class AuthenticationController {
             "org.springframework.validation.BindingResult.authDto",
             bindingResult
         );
-        return "redirect:/ui/login";
+        return "redirect:" + EndpointConstants.LOGIN_PAGE_ENDPOINT;
     }
 
     @GetMapping("/main")

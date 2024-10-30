@@ -93,12 +93,6 @@ public class UserServiceImpl extends GenericServiceImpl<UserEntity, String, User
 
     private static UserResponseDto mapToUserResponseDto(UserEntity user) {
         return UserResponseDto.builder()
-                .id(Long.valueOf(user.getId()))
-                .email(user.getEmail())
-                .fullName(user.getFullName())
-                .projectIds(user.getProjects().stream()
-                        .map(project -> Long.valueOf(project.getId()))
-                        .collect(Collectors.toList()))
                 .build();
     }
 

@@ -1,24 +1,31 @@
 <!DOCTYPE HTML>
 <html
         lang="en"
-        xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.w3.org/1999/xhtml"
+>
 <head>
     <title>Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:href="@{/resources/main.css}" rel="stylesheet"/>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
 </head>
 <body class="bg-slate-50">
-<header class="bg-gray-100 container mx-auto">
-    <h1 class="text-4xl font-bold p-8 text-center">
-        MAIN PAGE!
-    </h1>
+<header th:replace="layout/header :: header">
 
-    <div sec:authorize="hasRole('USER')">Text visible to user.</div>
-    <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
-    
-    <a href="/ui/admin" class="text-3xl">Admin page</a>
-
-    <img src="/content/competition-image.jpg" alt="competition image">
 </header>
+<div class="bg-gray-100 container flex flex-col justify-center">
+    <main>
+        <h1 class="text-4xl font-bold p-8 text-center">
+            MAIN PAGE!
+        </h1>
+
+        <div sec:authorize="hasRole('USER')">Text visible to user.</div>
+        <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+
+        <a href="/ui/admin" class="text-3xl">Admin page</a>
+
+        <img src="/competition-image.jpg" alt="competition image">
+    </main>
+</div>
 </body>
 </html>

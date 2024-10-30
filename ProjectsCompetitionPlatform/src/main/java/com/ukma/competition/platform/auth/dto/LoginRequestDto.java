@@ -1,14 +1,12 @@
 package com.ukma.competition.platform.auth.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 
@@ -17,8 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
-public class AuthDto {
+public class LoginRequestDto {
 
     @Email(message = "Email is not formatted properly!")
     String email;

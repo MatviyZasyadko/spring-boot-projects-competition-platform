@@ -17,15 +17,8 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponseDto {
-    Long id;
 
+    String id;
     String email;
-
-    String fullName;
-
-    List<Long> projectIds;
-
-    List<Long> paymentIds;
-
-    List<Long> imageIds;
+    String role;
 }
