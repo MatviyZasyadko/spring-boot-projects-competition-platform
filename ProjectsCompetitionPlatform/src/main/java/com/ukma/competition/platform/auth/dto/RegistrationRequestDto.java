@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 public class RegistrationRequestDto {
 
     @NotBlank
-    @Length(min = 2, max = 50, message = "Full name should be in range from 6 to 15 symbols!")
+    @Length(min = 2, max = 50, message = "Full name should be in range from 2 to 50 symbols!")
     String fullName;
 
     @Email(message = "Email is not formatted properly!")

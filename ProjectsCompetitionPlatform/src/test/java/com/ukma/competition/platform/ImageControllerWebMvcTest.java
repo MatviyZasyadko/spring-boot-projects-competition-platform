@@ -6,6 +6,7 @@ import com.ukma.competition.platform.images.ImageService;
 import com.ukma.competition.platform.images.dto.ImageRequestDto;
 import com.ukma.competition.platform.images.dto.ImageResponseDto;
 import com.ukma.competition.platform.shared.exception.ImageNotFoundException;
+import com.ukma.competition.platform.users.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,7 +23,6 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -38,10 +39,17 @@ class ImageControllerWebMvcTest {
     @MockBean
     JwtService jwtService;
 
+    @MockBean
+    UserRepository userRepository;
+
+    @MockBean
+    PasswordEncoder passwordEncoder;
+
+
     @Test
     @WithMockUser(roles = "ADMIN")
     void saveImageSuccessfully() throws Exception {
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("image", new byte[] {});
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("image", new byte[]{});
         ImageResponseDto responseDto = ImageResponseDto.builder()
             .id("image-id")
             .url("http://image.url")
@@ -49,7 +57,7 @@ class ImageControllerWebMvcTest {
         Mockito.when(imageService.uploadImage(any(ImageRequestDto.class))).thenReturn(responseDto);
 
         mockMvc.perform(multipart("/api/images/_upload")
-            .file(mockMultipartFile))
+                .file(mockMultipartFile))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value("image-id"))
             .andExpect(jsonPath("$.url").value("http://image.url"));
@@ -87,6 +95,7 @@ class ImageControllerWebMvcTest {
             .andExpect(jsonPath("$.id").value("image-id"))
             .andExpect(jsonPath("$.url").value("http://image.url"));
     }
+
     @Test
     @WithMockUser(roles = "ADMIN")
     void deleteImageByIdSuccessfully() throws Exception {

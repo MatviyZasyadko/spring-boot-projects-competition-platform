@@ -28,6 +28,18 @@
                 </div>
 
                 <div>
+                    <label for="fullName" class="block text-sm font-medium text-gray-700">
+                        Full Name
+                    </label>
+                    <div class="mt-1">
+                        <input id="fullName" name="fullName" type="text" required
+                               class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-gray-300 focus:border-black focus:z-10 sm:text-sm"
+                               placeholder="Enter your name"
+                               th:field="*{fullName}">
+                    </div>
+                </div>
+
+                <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">
                         Email address
                     </label>

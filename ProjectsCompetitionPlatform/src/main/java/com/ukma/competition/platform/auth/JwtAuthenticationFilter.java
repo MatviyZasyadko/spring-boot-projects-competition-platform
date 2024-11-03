@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.server.PathContainer;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,11 +29,17 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     JwtService jwtService;
+
+    @Value("${spring.security.access.token.name}")
+    String ACCESS_TOKEN_NAME;
+
+    public JwtAuthenticationFilter(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
@@ -47,14 +54,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         if (request.getCookies() != null) {
             Cookie accessTokenCookie = Arrays.stream(request.getCookies())
-                .filter(item -> item.getName().contains("accessToken"))
+                .filter(item -> item.getName().contains(ACCESS_TOKEN_NAME))
                 .findFirst()
                 .orElse(null);
             if (accessTokenCookie != null) {
                 String token = accessTokenCookie.getValue();
                 Claims claims = jwtService.extractAllClaims(token);
                 UserRole role = claims.get("role") != null
-                    ? (claims.get("role").equals("ADMIN") ? UserRole.ADMIN : UserRole.USER)
+                    ? (claims.get("role").equals(UserRole.ADMIN.name()) ? UserRole.ADMIN : UserRole.USER)
                     : UserRole.USER;
                 List<GrantedAuthority> roleList = Collections.singletonList(role);
                 UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(

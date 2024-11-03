@@ -5,12 +5,28 @@ import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.payments.PaymentEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,22 +46,25 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     @Column
     String fullName;
 
-    @Column(nullable = false)
+    @Column
     String password;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    UserRole userRole;
+    @Builder.Default
+    UserRole userRole = UserRole.USER;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     AuthenticationProvider authenticationProvider;
 
     @OneToMany(mappedBy = "user")
-    List<PaymentEntity> payments;
+    @Builder.Default
+    List<PaymentEntity> payments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<ProjectEntity> projects;
+    @Builder.Default
+    List<ProjectEntity> projects = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
@@ -53,7 +72,8 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "image_id")
     )
-    List<ImageEntity> images;
+    @Builder.Default
+    List<ImageEntity> images = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -63,5 +83,10 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     @Override
     public String getUsername() {
         return this.email;
+    }
+
+    public void addImage(ImageEntity image) {
+        this.images.add(image);
+        image.getUsers().add(this);
     }
 }

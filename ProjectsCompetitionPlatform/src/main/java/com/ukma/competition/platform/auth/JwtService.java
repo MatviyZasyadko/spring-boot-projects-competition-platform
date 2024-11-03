@@ -1,7 +1,9 @@
 package com.ukma.competition.platform.auth;
 
+import com.ukma.competition.platform.users.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -24,6 +27,9 @@ public class JwtService {
     Duration JWT_REFRESH_TOKEN_EXPIRATION_DURATION;
 
     SecretKeyProvider keyProvider;
+
+    @Value("${spring.security.access.token.name}")
+    String ACCESS_TOKEN_NAME;
 
     public JwtService(SecretKeyProvider keyProvider) {
         this.keyProvider = keyProvider;
@@ -77,7 +83,22 @@ public class JwtService {
         return getClaim(token, Claims::getSubject);
     }
 
-    private boolean isTokenExpired(String token) {
-        return getTokenExpirationDate(token).before(new Date());
+    public Cookie generateTokenWithCookie(UserEntity user) {
+        String accessToken = this.generateAccessToken(
+            Map.of(
+                "role", user.getUserRole().name(),
+                "authProvider", user.getAuthenticationProvider().toString()
+            ),
+            user.getUsername()
+        );
+
+        Cookie accessTokenCookie = new Cookie(ACCESS_TOKEN_NAME, accessToken);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setSecure(true);
+        accessTokenCookie.setMaxAge((int) JWT_ACCESS_TOKEN_EXPIRATION_DURATION.toMillis());
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setDomain("localhost");
+
+        return accessTokenCookie;
     }
 }

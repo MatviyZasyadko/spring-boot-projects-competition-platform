@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AuthenticationService {
 
-    List<Cookie> login(LoginRequestDto authDto);
+    Cookie login(LoginRequestDto authDto);
 
-    List<Cookie> register(RegistrationRequestDto authDto);
+    Cookie register(RegistrationRequestDto authDto);
 }

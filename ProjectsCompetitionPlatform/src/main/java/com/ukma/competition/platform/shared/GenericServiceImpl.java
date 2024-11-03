@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 @RequiredArgsConstructor
 public abstract class GenericServiceImpl<T extends IdentifiableEntity, ID extends Serializable, R extends JpaRepository<T, ID>>
     implements GenericService<T, ID> {

@@ -3,6 +3,7 @@ package com.ukma.competition.platform.images;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
+import com.ukma.competition.platform.users.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,16 +36,18 @@ public class ImageEntity extends IdentifiableEntity {
     String publicId;
 
     @ManyToMany(mappedBy = "images")
-    List<CompetitionEntity> competitionEntities;
+    @Builder.Default
+    List<CompetitionEntity> competitions = new ArrayList<>();
 
     @ManyToMany(mappedBy = "images")
-    List<ProjectEntity> projects;
+    @Builder.Default
+    List<ProjectEntity> projects = new ArrayList<>();
 
     @ManyToMany(mappedBy = "images")
-    List<ProjectEntity> users;
+    @Builder.Default
+    List<UserEntity> users = new ArrayList<>();
 
-    public ImageEntity(String url, String publicId) {
-        this.url = url;
-        this.publicId = publicId;
+    public boolean isFromApplicationCloudStorage() {
+        return this.publicId != null;
     }
 }

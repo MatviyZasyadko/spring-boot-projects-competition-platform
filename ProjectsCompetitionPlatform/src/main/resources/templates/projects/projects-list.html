@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Competitors - Projects</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body class="bg-gray-50">
+<header th:replace="layout/header :: header"></header>
+<main class="container">
+    <h2 class="text-3xl text-center leading-[3.75rem] font-palanquin">All projects</h2>
+    <div class="mt-8 flex justify-between items-center gap-2 px-4">
+        <form class="max-w-md">
+            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input type="search" id="default-search"
+                       class="block w-80 py-4 px-12 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:border focus:border-gray-300 focus:ring-0 focus:ring-offset-0  focus:outline-none"
+                       placeholder="Search projects..." required
+                       maxlength="25"
+                />
+                <button type="submit"
+                        class="primary-button p-2 absolute end-2.5 bottom-[0.40rem]">
+                    Search
+                </button>
+            </div>
+        </form>
+
+        <div>
+            <a class="secondary-button px-3 py-2.5" href="">Create a new project</a>
+        </div>
+    </div>
+    <div>
+        <div class="mt-8 grid grid-cols-[repeat(auto-fill,_minmax(450px,1fr))] gap-6">
+            <div
+                    class="block rounded-lg bg-white shadow-md text-surface">
+                <div class="p-3">
+                    <h5
+                            class="mb-2 text-xl font-medium leading-tight">
+                        Special title treatment
+                    </h5>
+                    <p class="mb-4 text-base">
+                        With supporting text below as a natural lead-in to additional
+                        content.
+                    </p>
+                    <button
+                            type="button"
+                            href="#"
+                            class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                            data-twe-ripple-init
+                            data-twe-ripple-color="light">
+                        Go somewhere
+                    </button>
+                </div>
+            </div>
+
+            <div
+                    class="block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark dark:text-white text-surface">
+                <div
+                        class="border-b-2 border-neutral-100 px-6 py-3 dark:border-white/10">
+                    Featured
+                </div>
+                <div class="p-6">
+                    <h5
+                            class="mb-2 text-xl font-medium leading-tight">
+                        Special title treatment
+                    </h5>
+                    <p class="mb-4 text-base">
+                        With supporting text below as a natural lead-in to additional
+                        content.
+                    </p>
+                    <button
+                            type="button"
+                            href="#"
+                            class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                            data-twe-ripple-init
+                            data-twe-ripple-color="light">
+                        Go somewhere
+                    </button>
+                </div>
+            </div>
+
+            <div
+                    class="block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark dark:text-white text-surface">
+                <div
+                        class="border-b-2 border-neutral-100 px-6 py-3 dark:border-white/10">
+                    Featured
+                </div>
+                <div class="p-6">
+                    <h5
+                            class="mb-2 text-xl font-medium leading-tight">
+                        Special title treatment
+                    </h5>
+                    <p class="mb-4 text-base">
+                        With supporting text below as a natural lead-in to additional
+                        content.
+                    </p>
+                    <button
+                            type="button"
+                            href="#"
+                            class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                            data-twe-ripple-init
+                            data-twe-ripple-color="light">
+                        Go somewhere
+                    </button>
+                </div>
+            </div>
+
+            <div
+                    class="block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark dark:text-white text-surface">
+                <div
+                        class="border-b-2 border-neutral-100 px-6 py-3 dark:border-white/10">
+                    Featured
+                </div>
+                <div class="p-6">
+                    <h5
+                            class="mb-2 text-xl font-medium leading-tight">
+                        Special title treatment
+                    </h5>
+                    <p class="mb-4 text-base">
+                        With supporting text below as a natural lead-in to additional
+                        content.
+                    </p>
+                    <button
+                            type="button"
+                            href="#"
+                            class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                            data-twe-ripple-init
+                            data-twe-ripple-color="light">
+                        Go somewhere
+                    </button>
+                </div>
+            </div>
+
+            <div
+                    class="block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark dark:text-white text-surface">
+                <div
+                        class="border-b-2 border-neutral-100 px-6 py-3 dark:border-white/10">
+                    Featured
+                </div>
+                <div class="p-6">
+                    <h5
+                            class="mb-2 text-xl font-medium leading-tight">
+                        Special title treatment
+                    </h5>
+                    <p class="mb-4 text-base">
+                        With supporting text below as a natural lead-in to additional
+                        content.
+                    </p>
+                    <button
+                            type="button"
+                            href="#"
+                            class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                            data-twe-ripple-init
+                            data-twe-ripple-color="light">
+                        Go somewhere
+                    </button>
+                </div>
+            </div>
+
+            <div
+                    class="block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark dark:text-white text-surface">
+                <div
+                        class="border-b-2 border-neutral-100 px-6 py-3 dark:border-white/10">
+                    Featured
+                </div>
+                <div class="p-6">
+                    <h5
+                            class="mb-2 text-xl font-medium leading-tight">
+                        Special title treatment
+                    </h5>
+                    <p class="mb-4 text-base">
+                        With supporting text below as a natural lead-in to additional
+                        content.
+                    </p>
+                    <button
+                            type="button"
+                            href="#"
+                            class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                            data-twe-ripple-init
+                            data-twe-ripple-color="light">
+                        Go somewhere
+                    </button>
+                </div>
+            </div>
+
+            <div
+                    class="block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark dark:text-white text-surface">
+                <div
+                        class="border-b-2 border-neutral-100 px-6 py-3 dark:border-white/10">
+                    Featured
+                </div>
+                <div class="p-6">
+                    <h5
+                            class="mb-2 text-xl font-medium leading-tight">
+                        Special title treatment
+                    </h5>
+                    <p class="mb-4 text-base">
+                        With supporting text below as a natural lead-in to additional
+                        content.
+                    </p>
+                    <button
+                            type="button"
+                            href="#"
+                            class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                            data-twe-ripple-init
+                            data-twe-ripple-color="light">
+                        Go somewhere
+                    </button>
+                </div>
+            </div>
+
+            <div
+                    class="block rounded-lg bg-white shadow-secondary-1 dark:bg-surface-dark dark:text-white text-surface">
+                <div
+                        class="border-b-2 border-neutral-100 px-6 py-3 dark:border-white/10">
+                    Featured
+                </div>
+                <div class="p-6">
+                    <h5
+                            class="mb-2 text-xl font-medium leading-tight">
+                        Special title treatment
+                    </h5>
+                    <p class="mb-4 text-base">
+                        With supporting text below as a natural lead-in to additional
+                        content.
+                    </p>
+                    <button
+                            type="button"
+                            href="#"
+                            class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+                            data-twe-ripple-init
+                            data-twe-ripple-color="light">
+                        Go somewhere
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="layout/footer :: footer"></footer>
+</body>
+</html>

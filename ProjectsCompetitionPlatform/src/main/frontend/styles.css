@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0.5rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+.slow-animation-300 {
+    @apply transition-all duration-300;
+}
+
+.secondary-button {
+    @apply bg-transparent text-black border border-black rounded-lg hover:bg-black hover:text-white hover:cursor-pointer focus:ring-1 focus:outline-none focus:ring-gray-200 slow-animation-300;
+}
+
+.primary-button {
+    @apply bg-black text-white border border-black rounded-lg hover:bg-gray-950 hover:cursor-pointer focus:ring-1 focus:outline-none focus:ring-gray-200 slow-animation-300;
+}
+
+.page-block {
+    @apply bg-white rounded-xl shadow-md py-8 px-16;
+}
+
+.container {
+    @apply p-5 md:w-[85%] md:p-0 mx-auto min-h-screen;
+}
+
+.page-block.in_view {
+    animation: fade 0.45s 0.45s both;
+}
+
+.page-block.not_in_view {
+    opacity: 0;
+}

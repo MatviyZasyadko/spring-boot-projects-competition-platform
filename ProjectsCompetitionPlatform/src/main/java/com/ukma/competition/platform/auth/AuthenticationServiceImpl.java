@@ -2,6 +2,7 @@ package com.ukma.competition.platform.auth;
 
 import com.ukma.competition.platform.auth.dto.LoginRequestDto;
 import com.ukma.competition.platform.auth.dto.RegistrationRequestDto;
+import com.ukma.competition.platform.auth.oauth.AuthenticationProvider;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserRepository;
@@ -26,51 +27,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
 
-    public List<Cookie> login(LoginRequestDto authDto) {
+    public Cookie login(LoginRequestDto authDto) {
         UserEntity userCheck = userRepository.findByEmail(authDto.getEmail()).orElse(null);
         if (userCheck != null) {
             if (passwordEncoder.matches(authDto.getPassword(), userCheck.getPassword())) {
-                return generateTokens(userCheck);
+                return this.jwtService.generateTokenWithCookie(userCheck);
             }
         }
         throw new AuthenticationException("Username or password is not correct!");
     }
 
 
-    public List<Cookie> register(RegistrationRequestDto authDto) {
+    public Cookie register(RegistrationRequestDto authDto) {
         Optional<UserEntity> userCheck = userRepository.findByEmail(authDto.getEmail());
         if (userCheck.isEmpty()) {
             UserEntity newUser = UserEntity.builder()
                 .email(authDto.getEmail())
                 .password(passwordEncoder.encode(authDto.getPassword()))
                 .userRole(UserRole.USER)
+                .authenticationProvider(AuthenticationProvider.NATIVE)
                 .build();
             userRepository.save(newUser);
 
-            return generateTokens(newUser);
+            return this.jwtService.generateTokenWithCookie(newUser);
         } else {
             throw new AuthenticationException("User already exists");
         }
     }
 
-    private List<Cookie> generateTokens(UserEntity user) {
-        String accessToken = jwtService.generateAccessToken(
-            Map.of("role", user.getUserRole().name()),
-            user.getUsername()
-        );
-        String refreshToken = jwtService.generateRefreshToken(
-            Map.of("role", user.getUserRole().name()),
-            user.getUsername()
-        );
-
-        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(true);
-
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-
-        return List.of(accessTokenCookie, refreshTokenCookie);
-    }
 }

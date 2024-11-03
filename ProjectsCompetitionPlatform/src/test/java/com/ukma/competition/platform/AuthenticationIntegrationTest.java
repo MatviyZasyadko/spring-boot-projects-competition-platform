@@ -63,7 +63,7 @@ class AuthenticationIntegrationTest {
 
     MockMvc mockMvc;
 
-    final String ACCESS_TOKEN_COOKIE_NAME = "accessToken";
+    final String ACCESS_TOKEN_COOKIE_NAME = "COMPETITORS_ACCESS_TOKEN";
 
     @BeforeEach
     public void setUp() {
@@ -85,7 +85,7 @@ class AuthenticationIntegrationTest {
         when(userRepository.save(any(UserEntity.class))).thenReturn(
             UserEntity.builder()
                 .email(registrationRequestDto.getEmail())
-                .fullName(registrationRequestDto.getFullName())
+                .fullName("registrationRequestDto.getFullName()")
                 .userRole(UserRole.USER)
                 .build()
         );
@@ -140,7 +140,7 @@ class AuthenticationIntegrationTest {
         when(userRepository.save(any(UserEntity.class))).thenReturn(
             UserEntity.builder()
                 .email(registrationRequestDto.getEmail())
-                .fullName(registrationRequestDto.getFullName())
+                .fullName("registrationRequestDto.getFullName()")
                 .password(registrationRequestDto.getPassword())
                 .userRole(UserRole.USER)
                 .build()

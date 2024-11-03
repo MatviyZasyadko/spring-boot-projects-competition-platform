@@ -42,6 +42,7 @@ public class AuthenticationRestController {
         return UserResponseDto.builder().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/profile/admin")
     public UserResponseDto adminProfile(HttpServletResponse response) {
         try {
@@ -64,7 +65,7 @@ public class AuthenticationRestController {
         HttpServletResponse response
     ) {
         try {
-            authenticationService.login(loginRequestDto).forEach(response::addCookie);
+            response.addCookie(authenticationService.login(loginRequestDto));
         } catch (Exception exception) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
@@ -76,7 +77,7 @@ public class AuthenticationRestController {
         HttpServletResponse response
     ) {
         try {
-            authenticationService.register(registrationRequestDto).forEach(response::addCookie);
+            response.addCookie(authenticationService.register(registrationRequestDto));
         } catch (Exception exception) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
         }

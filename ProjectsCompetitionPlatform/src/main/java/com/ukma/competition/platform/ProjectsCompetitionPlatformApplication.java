@@ -13,25 +13,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class ProjectsCompetitionPlatformApplication implements CommandLineRunner {
 
-    //@Autowired
-    //UserRepository userRepository;
-//
-    //@Autowired
-    //PasswordEncoder passwordEncoder;
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(ProjectsCompetitionPlatformApplication.class, args);
     }
 
     @Override
-    public void run(String... args) throws Exception {
-      // UserEntity admin = UserEntity.builder()
-      //     .email("admin@mail.com")
-      //     .password(passwordEncoder.encode("admin"))
-      //     .userRole(UserRole.ADMIN)
-      //     .authenticationProvider(AuthenticationProvider.NATIVE)
-      //     .build();
-
-      // userRepository.save(admin);
+    public void run(String... args) {
+        UserEntity admin = UserEntity.builder()
+            .email("admin@mail.com")
+            .fullName("VOVAAAAA")
+            .password(passwordEncoder.encode("admin"))
+            .userRole(UserRole.ADMIN)
+            .authenticationProvider(AuthenticationProvider.NATIVE)
+            .build();
+        if (userRepository != null) {
+            userRepository.save(admin);
+        }
     }
 }

@@ -30,6 +30,7 @@ import lombok.experimental.FieldDefaults;
 public class PaymentEntity extends IdentifiableEntity {
 
     @Column(nullable = false)
+    @Builder.Default
     Double sum = 0.;
 
     @Column(nullable = false)
