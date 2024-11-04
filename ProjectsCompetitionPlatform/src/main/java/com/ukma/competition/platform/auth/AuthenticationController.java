@@ -3,7 +3,6 @@ package com.ukma.competition.platform.auth;
 import com.ukma.competition.platform.auth.dto.LoginRequestDto;
 import com.ukma.competition.platform.auth.dto.RegistrationRequestDto;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -118,13 +117,19 @@ public class AuthenticationController {
         return "redirect:" + EndpointConstants.LOGIN_PAGE_ENDPOINT;
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        response.addCookie(this.authenticationService.logout());
+        return EndpointConstants.LOGIN_PAGE_ENDPOINT;
+    }
+
     @GetMapping("/main")
     public String mainPage() {
         return "main";
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/admin-page")
     public String adminPage() {
-        return "admin_page";
+        return "admin-page";
     }
 }

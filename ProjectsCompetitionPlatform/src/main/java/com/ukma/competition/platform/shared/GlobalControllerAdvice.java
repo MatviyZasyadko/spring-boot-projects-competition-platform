@@ -59,13 +59,7 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ExceptionDto> noSuchElementExceptionHandler(NoSuchElementException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-            ExceptionDto.builder()
-                .message(exception.getMessage())
-                .exceptionClass(exception.getClass().getName())
-                .exceptionTime(Instant.now())
-                .build()
-        );
+    public String noSuchElementExceptionHandler(NoSuchElementException exception) {
+        return "not-found";
     }
 }

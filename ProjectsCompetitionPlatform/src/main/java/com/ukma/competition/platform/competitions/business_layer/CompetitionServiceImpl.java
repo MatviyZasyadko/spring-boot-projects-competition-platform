@@ -3,7 +3,6 @@ package com.ukma.competition.platform.competitions.business_layer;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
-import com.ukma.competition.platform.users.UserServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

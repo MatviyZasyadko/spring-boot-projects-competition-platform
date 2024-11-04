@@ -79,7 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean uriMatches(String uriTemplate, String path) {
         PathPatternParser parser = new PathPatternParser();
         PathPattern p = parser.parse(uriTemplate);
-        PathContainer pc =  PathContainer.parsePath(path);
+        PathContainer pc = PathContainer.parsePath(path);
         return p.matches(pc);
     }
 }

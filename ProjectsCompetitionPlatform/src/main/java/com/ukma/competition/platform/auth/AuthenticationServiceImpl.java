@@ -11,21 +11,23 @@ import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    JwtService jwtService;
-    UserRepository userRepository;
-    PasswordEncoder passwordEncoder;
+    final JwtService jwtService;
+    final UserRepository userRepository;
+    final PasswordEncoder passwordEncoder;
+
+    @Value("${spring.security.access.token.name}")
+    String ACCESS_TOKEN_NAME;
 
     public Cookie login(LoginRequestDto authDto) {
         UserEntity userCheck = userRepository.findByEmail(authDto.getEmail()).orElse(null);
@@ -51,8 +53,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return this.jwtService.generateTokenWithCookie(newUser);
         } else {
-            throw new AuthenticationException("User already exists");
+            throw new AuthenticationException("User with such email already exists");
         }
+    }
+
+    @Override
+    public Cookie logout() {
+        Cookie resetAccessTokenCookie = new Cookie(ACCESS_TOKEN_NAME, "");
+        resetAccessTokenCookie.setHttpOnly(true);
+        resetAccessTokenCookie.setSecure(true);
+        resetAccessTokenCookie.setMaxAge(0);
+        resetAccessTokenCookie.setPath("/");
+        resetAccessTokenCookie.setDomain("localhost");
+        return resetAccessTokenCookie;
     }
 
 }

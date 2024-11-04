@@ -62,7 +62,7 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     @Builder.Default
     List<PaymentEntity> payments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     List<ProjectEntity> projects = new ArrayList<>();
 
@@ -88,5 +88,10 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     public void addImage(ImageEntity image) {
         this.images.add(image);
         image.getUsers().add(this);
+    }
+
+    public void addProject(ProjectEntity project) {
+        this.projects.add(project);
+        project.setCreator(this);
     }
 }

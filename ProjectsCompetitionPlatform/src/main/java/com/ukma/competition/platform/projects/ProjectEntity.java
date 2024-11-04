@@ -22,7 +22,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "projects")
@@ -34,26 +36,31 @@ import java.util.List;
 @Setter
 public class ProjectEntity extends IdentifiableEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     String name;
 
-    @Column(nullable = false)
-    String description;
+    @Column(nullable = false, length = 250)
+    String shortDescription;
+
+    @Column(nullable = false, length = 500)
+    String fullDescription;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    UserEntity user;
+    UserEntity creator;
 
     @ManyToMany(mappedBy = "projects")
-    List<CompetitionEntity> competitionEntities;
+    @Builder.Default
+    List<CompetitionEntity> competitions = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
         name = "images_projects",
         joinColumns = @JoinColumn(name = "project_id"),
         inverseJoinColumns = @JoinColumn(name = "image_id")
     )
-    List<ImageEntity> images;
+    @Builder.Default
+    List<ImageEntity> images = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
@@ -61,7 +68,18 @@ public class ProjectEntity extends IdentifiableEntity {
         joinColumns = @JoinColumn(name = "competition_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    List<TagEntity> tags;
+    @Builder.Default
+    List<TagEntity> tags = new ArrayList<>();
+
+    public ImageEntity getLogo() {
+        return images.stream().filter(ImageEntity::getIsMain).findFirst()
+            .orElse(null);
+    }
+
+    public void addImage(ImageEntity image) {
+        this.images.add(image);
+        image.getProjects().add(this);
+    }
 }
 
 

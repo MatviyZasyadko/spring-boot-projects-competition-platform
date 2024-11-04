@@ -35,6 +35,10 @@ public class ImageEntity extends IdentifiableEntity {
     @Column
     String publicId;
 
+    @Column(nullable = false)
+    @Builder.Default
+    Boolean isMain = Boolean.FALSE;
+
     @ManyToMany(mappedBy = "images")
     @Builder.Default
     List<CompetitionEntity> competitions = new ArrayList<>();

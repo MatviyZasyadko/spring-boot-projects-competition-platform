@@ -11,4 +11,6 @@ public interface AuthenticationService {
     Cookie login(LoginRequestDto authDto);
 
     Cookie register(RegistrationRequestDto authDto);
+
+    Cookie logout();
 }

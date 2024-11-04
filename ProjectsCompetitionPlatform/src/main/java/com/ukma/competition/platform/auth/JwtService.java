@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -26,21 +25,13 @@ public class JwtService {
     @Value("${jwt.expiration.duration.refresh}")
     Duration JWT_REFRESH_TOKEN_EXPIRATION_DURATION;
 
-    SecretKeyProvider keyProvider;
+    AuthenticaionKeyProvider keyProvider;
 
     @Value("${spring.security.access.token.name}")
     String ACCESS_TOKEN_NAME;
 
-    public JwtService(SecretKeyProvider keyProvider) {
+    public JwtService(AuthenticaionKeyProvider keyProvider) {
         this.keyProvider = keyProvider;
-    }
-
-    public String generateRefreshToken(Map<String, Object> claims, String subject) {
-        return generateToken(
-            claims,
-            subject,
-            Instant.now().plus(JWT_REFRESH_TOKEN_EXPIRATION_DURATION)
-        );
     }
 
     public String generateAccessToken(Map<String, Object> claims, String subject) {

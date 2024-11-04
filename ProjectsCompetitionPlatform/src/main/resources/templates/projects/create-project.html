@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Competitors - Create a project</title>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body class="bg-gray-50">
+<header th:replace="layout/header :: header"></header>
+
+<main class="custom-container">
+    <section class="page-block">
+        <div class="mx-auto my-auto max-w-3xl">
+            <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">Create a project</h2>
+            <form
+                    th:action="@{/ui/projects/create}"
+                    th:object="${projectCreateDto}"
+                    method="POST"
+                    enctype="multipart/form-data"
+            >
+
+                <div th:if="${#fields.hasAnyErrors()}"
+                     class="p-4 mt-8 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                     role="alert">
+                    <span class="font-medium">Error!</span> <span th:text="${#fields.allErrors().get(0)}"></span>
+                </div>
+
+                <div class="flex flex-col items-center mt-8">
+                    <div>
+                        <img class="object-cover rounded-lg shadow-md h-52 w-48"
+                             src="/default-image.jpg"
+                             alt="Project logo"
+                             id="project_logo"
+                        >
+                    </div>
+                    <p class="text-gray-600 mt-2 text-sm">
+                        Your project logo
+                    </p>
+                </div>
+                <div class="mt-4 grid gap-4 sm:grid-cols-2 sm:gap-6">
+                    <div class="sm:col-span-2">
+                        <label class="block mb-2 text-sm font-medium text-gray-900" for="logo">Project
+                            logo</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                               id="logo" name="logo" type="file" th:field="*{logo}" accept="image/*">
+                        <script>
+                          const logoInput = document.getElementById('logo');
+                          const logoImage = document.getElementById('project_logo');
+
+                          logoInput.onchange = function () {
+                            let file = this.files[0];
+                            const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+
+                            if (!acceptedImageTypes.includes(file.type)) {
+                              this.value = null;
+                              logoImage.src = '/default-image.jpg';
+                              alert('Logo should be an image!');
+                              return;
+                            }
+
+                            if (file) {
+                              logoImage.src = URL.createObjectURL(file);
+                            } else {
+                              logoImage.src = '/default-image.jpg';
+                            }
+                          };
+                        </script>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="name" class="block  mb-2 text-sm font-medium text-gray-900">Name<span
+                                class="text-red-600">*</span></label>
+                        <input type="text" name="name" id="name"
+                               class="default-input block w-full p-2.5"
+                               placeholder="Type project name" required th:field="*{name}">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="shortDescription" class="block mb-2 text-sm font-medium text-gray-900">Short
+                            description<span class="text-red-600">*</span></label>
+                        <input type="text" name="shortDescription" id="shortDescription"
+                               class="default-input block w-full p-2.5"
+                               placeholder="Type short description" required th:field="*{shortDescription}">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="fullDescription"
+                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full
+                            description<span class="text-red-600">*</span></label>
+                        <textarea id="fullDescription" rows="8"
+                                  class="block p-2.5 w-full default-input"
+                                  name="fullDescription"
+                                  placeholder="Type full description" th:field="*{fullDescription}"></textarea>
+                    </div>
+                </div>
+                <div class="sm:col-span-2 mt-6 flex justify-end">
+                    <div>
+                        <button type="submit"
+                                class="secondary-button px-4 py-2">
+                            Create a project
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="layout/footer :: footer"></footer>
+</body>
+</html>

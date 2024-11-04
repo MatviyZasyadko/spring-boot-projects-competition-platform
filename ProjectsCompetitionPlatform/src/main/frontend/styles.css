@@ -21,7 +21,7 @@
 }
 
 .slow-animation-300 {
-    @apply transition-all duration-300;
+    @apply transition-all duration-300 ease-in-out;
 }
 
 .secondary-button {
@@ -36,7 +36,7 @@
     @apply bg-white rounded-xl shadow-md py-8 px-16;
 }
 
-.container {
+.custom-container {
     @apply p-5 md:w-[85%] md:p-0 mx-auto min-h-screen;
 }
 
@@ -46,4 +46,8 @@
 
 .page-block.not_in_view {
     opacity: 0;
+}
+
+.default-input {
+    @apply text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:border focus:border-gray-500 focus:ring-0 focus:ring-offset-0  focus:outline-none;
 }
