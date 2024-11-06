@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Getter
 @Builder
-public class GoogleOAuth2TokensResponseDto {
+public class OAuth2TokensResponseDto {
 
     String scope;
 
@@ -25,7 +25,4 @@ public class GoogleOAuth2TokensResponseDto {
 
     @JsonProperty("token_type")
     String tokenType;
-
-    @JsonProperty("id_token")
-    String idToken;
 }

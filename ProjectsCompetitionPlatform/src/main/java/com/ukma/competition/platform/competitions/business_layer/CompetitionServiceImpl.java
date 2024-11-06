@@ -29,30 +29,15 @@ public class CompetitionServiceImpl implements CompetitionService {
         this.competitionRepository = repository;
         this.competitionProperties = competitionProperties;
     }
+
     public Competition updateById(String id, Competition competition) {
+        Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(id);
 
         Marker updateMarker = MarkerManager.getMarker("COMPETITION_UPDATE");
-
         logger.info(updateMarker, "Updating competition");
-
-        Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(id);
 
         if (optionalCompetitionEntity.isPresent()) {
             CompetitionEntity existingCompetitionEntity = optionalCompetitionEntity.get();
-
-            existingCompetitionEntity.setName(competition.getName());
-            existingCompetitionEntity.setDescription(competition.getDescription());
-            existingCompetitionEntity.setBeginDate(competition.getBeginDate());
-            existingCompetitionEntity.setVotingBeginDate(competition.getVotingBeginDate());
-            existingCompetitionEntity.setVotingEndDate(competition.getVotingEndDate());
-            existingCompetitionEntity.setHasPrizePool(competition.getHasPrizePool());
-            existingCompetitionEntity.setPriceDescription(competition.getPriceDescription());
-            existingCompetitionEntity.setPrizePool(competition.getPrizePool());
-            existingCompetitionEntity.setImages(competition.getImages());
-            existingCompetitionEntity.setProjects(competition.getProjects());
-            existingCompetitionEntity.setTags(competition.getTags());
-            existingCompetitionEntity.setPayments(competition.getPayments());
-
             CompetitionEntity updatedCompetitionEntity = competitionRepository.save(existingCompetitionEntity);
 
             logger.info(updateMarker, "Successfully updated competition with ID: {}", id);
@@ -93,7 +78,6 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
 
-
     private Competition convertEntityToCompetition(CompetitionEntity entity) {
         Competition competition = new Competition();
         competition.setId(entity.getId());
@@ -119,19 +103,19 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     private CompetitionEntity convertCompetitionToEntity(Competition competition) {
         return CompetitionEntity.builder()
-                .name(competition.getName())
-                .description(competition.getDescription())
-                .beginDate(competition.getBeginDate())
-                .votingBeginDate(competition.getVotingBeginDate())
-                .votingEndDate(competition.getVotingEndDate())
-                .hasPrizePool(competition.getHasPrizePool())
-                .priceDescription(competition.getPriceDescription())
-                .prizePool(competition.getPrizePool())
-                .images(competition.getImages())
-                .projects(competition.getProjects())
-                .tags(competition.getTags())
-                .payments(competition.getPayments())
-                .build();
+            .name(competition.getName())
+            .description(competition.getDescription())
+            .beginDate(competition.getBeginDate())
+            .votingBeginDate(competition.getVotingBeginDate())
+            .votingEndDate(competition.getVotingEndDate())
+            .hasPrizePool(competition.getHasPrizePool())
+            .priceDescription(competition.getPriceDescription())
+            .prizePool(competition.getPrizePool())
+            .images(competition.getImages())
+            .projects(competition.getProjects())
+            .tags(competition.getTags())
+            .payments(competition.getPayments())
+            .build();
     }
 
     @Override
@@ -150,8 +134,8 @@ public class CompetitionServiceImpl implements CompetitionService {
         List<CompetitionEntity> allCompetitionEntities = competitionRepository.findAll();
 
         return allCompetitionEntities.stream()
-                .map(this::convertEntityToCompetition)
-                .toList();
+            .map(this::convertEntityToCompetition)
+            .toList();
     }
 
     @Override

@@ -15,14 +15,14 @@ import java.util.Base64;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticaionKeyProvider {
+public class AuthenticationKeyProvider {
 
     final PrivateKey PRIVATE_KEY;
     final PublicKey PUBLIC_KEY;
     final KeyFactory KEY_FACTORY;
     ResourceLoader resourceLoader;
 
-    public AuthenticaionKeyProvider(ResourceLoader resourceLoader) throws Exception {
+    public AuthenticationKeyProvider(ResourceLoader resourceLoader) throws Exception {
         this.resourceLoader = resourceLoader;
         this.KEY_FACTORY = KeyFactory.getInstance("RSA");
         this.PRIVATE_KEY = loadPrivateKey();

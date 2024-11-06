@@ -17,7 +17,7 @@ public class OAuth2ServiceFactoryImpl implements OAuth2ServiceFactory {
     public OAuth2ServiceFactoryImpl(List<AbstractOAuth2Service> oauthServices) {
         this.serviceMap = new HashMap<>();
         oauthServices.forEach(oauthService ->
-            serviceMap.put(oauthService.getOauthAuthenticationProvider(), oauthService)
+            serviceMap.put(oauthService.getOAuth2AuthenticationProvider(), oauthService)
         );
     }
 

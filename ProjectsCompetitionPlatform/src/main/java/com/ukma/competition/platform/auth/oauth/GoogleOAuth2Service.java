@@ -3,7 +3,7 @@ package com.ukma.competition.platform.auth.oauth;
 import com.ukma.competition.platform.auth.JwtService;
 import com.ukma.competition.platform.auth.oauth.dto.GoogleOAuth2UserInfoDto;
 import com.ukma.competition.platform.auth.oauth.dto.GoogleOAuth2TokensRequestDto;
-import com.ukma.competition.platform.auth.oauth.dto.GoogleOAuth2TokensResponseDto;
+import com.ukma.competition.platform.auth.oauth.dto.OAuth2TokensResponseDto;
 import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import com.ukma.competition.platform.users.UserEntity;
@@ -18,9 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Service
 @Slf4j
@@ -28,11 +25,6 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
 
     final String GOOGLE_API_TOKEN_URL;
     final String GOOGLE_API_USER_INFO_BASE_URL;
-    final String GOOGLE_AUTH_PAGE_URL;
-    final String CLIENT_ID;
-    final String CLIENT_SECRET;
-    final String SCOPE;
-    final String STATE;
 
     JwtService jwtService;
     UserService userService;
@@ -40,7 +32,7 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
     public GoogleOAuth2Service(
         @Value("${oauth2.google.url.apis.token}") String GOOGLE_API_TOKEN_URL,
         @Value("${oauth2.google.url.apis.user-info}") String GOOGLE_API_USER_INFO_BASE_URL,
-        @Value("${oauth2.google.url.authPage}") String GOOGLE_API_AUTH_PAGE,
+        @Value("${oauth2.google.url.authPage}") String GOOGLE_AUTH_PAGE,
         @Value("${oauth2.google.client.id}") String CLIENT_ID,
         @Value("${oauth2.google.client.secret}") String CLIENT_SECRET,
         @Value("${oauth2.google.scope}") String SCOPE,
@@ -48,34 +40,24 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
         JwtService jwtService,
         UserService userService
     ) {
-        this.GOOGLE_API_TOKEN_URL = GOOGLE_API_TOKEN_URL;
-        this.GOOGLE_API_USER_INFO_BASE_URL = GOOGLE_API_USER_INFO_BASE_URL;
-        this.GOOGLE_AUTH_PAGE_URL = GOOGLE_API_AUTH_PAGE;
-        this.CLIENT_ID = CLIENT_ID;
-        this.CLIENT_SECRET = CLIENT_SECRET;
-        this.SCOPE = SCOPE;
-        this.STATE = STATE;
+        super(
+            GOOGLE_AUTH_PAGE,
+            CLIENT_ID,
+            CLIENT_SECRET,
+            STATE,
+            SCOPE
+        );
         this.jwtService = jwtService;
         this.userService = userService;
-    }
-
-    @Override
-    public String generateAuthenticationRedirectUrl() {
-        return "%s?client_id=%s&response_type=code&scope=%s&state=%s&redirect_uri=%s"
-            .formatted(
-                GOOGLE_AUTH_PAGE_URL,
-                CLIENT_ID,
-                URLEncoder.encode(SCOPE, StandardCharsets.UTF_8),
-                STATE,
-                URLEncoder.encode(buildApplicationRedirectUrl(), StandardCharsets.UTF_8)
-            );
+        this.GOOGLE_API_TOKEN_URL = GOOGLE_API_TOKEN_URL;
+        this.GOOGLE_API_USER_INFO_BASE_URL = GOOGLE_API_USER_INFO_BASE_URL;
     }
 
     @Override
     public Cookie authenticationCallback(String code) {
         try {
-            log.info("Starting the processing of OAuth2 callback for provider {}", this.getOauthAuthenticationProvider());
-            GoogleOAuth2TokensResponseDto tokensResponseDto = requestGoogleTokens(code);
+            log.info("Starting the processing of OAuth2 callback for provider {}", this.getOAuth2AuthenticationProvider());
+            OAuth2TokensResponseDto tokensResponseDto = requestGoogleTokens(code);
             GoogleOAuth2UserInfoDto userInfoFromResourceServer = getUserInfoFromResourceServer(tokensResponseDto.getAccessToken());
 
             validateUserInfo(userInfoFromResourceServer);
@@ -86,7 +68,7 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
                 userCheck = UserEntity.builder()
                     .email(userInfoFromResourceServer.getEmail())
                     .fullName(userInfoFromResourceServer.getName())
-                    .authenticationProvider(this.getOauthAuthenticationProvider())
+                    .authenticationProvider(this.getOAuth2AuthenticationProvider())
                     .build();
                 if (userInfoFromResourceServer.getPicture() != null) {
                     ImageEntity image = ImageEntity.builder()
@@ -99,12 +81,12 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
 
             return this.jwtService.generateTokenWithCookie(userCheck);
         } catch (Exception exception) {
-            log.error("Failed an attempt to authorize user through OAuth2 provider {}", this.getOauthAuthenticationProvider());
+            log.error("Failed an attempt to authorize user through OAuth2 provider {}", this.getOAuth2AuthenticationProvider());
             throw new AuthenticationException("Some error occurred during Google authentication", exception);
         }
     }
 
-    private GoogleOAuth2TokensResponseDto requestGoogleTokens(String code) {
+    private OAuth2TokensResponseDto requestGoogleTokens(String code) {
         RestClient restClient = RestClient.create();
         GoogleOAuth2TokensRequestDto googleOAuth2RequestTokensDto = GoogleOAuth2TokensRequestDto.builder()
             .clientId(this.CLIENT_ID)
@@ -115,21 +97,20 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
             .build();
 
         return restClient.post()
-            .uri(GOOGLE_API_TOKEN_URL + "/token")
+            .uri(GOOGLE_API_TOKEN_URL)
             .body(googleOAuth2RequestTokensDto)
             .retrieve()
-            .body(GoogleOAuth2TokensResponseDto.class);
+            .body(OAuth2TokensResponseDto.class);
     }
 
     private GoogleOAuth2UserInfoDto getUserInfoFromResourceServer(String accessToken) {
         RestClient restClient = RestClient.create();
-        GoogleOAuth2UserInfoDto userInfo = restClient.get()
+
+        return restClient.get()
             .uri(GOOGLE_API_USER_INFO_BASE_URL + "/userinfo")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .retrieve()
             .body(GoogleOAuth2UserInfoDto.class);
-
-        return userInfo;
     }
 
     private void validateUserInfo(GoogleOAuth2UserInfoDto googleUserInfoDto) {
@@ -139,7 +120,7 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
     }
 
     @Override
-    public AuthenticationProvider getOauthAuthenticationProvider() {
+    public AuthenticationProvider getOAuth2AuthenticationProvider() {
         return AuthenticationProvider.GOOGLE;
     }
 }

@@ -25,12 +25,12 @@ public class JwtService {
     @Value("${jwt.expiration.duration.refresh}")
     Duration JWT_REFRESH_TOKEN_EXPIRATION_DURATION;
 
-    AuthenticaionKeyProvider keyProvider;
+    AuthenticationKeyProvider keyProvider;
 
     @Value("${spring.security.access.token.name}")
     String ACCESS_TOKEN_NAME;
 
-    public JwtService(AuthenticaionKeyProvider keyProvider) {
+    public JwtService(AuthenticationKeyProvider keyProvider) {
         this.keyProvider = keyProvider;
     }
 
