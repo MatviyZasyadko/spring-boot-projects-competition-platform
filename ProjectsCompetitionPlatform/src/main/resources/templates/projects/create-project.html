@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <body class="bg-gray-50">
-<header th:replace="layout/header :: header"></header>
+<header th:replace="~{layout/header :: header}"></header>
 
 <main class="custom-container">
     <section class="page-block">
@@ -104,6 +104,6 @@
     </section>
 </main>
 
-<footer th:replace="layout/footer :: footer"></footer>
+<footer th:replace="~{layout/footer :: footer}"></footer>
 </body>
 </html>
