@@ -11,7 +11,7 @@
     <script th:src="@{/observer.js}"></script>
 </head>
 <body class="bg-gray-50">
-<header th:replace="layout/header :: header"></header>
+<header th:replace="~{layout/header :: header}"></header>
 <main class="custom-container">
     <div>
         <div class="page-block flex flex-col md:flex-row gap-18 justify-center items-center">
@@ -141,6 +141,6 @@
     </div>
 </main>
 
-<footer th:replace="layout/footer :: footer"></footer>
+<footer th:replace="~{layout/footer :: footer}"></footer>
 </body>
 </html>

@@ -120,7 +120,7 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
         response.addCookie(this.authenticationService.logout());
-        return EndpointConstants.LOGIN_PAGE_ENDPOINT;
+        return "redirect:" + EndpointConstants.LOGIN_PAGE_ENDPOINT;
     }
 
     @GetMapping("/main")

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <body class="bg-gray-50">
-<header th:replace="layout/header :: header"></header>
+<header th:replace="~{layout/header :: header}"></header>
 <main class="custom-container">
     <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">All projects</h2>
     <div class="mt-8 flex justify-between items-center gap-2 px-4">
@@ -64,6 +64,6 @@
         </div>
     </div>
 </main>
-<footer th:replace="layout/footer :: footer"></footer>
+<footer th:replace="~{layout/footer :: footer}"></footer>
 </body>
 </html>
