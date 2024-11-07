@@ -1,10 +1,10 @@
 package com.ukma.competition.platform.shared.exception;
 
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,11 +13,10 @@ import java.nio.file.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-
 @Aspect
 @Component
 public class ExceptionHandlingAspect {
-    private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlingAspect.class);
+    private static final Logger logger = LogManager.getLogger(ExceptionHandlingAspect.class);
 
     @Value("${log.file.path}")
     private String LOG_FILE_PATH;
@@ -26,8 +25,9 @@ public class ExceptionHandlingAspect {
     public void handleExceptionPointcut() {}
 
     @AfterThrowing(pointcut = "handleExceptionPointcut()", throwing = "ex")
-    public void logAfterThrowingException(Exception ex) {
-        logger.error("Exception occurred with @HandleExceptions annotated method: ", ex);
+    public void logAfterThrowingException(JoinPoint joinPoint, Exception ex) {
+        String methodName = joinPoint.getSignature().toShortString();
+        logger.error("Exception occurred in method " + methodName + " with @HandleExceptions annotation: ", ex);
         fileLogging(ex);
     }
 
@@ -41,7 +41,15 @@ public class ExceptionHandlingAspect {
 
         Path logFilePath = Paths.get(LOG_FILE_PATH);
 
-        try (BufferedWriter writer = Files.newBufferedWriter(logFilePath, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND)) {
+        try {
+            if (!Files.exists(logFilePath.getParent())) {
+                Files.createDirectories(logFilePath.getParent());
+            }
+        } catch (IOException ioEx) {
+            logger.error("Failed to create log directory", ioEx);
+        }
+
+        try (BufferedWriter writer = Files.newBufferedWriter(logFilePath, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
             writer.write(exceptionMessage);
             logger.info("Exception written to file: " + logFilePath.toAbsolutePath());
         } catch (IOException ioEx) {
