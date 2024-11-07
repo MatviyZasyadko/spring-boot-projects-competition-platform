@@ -1,6 +1,7 @@
 package com.ukma.competition.platform.auth.oauth;
 
 import com.ukma.competition.platform.auth.EndpointConstants;
+import com.ukma.competition.platform.shared.annotations.PerformanceTracker;
 import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

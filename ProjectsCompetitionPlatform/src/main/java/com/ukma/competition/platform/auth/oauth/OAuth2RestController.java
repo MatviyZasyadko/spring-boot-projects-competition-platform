@@ -1,6 +1,7 @@
 package com.ukma.competition.platform.auth.oauth;
 
 import com.ukma.competition.platform.auth.EndpointConstants;
+import com.ukma.competition.platform.shared.annotations.PerformanceTracker;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -26,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
+@PerformanceTracker
 public class OAuth2RestController {
 
     OAuth2ServiceFactory oAuthServiceFactory;
@@ -56,21 +58,16 @@ public class OAuth2RestController {
         String code,
         HttpServletResponse response
     ) throws IOException {
-        try {
-            Cookie accessTokenCookie = oAuthServiceFactory.get(AuthenticationProvider.valueOf(provider.toUpperCase()))
-                .authenticationCallback(code);
-            response.addCookie(accessTokenCookie);
-            response.sendRedirect(EndpointConstants.getContextPath() + "/ui/main");
-        } catch (Exception exception) {
-            log.error("Error occurred while processing OAuth2 callback!", exception);
-            response.sendRedirect(buildExceptionOAuthRedirectUrl().toString());
-        }
+        Cookie accessTokenCookie = oAuthServiceFactory.get(AuthenticationProvider.valueOf(provider.toUpperCase()))
+            .authenticationCallback(code);
+        response.addCookie(accessTokenCookie);
+        response.sendRedirect(EndpointConstants.getContextPath() + "/ui/main");
     }
 
     private URI buildExceptionOAuthRedirectUrl() {
         return URI.create(EndpointConstants.getContextPath()
                           + EndpointConstants.LOGIN_PAGE_ENDPOINT
-                          + "?oauth_error="
+                          + "?error="
                           + URLEncoder.encode("Error occurred during OAuth2 authorization", StandardCharsets.UTF_8)
         );
     }

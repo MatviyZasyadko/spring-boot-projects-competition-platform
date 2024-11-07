@@ -3,21 +3,18 @@ package com.ukma.competition.platform.shared;
 import com.ukma.competition.platform.shared.dto.exception.ExceptionDto;
 import com.ukma.competition.platform.shared.dto.exception.FileEmptyExceptionDto;
 import com.ukma.competition.platform.shared.dto.exception.ValidationFailDto;
+import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import com.ukma.competition.platform.shared.exception.FileEmptyException;
 import com.ukma.competition.platform.shared.exception.ImageNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -61,5 +58,10 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(NoSuchElementException.class)
     public String noSuchElementExceptionHandler(NoSuchElementException exception) {
         return "not-found";
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public String noSuchElementExceptionHandler(AuthenticationException exception) {
+        return "redirect:/ui-login?error=" + exception.getMessage();
     }
 }

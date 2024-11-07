@@ -27,12 +27,11 @@ public class AuthenticationLimiterAspect {
 
     public AuthenticationLimiterAspect() {
         this.methodsCallsAmountMap = new ConcurrentHashMap<>();
-        this.METHOD_CALL_LIMIT_VALUE = 100;
+        this.METHOD_CALL_LIMIT_VALUE = 5;
     }
 
     @Pointcut("within(com.ukma.competition.platform.auth.AuthenticationService+)")
-    public void authenticationServicePointCut() {
-    }
+    public void authenticationServicePointCut() {}
 
     @Before("authenticationServicePointCut()")
     public void limitAuthenticationMethodsCalls(JoinPoint joinPoint) {
