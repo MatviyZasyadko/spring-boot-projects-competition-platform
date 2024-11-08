@@ -37,8 +37,8 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
         this.cloudinaryService = cloudinaryService;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void saveFromDto(ProjectCreateDto projectCreateDto, String userEmail) throws IOException {
         UserEntity projectCreator = userService.findByEmail(userEmail).orElseThrow();
         ProjectEntity project = ProjectEntity.builder()

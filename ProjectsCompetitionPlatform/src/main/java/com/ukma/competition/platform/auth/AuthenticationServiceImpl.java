@@ -3,6 +3,7 @@ package com.ukma.competition.platform.auth;
 import com.ukma.competition.platform.auth.dto.LoginRequestDto;
 import com.ukma.competition.platform.auth.dto.RegistrationRequestDto;
 import com.ukma.competition.platform.auth.oauth.AuthenticationProvider;
+import com.ukma.competition.platform.shared.constants.AppConstants;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserRepository;
@@ -18,16 +19,14 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    final JwtService jwtService;
-    final UserRepository userRepository;
-    final PasswordEncoder passwordEncoder;
+    JwtService jwtService;
+    UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
 
-    @Value("${spring.security.access.token.name}")
-    String ACCESS_TOKEN_NAME;
 
     public Cookie login(LoginRequestDto authDto) {
         UserEntity userCheck = userRepository.findByEmail(authDto.getEmail()).orElse(null);
@@ -59,7 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Cookie logout() {
-        Cookie resetAccessTokenCookie = new Cookie(ACCESS_TOKEN_NAME, "");
+        Cookie resetAccessTokenCookie = new Cookie(AppConstants.ACCESS_TOKEN_NAME, "");
         resetAccessTokenCookie.setHttpOnly(true);
         resetAccessTokenCookie.setSecure(true);
         resetAccessTokenCookie.setMaxAge(0);

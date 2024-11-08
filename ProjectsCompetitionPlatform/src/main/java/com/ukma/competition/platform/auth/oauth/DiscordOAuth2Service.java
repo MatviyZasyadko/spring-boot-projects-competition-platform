@@ -30,17 +30,16 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
     final String AVATARS_URL;
 
     JwtService jwtService;
-    UserService userService;
 
     public DiscordOAuth2Service(
-        @Value("${oauth2.discord.url.apis.token}") String DISCORD_API_TOKEN_URL,
-        @Value("${oauth2.discord.url.apis.user-info}") String DISCORD_API_USER_INFO,
-        @Value("${oauth2.discord.url.authPage}") String DISCORD_AUTH_PAGE_URL,
-        @Value("${oauth2.discord.client.id}") String CLIENT_ID,
-        @Value("${oauth2.discord.client.secret}") String CLIENT_SECRET,
-        @Value("${oauth2.discord.scope}") String SCOPE,
+        @Value("${oauth2.provider.discord.url.apis.token}") String DISCORD_API_TOKEN_URL,
+        @Value("${oauth2.provider.discord.url.apis.user-info}") String DISCORD_API_USER_INFO,
+        @Value("${oauth2.provider.discord.url.authPage}") String DISCORD_AUTH_PAGE_URL,
+        @Value("${oauth2.provider.discord.client.id}") String CLIENT_ID,
+        @Value("${oauth2.provider.discord.client.secret}") String CLIENT_SECRET,
+        @Value("${oauth2.provider.discord.scope}") String SCOPE,
         @Value("${oauth2.state}") String STATE,
-        @Value("oauth2.discord.avatars.url") String AVATARS_URL,
+        @Value("oauth2.provider.discord.avatars.url") String AVATARS_URL,
         JwtService jwtService,
         UserService userService
     ) {
@@ -49,32 +48,22 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
             CLIENT_ID,
             CLIENT_SECRET,
             STATE,
-            SCOPE
+            SCOPE,
+            userService,
+            jwtService
         );
         this.DISCORD_API_TOKEN_URL = DISCORD_API_TOKEN_URL;
         this.DISCORD_API_USER_INFO = DISCORD_API_USER_INFO;
         this.AVATARS_URL = AVATARS_URL;
-        this.jwtService = jwtService;
-        this.userService = userService;
     }
 
     @Override
-    public Cookie authenticationCallback(String code) {
-        OAuth2TokensResponseDto tokensResponseDto = requestDiscordOAuth2Tokens(code);
-        DiscordOAuth2UserInfoDto userInfoDto = requestDiscordOAuth2UserInfo(tokensResponseDto.getAccessToken());
-
-        if (StringUtils.isBlank(userInfoDto.getEmail())) {
-            String errorMessage = "Can't authenticate discord user without email";
-            log.error(errorMessage);
-            throw new AuthenticationException(errorMessage);
-        }
-
-        UserEntity user = getUserEntityByOAuth2UserInfo(userInfoDto);
-
-        return this.jwtService.generateTokenWithCookie(user);
+    public AuthenticationProvider getOAuth2AuthenticationProvider() {
+        return AuthenticationProvider.DISCORD;
     }
 
-    private OAuth2TokensResponseDto requestDiscordOAuth2Tokens(String code) {
+    @Override
+    public OAuth2TokensResponseDto requestOAuth2Tokens(String code) {
         RestClient restClient = RestClient.create();
 
         return restClient.post()
@@ -86,7 +75,8 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
             .body(OAuth2TokensResponseDto.class);
     }
 
-    private DiscordOAuth2UserInfoDto requestDiscordOAuth2UserInfo(String accessToken) {
+    @Override
+    public OAuth2UserInfo getUserInfoFromResourceServer(String accessToken) {
         RestClient restClient = RestClient.create();
 
         return restClient.get()
@@ -104,33 +94,5 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
             add("code", code);
             add("redirect_uri", buildApplicationRedirectUrl());
         }};
-    }
-
-    private UserEntity getUserEntityByOAuth2UserInfo(DiscordOAuth2UserInfoDto userInfoDto) {
-        UserEntity userCheck = userService.findByEmail(userInfoDto.getEmail()).orElse(null);
-
-        if (userCheck == null) {
-            userCheck = UserEntity.builder()
-                .email(userInfoDto.getEmail())
-                .fullName(userInfoDto.getUsername())
-                .authenticationProvider(this.getOAuth2AuthenticationProvider())
-                .build();
-            if (userInfoDto.getAvatar() != null) {
-                String imageUrl = AVATARS_URL + userInfoDto.getId() + "/" + userInfoDto.getAvatar();
-                ImageEntity image = ImageEntity.builder()
-                    .url(imageUrl)
-                    .isMain(true)
-                    .build();
-                userCheck.addImage(image);
-            }
-            userService.save(userCheck);
-        }
-
-        return userCheck;
-    }
-
-    @Override
-    public AuthenticationProvider getOAuth2AuthenticationProvider() {
-        return AuthenticationProvider.DISCORD;
     }
 }

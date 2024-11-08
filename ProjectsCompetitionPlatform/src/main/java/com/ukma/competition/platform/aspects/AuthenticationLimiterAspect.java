@@ -27,7 +27,7 @@ public class AuthenticationLimiterAspect {
 
     public AuthenticationLimiterAspect() {
         this.methodsCallsAmountMap = new ConcurrentHashMap<>();
-        this.METHOD_CALL_LIMIT_VALUE = 5;
+        this.METHOD_CALL_LIMIT_VALUE = 1000;
     }
 
     @Pointcut("within(com.ukma.competition.platform.auth.AuthenticationService+)")

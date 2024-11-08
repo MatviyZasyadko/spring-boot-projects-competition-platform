@@ -1,8 +1,10 @@
 package com.ukma.competition.platform.auth.oauth;
 
+import com.ukma.competition.platform.auth.CookieService;
 import com.ukma.competition.platform.auth.EndpointConstants;
+import com.ukma.competition.platform.auth.JwtService;
 import com.ukma.competition.platform.shared.annotations.PerformanceTracker;
-import jakarta.servlet.http.Cookie;
+import com.ukma.competition.platform.shared.constants.AppConstants;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,8 @@ import java.nio.charset.StandardCharsets;
 public class OAuth2RestController {
 
     OAuth2ServiceFactory oAuthServiceFactory;
+    CookieService cookieService;
+    JwtService jwtService;
 
     @GetMapping("/redirect/{provider}")
     public ResponseEntity<Void> redirectToAuthPage(
@@ -58,9 +62,11 @@ public class OAuth2RestController {
         String code,
         HttpServletResponse response
     ) throws IOException {
-        Cookie accessTokenCookie = oAuthServiceFactory.get(AuthenticationProvider.valueOf(provider.toUpperCase()))
+        String accessToken = oAuthServiceFactory.get(AuthenticationProvider.valueOf(provider.toUpperCase()))
             .authenticationCallback(code);
-        response.addCookie(accessTokenCookie);
+        response.addCookie(
+            cookieService.generateSecuredHttpOnlyCookie(AppConstants.ACCESS_TOKEN_NAME, accessToken, this.jwtService.JWT_ACCESS_TOKEN_EXPIRATION_DURATION)
+        );
         response.sendRedirect(EndpointConstants.getContextPath() + "/ui/main");
     }
 
@@ -71,5 +77,4 @@ public class OAuth2RestController {
                           + URLEncoder.encode("Error occurred during OAuth2 authorization", StandardCharsets.UTF_8)
         );
     }
-
 }

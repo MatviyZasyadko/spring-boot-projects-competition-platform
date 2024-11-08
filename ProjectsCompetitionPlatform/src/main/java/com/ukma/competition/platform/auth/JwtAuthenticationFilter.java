@@ -1,5 +1,6 @@
 package com.ukma.competition.platform.auth;
 
+import com.ukma.competition.platform.shared.constants.AppConstants;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserRole;
 import io.jsonwebtoken.Claims;
@@ -34,9 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     JwtService jwtService;
 
-    @Value("${spring.security.access.token.name}")
-    String ACCESS_TOKEN_NAME;
-
     public JwtAuthenticationFilter(JwtService jwtService) {
         this.jwtService = jwtService;
     }
@@ -54,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         if (request.getCookies() != null) {
             Cookie accessTokenCookie = Arrays.stream(request.getCookies())
-                .filter(item -> item.getName().contains(ACCESS_TOKEN_NAME))
+                .filter(item -> item.getName().contains(AppConstants.ACCESS_TOKEN_NAME))
                 .findFirst()
                 .orElse(null);
             if (accessTokenCookie != null) {
