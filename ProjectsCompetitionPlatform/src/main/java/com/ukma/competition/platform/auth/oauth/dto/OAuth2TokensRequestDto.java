@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Getter
 @Builder
-public class GoogleOAuth2TokensRequestDto {
+public class OAuth2TokensRequestDto {
 
     String code;
 

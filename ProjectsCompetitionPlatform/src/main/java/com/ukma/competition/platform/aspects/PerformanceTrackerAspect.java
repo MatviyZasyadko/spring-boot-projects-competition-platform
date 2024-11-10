@@ -30,8 +30,7 @@ public class PerformanceTrackerAspect {
     }
 
     @Pointcut("publicMethod() && beanAnnotatedWithPerformanceTracker()")
-    public void publicMethodInsideAClassMarkedWithAtMonitor() {
-    }
+    public void publicMethodInsideAClassMarkedWithAtMonitor() {}
 
     @Around("publicMethodInsideAClassMarkedWithAtMonitor()")
     public Object methodPerformancePointCut(ProceedingJoinPoint pjp) throws Throwable {

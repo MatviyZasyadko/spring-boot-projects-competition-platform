@@ -23,7 +23,6 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-
 @RestController
 @RequestMapping("/api/oauth")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -43,7 +42,7 @@ public class OAuth2RestController {
     ) {
         try {
             String redirectUrl = oAuthServiceFactory.get(AuthenticationProvider.valueOf(provider.toUpperCase()))
-                .generateAuthenticationRedirectUrl();
+                .buildAuthenticationRedirectUrl();
             return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(redirectUrl))
                 .build();

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -72,13 +73,13 @@ public class AuthenticationController {
     @GetMapping("/login")
     public String loginPage(
         Model model,
-        @RequestParam(value = "oauth_error", required = false)
+        @RequestParam(value = "error", required = false)
         String oauthError
     ) {
         if (model.asMap().isEmpty()) {
             model.addAttribute("authDto", new LoginRequestDto());
             if (oauthError != null) {
-                model.addAttribute("oauth_error", oauthError);
+                model.addAttribute("error", oauthError);
             }
         }
         return "auth/login";
@@ -128,6 +129,7 @@ public class AuthenticationController {
         return "main";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin-page")
     public String adminPage() {
         return "admin-page";

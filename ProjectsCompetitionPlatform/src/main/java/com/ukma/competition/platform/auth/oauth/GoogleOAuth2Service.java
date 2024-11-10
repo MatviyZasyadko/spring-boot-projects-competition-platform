@@ -2,7 +2,7 @@ package com.ukma.competition.platform.auth.oauth;
 
 import com.ukma.competition.platform.auth.JwtService;
 import com.ukma.competition.platform.auth.oauth.dto.GoogleOAuth2UserInfoDto;
-import com.ukma.competition.platform.auth.oauth.dto.GoogleOAuth2TokensRequestDto;
+import com.ukma.competition.platform.auth.oauth.dto.OAuth2TokensRequestDto;
 import com.ukma.competition.platform.auth.oauth.dto.OAuth2TokensResponseDto;
 import com.ukma.competition.platform.users.UserService;
 import lombok.AccessLevel;
@@ -22,13 +22,13 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
     final String GOOGLE_API_USER_INFO_BASE_URL;
 
     public GoogleOAuth2Service(
-        @Value("${oauth2.provider.google.url.apis.token}") String GOOGLE_API_TOKEN_URL,
+        @Value("${oauth2.provider.google.url.apis.token}") String GOOGLE_API_TOKEN_BASE_URL,
         @Value("${oauth2.provider.google.url.apis.user-info}") String GOOGLE_API_USER_INFO_BASE_URL,
         @Value("${oauth2.provider.google.url.authPage}") String GOOGLE_AUTH_PAGE,
         @Value("${oauth2.provider.google.client.id}") String CLIENT_ID,
         @Value("${oauth2.provider.google.client.secret}") String CLIENT_SECRET,
         @Value("${oauth2.provider.google.scope}") String SCOPE,
-        @Value("${oauth2.provider.state}") String STATE,
+        @Value("${oauth2.state}") String STATE,
         JwtService jwtService,
         UserService userService
     ) {
@@ -41,7 +41,7 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
             userService,
             jwtService
         );
-        this.GOOGLE_API_TOKEN_URL = GOOGLE_API_TOKEN_URL;
+        this.GOOGLE_API_TOKEN_URL = GOOGLE_API_TOKEN_BASE_URL;
         this.GOOGLE_API_USER_INFO_BASE_URL = GOOGLE_API_USER_INFO_BASE_URL;
     }
 
@@ -59,7 +59,7 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
     @Override
     public OAuth2TokensResponseDto requestOAuth2Tokens(String code) {
         RestClient restClient = RestClient.create();
-        GoogleOAuth2TokensRequestDto googleOAuth2RequestTokensDto = GoogleOAuth2TokensRequestDto.builder()
+        OAuth2TokensRequestDto googleOAuth2RequestTokensDto = OAuth2TokensRequestDto.builder()
             .clientId(this.CLIENT_ID)
             .clientSecret(this.CLIENT_SECRET)
             .redirectUri(buildApplicationRedirectUrl())

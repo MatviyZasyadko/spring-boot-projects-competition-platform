@@ -62,6 +62,6 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(AuthenticationException.class)
     public String noSuchElementExceptionHandler(AuthenticationException exception) {
-        return "redirect:/ui-login?error=" + exception.getMessage();
+        return "redirect:/ui/login?error=" + exception.getMessage();
     }
 }

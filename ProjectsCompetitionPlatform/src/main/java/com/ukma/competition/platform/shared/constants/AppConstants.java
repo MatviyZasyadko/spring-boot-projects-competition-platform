@@ -14,7 +14,7 @@ public class AppConstants {
     private AppConstants() {}
 
 
-    @Value("${oauth2.discord.avatars.url}")
+    @Value("${oauth2.provider.discord.url.avatars}")
     public void setDiscordAvatarBaseUrl(String value) {
         DISCORD_AVATAR_BASE_URL = value;
     }

@@ -1,6 +1,5 @@
 package com.ukma.competition.platform.projects;
 
-import com.ukma.competition.platform.auth.dto.LoginRequestDto;
 import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

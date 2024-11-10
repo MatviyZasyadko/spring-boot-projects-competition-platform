@@ -36,10 +36,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> {
                 EndpointConstants.PUBLIC_ENDPOINTS.forEach(endpoint -> requests.requestMatchers(endpoint).permitAll());
-                requests.requestMatchers("/ui/main").authenticated();
-                requests.requestMatchers("/ui/admin-page").hasRole(UserRole.ADMIN.toString());
+                requests.requestMatchers("/ui/**").authenticated();
                 requests.requestMatchers("/api/**").authenticated();
-                requests.anyRequest().authenticated();
+                requests.anyRequest().permitAll();
             })
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

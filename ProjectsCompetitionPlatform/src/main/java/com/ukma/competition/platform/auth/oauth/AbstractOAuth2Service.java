@@ -53,7 +53,7 @@ public abstract class AbstractOAuth2Service {
 
     public abstract OAuth2UserInfo getUserInfoFromResourceServer(String accessToken);
 
-    public String generateAuthenticationRedirectUrl() {
+    public String buildAuthenticationRedirectUrl() {
         return "%s?client_id=%s&response_type=code&scope=%s&state=%s&redirect_uri=%s"
             .formatted(
                 EXTERNAL_AUTH_PAGE,
@@ -92,7 +92,7 @@ public abstract class AbstractOAuth2Service {
             return this.jwtService.generateTokenFromUser(userCheck);
         } catch (Exception exception) {
             log.error("Failed an attempt to authorize user through OAuth2 provider {}", this.getOAuth2AuthenticationProvider());
-            throw new AuthenticationException("Some error occurred during OAuth2 authentication", exception);
+            throw new AuthenticationException("Some error occurred during OAuth2 authorization", exception);
         }
     }
 
