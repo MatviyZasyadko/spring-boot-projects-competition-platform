@@ -13,11 +13,19 @@
         <CustomFileAppender name="EXPERIMENTAL_APPENDER" filePath="logs/experimental_logs.log">
             <PatternLayout pattern="EXPERIMENTAL %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c{1} - %m%n"/>
         </CustomFileAppender>
+
+        <CustomFileAppender name="STATISTICS_APPENDER" filePath="logs/statistics.log">
+            <PatternLayout pattern="STATISTICS %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c{1} - %m%n"/>
+        </CustomFileAppender>
     </Appenders>
 
     <Loggers>
         <Logger name="com.ukma.competition.platform.images" level="DEBUG" additivity="true">
             <AppenderRef ref="EXPERIMENTAL_APPENDER"/>
+        </Logger>
+
+        <Logger name="com.ukma.competition.platform.statistics" level="INFO" additivity="true">
+            <AppenderRef ref="STATISTICS_APPENDER"/>
         </Logger>
 
         <Logger name="com.ukma.competition.platform" level="INFO" additivity="false">

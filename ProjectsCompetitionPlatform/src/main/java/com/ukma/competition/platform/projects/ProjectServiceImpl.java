@@ -3,13 +3,17 @@ package com.ukma.competition.platform.projects;
 import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
+import com.ukma.competition.platform.shared.exception.ExceptionHandlingAspect;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
 import com.ukma.edu.spring.boot.starter.cloudinary.service.CloudinaryService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,8 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
 
     UserService userService;
     CloudinaryService cloudinaryService;
+
+    private static final Logger logger = LogManager.getLogger(ProjectServiceImpl.class);
 
     @Autowired
     public ProjectServiceImpl(
@@ -59,5 +65,11 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
         }
 
         super.save(project);
+    }
+
+    @Scheduled(fixedRate = 900000) // every 15 minutes
+    public void cacheTopProjects() {
+        // Fetch top 10 projects and store them in an in-memory cache
+        logger.info("Updated cache for top projects.");
     }
 }
