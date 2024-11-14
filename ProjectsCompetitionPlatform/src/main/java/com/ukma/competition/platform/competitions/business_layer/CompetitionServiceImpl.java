@@ -9,12 +9,17 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 @Component
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -31,7 +36,10 @@ public class CompetitionServiceImpl implements CompetitionService {
         this.competitionProperties = competitionProperties;
     }
 
-    @HandleExceptions
+    @Caching(evict = {
+            @CacheEvict(value = "competitions", key = "#id"),
+            @CacheEvict(value = "competitionsList", allEntries = true)
+    })
     public Competition updateById(String id, Competition competition) {
         Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(id);
 
@@ -57,7 +65,6 @@ public class CompetitionServiceImpl implements CompetitionService {
         return currentProjects < competitionProperties.getMaxProjects();
     }
 
-    @HandleExceptions
     public Competition addProjectToCompetition(String competitionId, ProjectEntity project) {
         Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(competitionId);
 
@@ -122,6 +129,10 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "competitions", key = "#competition.id"),
+            @CacheEvict(value = "competitionsList", allEntries = true)
+    })
     public Competition save(Competition competition) {
         CompetitionEntity competitionEntity = convertCompetitionToEntity(competition);
         CompetitionEntity savedEntity = competitionRepository.saveAndFlush(competitionEntity);
@@ -129,6 +140,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    @Cacheable("competitionsList")
     public List<Competition> findAll() {
         Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
 
@@ -142,6 +154,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    @Cacheable(value = "competitions", key = "#id")
     public Optional<Competition> findById(String id) {
         Optional<CompetitionEntity> competitionEntity = competitionRepository.findById(id);
 
@@ -159,6 +172,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    @CacheEvict(value = "competitions", key = "#id")
     public void deleteById(String id) {
         competitionRepository.deleteById(id);
     }

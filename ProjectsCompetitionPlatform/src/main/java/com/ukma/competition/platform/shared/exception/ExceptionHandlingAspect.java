@@ -18,10 +18,10 @@ import java.time.format.DateTimeFormatter;
 public class ExceptionHandlingAspect {
     private static final Logger logger = LogManager.getLogger(ExceptionHandlingAspect.class);
 
-   // @Value("${log.file.path}")
-    private String LOG_FILE_PATH = "";
+    @Value("${log.file.path}")
+    private String LOG_FILE_PATH;
 
-    @Pointcut("@annotation(com.ukma.competition.platform.shared.exception.HandleExceptions)")
+    @Pointcut("within(@org.springframework.stereotype.Service *)")
     public void handleExceptionPointcut() {}
 
     @AfterThrowing(pointcut = "handleExceptionPointcut()", throwing = "ex")
