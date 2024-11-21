@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,6 +75,7 @@ public class ImageServiceImpl extends GenericServiceImpl<ImageEntity, String, Im
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("images")
     public ImageResponseDto findByIdAsDto(String id) {
         return super.findById(id).map(this::convertImageToDto)
             .orElseThrow(() -> new ImageNotFoundException("Image is not found!", id));

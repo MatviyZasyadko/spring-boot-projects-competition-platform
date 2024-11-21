@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,7 +48,7 @@ public class ProjectController {
         BindingResult bindingResult,
         RedirectAttributes redirectAttributes,
         @AuthenticationPrincipal UserDetails userDetails
-    ) throws IOException {
+    ) {
         if (projectCreateDto == null || bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute(
                 "org.springframework.validation.BindingResult.projectCreateDto",
@@ -56,7 +57,13 @@ public class ProjectController {
             return "redirect:/ui/projects/create";
         }
 
-        projectService.saveFromDto(projectCreateDto, userDetails.getUsername());
+        try {
+            projectService.saveFromDto(projectCreateDto, userDetails.getUsername());
+        } catch (Exception exception) {
+            ObjectError error = new ObjectError("globalError", exception.getMessage());
+            bindingResult.addError(error);
+            return "redirect:/ui/projects/create";
+        }
 
         return "redirect:/ui/projects";
     }

@@ -1,13 +1,14 @@
 package com.ukma.competition.platform.auth;
 
 import com.ukma.competition.platform.shared.constants.AppConstants;
+import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import com.ukma.competition.platform.users.UserEntity;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-@FieldDefaults(level = AccessLevel.PUBLIC, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
 public class JwtService {
 
-    @Value("${jwt.expiration.duration.access}")
     Duration JWT_ACCESS_TOKEN_EXPIRATION_DURATION;
-
-    @Value("${jwt.expiration.duration.refresh}")
     Duration JWT_REFRESH_TOKEN_EXPIRATION_DURATION;
-
     AuthenticationKeyProvider keyProvider;
 
     public JwtService(
@@ -108,5 +105,9 @@ public class JwtService {
         accessTokenCookie.setDomain("localhost");
 
         return accessTokenCookie;
+    }
+
+    public Duration getJwtAccessTokenExpirationDuration() {
+        return JWT_ACCESS_TOKEN_EXPIRATION_DURATION;
     }
 }

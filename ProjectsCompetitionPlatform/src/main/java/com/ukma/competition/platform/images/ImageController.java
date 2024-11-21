@@ -19,6 +19,9 @@ import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -150,6 +153,7 @@ public class ImageController {
     )
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @CachePut(value = "images")
     public ImageResponseDto updateById(
         @PathVariable("id") String id,
         @RequestBody @Valid ImageUpdateDto imageUpdateDto
@@ -181,6 +185,7 @@ public class ImageController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
+    @CacheEvict(value = "images", allEntries = true)
     public void deleteById(@PathVariable("id") String id) {
         imageService.deleteById(id);
     }

@@ -70,7 +70,9 @@ public class ProjectsCompetitionPlatformApplication implements CommandLineRunner
             .images(
                 new ArrayList<>() {{
                     add(
-                        ImageEntity.builder().url("https://static.vecteezy.com/system/resources/previews/008/296/131/non_2x/trophy-icon-isolated-on-white-background-free-vector.jpg").isMain(true).build()
+                        ImageEntity.builder().url("https://static.vecteezy.com/system/resources/previews/008/296/131/non_2x/trophy-icon-isolated-on-white-background-free-vector.jpg")
+                            .isMain(true)
+                            .name("somename.jpg").build()
                     );
                 }}
             )
@@ -89,7 +91,10 @@ public class ProjectsCompetitionPlatformApplication implements CommandLineRunner
             .images(
                 new ArrayList<>() {{
                     add(
-                        ImageEntity.builder().url("https://voloapparel.com/cdn/shop/files/instagramlogo5_480x.jpg?v=1614245885").isMain(true).build()
+                        ImageEntity.builder().url("https://voloapparel.com/cdn/shop/files/instagramlogo5_480x.jpg?v=1614245885")
+                            .name("somename.jpg")
+                            .isMain(true)
+                            .build()
                     );
                 }}
             )
@@ -100,28 +105,27 @@ public class ProjectsCompetitionPlatformApplication implements CommandLineRunner
         admin.addProject(secondProject);
 
         CompetitionEntity competitionEntity = CompetitionEntity.builder()
-                .name("first competition")
-                .description("first competition description")
-                .beginDate(Instant.now())
-                .votingBeginDate(Instant.now())
-                .votingEndDate(Instant.MAX)
-                .hasPrizePool(false)
-                .priceDescription("price description")
-                .prizePool(0.0)
-                .build();
+            .name("first competition")
+            .description("first competition description")
+            .beginDate(Instant.now())
+            .votingBeginDate(Instant.now())
+            .votingEndDate(Instant.MAX)
+            .hasPrizePool(false)
+            .priceDescription("price description")
+            .prizePool(0.0)
+            .build();
 
         competitionRepository.saveAndFlush(competitionEntity);
-
 
 
         if (userRepository != null) {
             userRepository.save(admin);
 
             voteRepository.saveAndFlush(Vote.builder()
-                    .project(firstProject)
-                    .competitionEntity(competitionEntity)
-                    .user(admin)
-                    .build());
+                .project(firstProject)
+                .competitionEntity(competitionEntity)
+                .user(admin)
+                .build());
 
 //            List<Vote> allVotes = voteRepository.findAll();
 //            System.out.println("all votes = " + allVotes);

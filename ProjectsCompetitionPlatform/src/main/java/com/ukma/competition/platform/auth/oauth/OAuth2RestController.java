@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/api/oauth")
@@ -64,16 +62,8 @@ public class OAuth2RestController {
         String accessToken = oAuthServiceFactory.get(AuthenticationProvider.valueOf(provider.toUpperCase()))
             .authenticationCallback(code);
         response.addCookie(
-            cookieService.generateSecuredHttpOnlyCookie(AppConstants.ACCESS_TOKEN_NAME, accessToken, this.jwtService.JWT_ACCESS_TOKEN_EXPIRATION_DURATION)
+            cookieService.generateSecuredHttpOnlyCookie(AppConstants.ACCESS_TOKEN_NAME, accessToken, this.jwtService.getJwtAccessTokenExpirationDuration())
         );
         response.sendRedirect(EndpointConstants.getContextPath() + "/ui/main");
-    }
-
-    private URI buildExceptionOAuthRedirectUrl() {
-        return URI.create(EndpointConstants.getContextPath()
-                          + EndpointConstants.LOGIN_PAGE_ENDPOINT
-                          + "?error="
-                          + URLEncoder.encode("Error occurred during OAuth2 authorization", StandardCharsets.UTF_8)
-        );
     }
 }

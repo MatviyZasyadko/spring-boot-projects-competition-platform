@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "reports")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -37,6 +39,9 @@ public class ReportEntity extends IdentifiableEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     ReportStatus reportStatus;
+
+    @Column
+    Instant approveDate;
 
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)

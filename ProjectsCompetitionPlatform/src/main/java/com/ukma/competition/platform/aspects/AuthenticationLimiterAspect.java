@@ -11,8 +11,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,7 +20,7 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public class AuthenticationLimiterAspect {
 
-    final private Integer METHOD_CALL_LIMIT_VALUE;
+    final Integer METHOD_CALL_LIMIT_VALUE;
     ConcurrentMap<String, Integer> methodsCallsAmountMap;
 
     public AuthenticationLimiterAspect() {
@@ -52,7 +50,7 @@ public class AuthenticationLimiterAspect {
     }
 
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(fixedRate = 60000)
     public void resetMethodsCallsMap() {
         this.methodsCallsAmountMap = new ConcurrentHashMap<>();
     }

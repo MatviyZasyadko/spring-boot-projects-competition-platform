@@ -4,11 +4,17 @@ import com.ukma.competition.platform.shared.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class ReportServiceImpl extends GenericServiceImpl <ReportEntity, String, ReportRepository> implements ReportService {
+public class ReportServiceImpl extends GenericServiceImpl<ReportEntity, String, ReportRepository> implements ReportService {
 
     @Autowired
     public ReportServiceImpl(ReportRepository repository) {
         super(repository);
+    }
+
+    public List<ReportEntity> findAllByStatus(ReportStatus reportStatus) {
+        return repository.findAllByReportStatus(reportStatus);
     }
 }

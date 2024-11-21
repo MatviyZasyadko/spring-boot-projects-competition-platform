@@ -126,7 +126,7 @@ public class AuthenticationController {
 
     @GetMapping("/main")
     public String mainPage() {
-        return "main";
+        return "index";
     }
 
     @PreAuthorize("hasRole('ADMIN')")

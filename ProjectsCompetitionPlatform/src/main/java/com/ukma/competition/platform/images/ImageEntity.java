@@ -32,6 +32,10 @@ public class ImageEntity extends IdentifiableEntity {
     @Column(nullable = false)
     String url;
 
+    @Column(nullable = false)
+    @Builder.Default
+    String name = "image.jpg";
+
     @Column
     String publicId;
 

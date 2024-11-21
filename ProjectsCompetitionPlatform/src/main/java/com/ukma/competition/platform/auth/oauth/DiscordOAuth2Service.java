@@ -21,15 +21,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class DiscordOAuth2Service extends AbstractOAuth2Service {
 
-    final String DISCORD_API_TOKEN_URL;
-    final String DISCORD_API_USER_INFO;
-    final String AVATARS_URL;
-
-    JwtService jwtService;
+    String DISCORD_API_TOKEN_URL;
+    String DISCORD_API_USER_INFO;
 
     public DiscordOAuth2Service(
         @Value("${oauth2.provider.discord.url.apis.token}") String DISCORD_API_TOKEN_URL,
@@ -39,7 +36,7 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
         @Value("${oauth2.provider.discord.client.secret}") String CLIENT_SECRET,
         @Value("${oauth2.provider.discord.scope}") String SCOPE,
         @Value("${oauth2.state}") String STATE,
-        @Value("oauth2.provider.discord.avatars.url") String AVATARS_URL,
+        @Value("oauth2.provider.discord.url.avatars") String AVATARS_URL,
         JwtService jwtService,
         UserService userService
     ) {
@@ -54,7 +51,6 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
         );
         this.DISCORD_API_TOKEN_URL = DISCORD_API_TOKEN_URL;
         this.DISCORD_API_USER_INFO = DISCORD_API_USER_INFO;
-        this.AVATARS_URL = AVATARS_URL;
     }
 
     @Override

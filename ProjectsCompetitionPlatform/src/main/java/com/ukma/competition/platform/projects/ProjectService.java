@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface ProjectService extends GenericService<ProjectEntity, String> {
 
-    void saveFromDto(ProjectCreateDto projectCreateDto, String userEmail) throws IOException;
+    void saveFromDto(ProjectCreateDto projectCreateDto, String userEmail) throws Exception;
 }

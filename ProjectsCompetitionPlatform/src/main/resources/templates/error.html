@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Competitors - Projects</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body class="bg-gray-50">
+<header th:replace="~{layout/header :: header}"></header>
+<main class="custom-container">
+    <div class="page-block mt-4 flex flex-col justify-center items-center">
+        <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">Something went wrong...</h2>
+        <div class="mt-10">
+            <div class="flex justify-center">
+                <div class="rounded max-h-[20rem] max-w-[26rem]">
+                    <img src="/competition-image.jpg"
+                         alt="competition image"
+                         class="object-fit h-[20rem] w-[26rem] rotate-180"
+                    >
+                </div>
+            </div>
+
+            <div class="mt-10">
+                <p>There seems to be a little problem with the page you requested (<span class="font-bold"
+                                                                                         th:text="${path}"></span>).
+                </p>
+                <p>
+                    The status code is <span class="font-bold" th:text="${status}"></span>, which means that the page
+                    was
+                    <span class="font-bold" th:text="${error}"></span>.
+                </p>
+                <p class="mt-4" th:text="${'Further details: ' + message + '.'}"></p>
+                <div class="mt-4 flex justify-center">
+                    <div class="w-auto">
+                        <a class="primary-button p-2" th:href="@{/ui/main}">Back home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{layout/footer :: footer}"></footer>
+</body>
+</html>

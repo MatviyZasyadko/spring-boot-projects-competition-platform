@@ -10,9 +10,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.PathContainer;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +30,7 @@ import java.util.List;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     JwtService jwtService;
@@ -50,26 +50,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull HttpServletResponse response,
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getCookies() != null) {
-            Cookie accessTokenCookie = Arrays.stream(request.getCookies())
-                .filter(item -> item.getName().contains(AppConstants.ACCESS_TOKEN_NAME))
-                .findFirst()
-                .orElse(null);
-            if (accessTokenCookie != null) {
-                String token = accessTokenCookie.getValue();
-                Claims claims = jwtService.extractAllClaims(token);
-                UserRole role = claims.get("role") != null
-                    ? (claims.get("role").equals(UserRole.ADMIN.name()) ? UserRole.ADMIN : UserRole.USER)
-                    : UserRole.USER;
-                List<GrantedAuthority> roleList = Collections.singletonList(role);
-                UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(
-                    UserEntity.builder().email(claims.getSubject()).userRole(role).build(),
-                    null,
-                    roleList
-                );
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        try {
+            if (request.getCookies() != null) {
+                Cookie accessTokenCookie = Arrays.stream(request.getCookies())
+                    .filter(item -> item.getName().contains(AppConstants.ACCESS_TOKEN_NAME))
+                    .findFirst()
+                    .orElse(null);
+                if (accessTokenCookie != null) {
+                    String token = accessTokenCookie.getValue();
+                    Claims claims = jwtService.extractAllClaims(token);
+                    UserRole role = claims.get("role") != null
+                        ? (claims.get("role").equals(UserRole.ADMIN.name()) ? UserRole.ADMIN : UserRole.USER)
+                        : UserRole.USER;
+                    List<GrantedAuthority> roleList = Collections.singletonList(role);
+                    UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(
+                        UserEntity.builder().email(claims.getSubject()).userRole(role).build(),
+                        null,
+                        roleList
+                    );
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
+        } catch (Exception exception) {
+            log.error("Error occurred while user authentication: {}.", exception.getMessage());
         }
         filterChain.doFilter(request, response);
     }

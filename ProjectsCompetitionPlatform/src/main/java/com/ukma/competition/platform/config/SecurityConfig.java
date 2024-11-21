@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -40,6 +41,7 @@ public class SecurityConfig {
                 requests.requestMatchers("/api/**").authenticated();
                 requests.anyRequest().permitAll();
             })
+            .headers(headers -> headers.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling(handler -> handler.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(EndpointConstants.LOGIN_PAGE_ENDPOINT)))
@@ -51,7 +53,9 @@ public class SecurityConfig {
 
     @Bean
     public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy("ROLE_ADMIN > ROLE_USER");
+        return RoleHierarchyImpl.fromHierarchy(
+            UserRole.ADMIN.getAuthority() + " > " + UserRole.USER.getAuthority()
+        );
     }
 
     @Bean
