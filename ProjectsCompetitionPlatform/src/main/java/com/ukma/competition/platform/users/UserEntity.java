@@ -11,6 +11,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -29,6 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "users")
@@ -66,7 +68,7 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     @Builder.Default
     List<ProjectEntity> projects = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(
         name = "images_users",
         joinColumns = @JoinColumn(name = "user_id"),
@@ -93,5 +95,16 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     public void addProject(ProjectEntity project) {
         this.projects.add(project);
         project.setCreator(this);
+    }
+
+    public ImageEntity getLogo() {
+        return images.stream().filter(ImageEntity::getIsMain).findFirst()
+            .orElse(null);
+    }
+
+    public String getLogoUrl() {
+        return Optional.ofNullable(this.getLogo())
+            .map(ImageEntity::getUrl)
+            .orElse(null);
     }
 }

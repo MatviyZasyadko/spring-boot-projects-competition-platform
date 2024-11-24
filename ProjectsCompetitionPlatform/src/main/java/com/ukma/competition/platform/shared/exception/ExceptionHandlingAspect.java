@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import java.io.*;
 import java.nio.file.*;
 import java.time.*;
@@ -22,7 +23,8 @@ public class ExceptionHandlingAspect {
     private String LOG_FILE_PATH;
 
     @Pointcut("within(@org.springframework.stereotype.Service *)")
-    public void handleExceptionPointcut() {}
+    public void handleExceptionPointcut() {
+    }
 
     @AfterThrowing(pointcut = "handleExceptionPointcut()", throwing = "ex")
     public void logAfterThrowingException(JoinPoint joinPoint, Exception ex) {
@@ -33,10 +35,10 @@ public class ExceptionHandlingAspect {
 
     private void fileLogging(Exception ex) {
         String exceptionMessage = String.format(
-                "[%s] Exception: %s%nStacktrace:%n%s%n%n",
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                ex.getMessage(),
-                getStackTraceAsString(ex)
+            "[%s] Exception: %s%nStacktrace:%n%s%n%n",
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+            ex.getMessage(),
+            getStackTraceAsString(ex)
         );
 
         Path logFilePath = Paths.get(LOG_FILE_PATH);

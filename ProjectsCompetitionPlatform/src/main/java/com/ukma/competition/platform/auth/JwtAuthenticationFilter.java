@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.PathContainer;
@@ -17,6 +18,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,19 +27,16 @@ import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     JwtService jwtService;
-
-    public JwtAuthenticationFilter(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
+    UserDetailsService userDetailsService;
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
@@ -59,14 +58,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (accessTokenCookie != null) {
                     String token = accessTokenCookie.getValue();
                     Claims claims = jwtService.extractAllClaims(token);
-                    UserRole role = claims.get("role") != null
-                        ? (claims.get("role").equals(UserRole.ADMIN.name()) ? UserRole.ADMIN : UserRole.USER)
-                        : UserRole.USER;
-                    List<GrantedAuthority> roleList = Collections.singletonList(role);
+                    UserEntity user = (UserEntity) this.userDetailsService.loadUserByUsername(claims.getSubject());
                     UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(
-                        UserEntity.builder().email(claims.getSubject()).userRole(role).build(),
+                        user,
                         null,
-                        roleList
+                        List.of(user.getUserRole())
                     );
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);

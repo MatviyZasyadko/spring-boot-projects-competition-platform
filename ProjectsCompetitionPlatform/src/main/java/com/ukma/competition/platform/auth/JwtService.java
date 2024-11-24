@@ -1,10 +1,8 @@
 package com.ukma.competition.platform.auth;
 
 import com.ukma.competition.platform.shared.constants.AppConstants;
-import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import com.ukma.competition.platform.users.UserEntity;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
@@ -64,38 +62,19 @@ public class JwtService {
             .getPayload();
     }
 
-    public <T> T getClaim(String token, Function<Claims, T> claimFunction) {
-        Claims allClaims = extractAllClaims(token);
-
-        return claimFunction.apply(allClaims);
-    }
-
-    private Date getTokenExpirationDate(String token) {
-        return getClaim(token, Claims::getExpiration);
-    }
-
-    public String getUsername(String token) {
-        return getClaim(token, Claims::getSubject);
-    }
-
     public String generateTokenFromUser(UserEntity user) {
         return this.generateAccessTokenWithClaims(
             Map.of(
                 "role", user.getUserRole().name(),
-                "authProvider", user.getAuthenticationProvider().toString()
+                "authProvider", user.getAuthenticationProvider().toString(),
+                "fullName", user.getFullName()
             ),
             user.getUsername()
         );
     }
 
     public Cookie generateTokenWithCookie(UserEntity user) {
-        String accessToken = this.generateAccessTokenWithClaims(
-            Map.of(
-                "role", user.getUserRole().name(),
-                "authProvider", user.getAuthenticationProvider().toString()
-            ),
-            user.getUsername()
-        );
+        String accessToken = this.generateTokenFromUser(user);
 
         Cookie accessTokenCookie = new Cookie(AppConstants.ACCESS_TOKEN_NAME, accessToken);
         accessTokenCookie.setHttpOnly(true);
