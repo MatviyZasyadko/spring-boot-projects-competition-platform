@@ -5,12 +5,15 @@ import com.ukma.competition.platform.shared.dto.exception.FileEmptyExceptionDto;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import com.ukma.competition.platform.shared.exception.FileEmptyException;
 import com.ukma.competition.platform.shared.exception.ImageNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -56,5 +59,10 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(AuthenticationException.class)
     public String authenticationExceptionHandler(AuthenticationException exception) {
         return "redirect:/ui/login?error=" + exception.getMessage();
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String maxUploadSizeExceededExceptionHandler(HttpServletRequest servletRequest, MaxUploadSizeExceededException exception) {
+        return "redirect:" + servletRequest.getRequestURI() + "?error=" + exception.getMessage();
     }
 }

@@ -54,6 +54,15 @@
                     <span class="font-medium">Error!</span> <span th:text="${#fields.allErrors().get(0)}"></span>
                 </div>
 
+                <div th:if="${error != null}"
+                     class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                     role="alert">
+                    <span class="font-medium">Error!</span> <span th:text="${error}"></span>
+                    <script>
+                      window.history.replaceState(null, '', window.location.pathname);
+                    </script>
+                </div>
+
                 <div class="flex flex-col items-center mt-6">
                     <div>
                         <img class="object-cover rounded-lg shadow-md h-52 w-48"

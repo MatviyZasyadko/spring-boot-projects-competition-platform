@@ -28,6 +28,10 @@
     @apply bg-transparent text-black border border-black rounded-lg hover:bg-black hover:text-white hover:cursor-pointer focus:ring-1 focus:outline-none focus:ring-gray-200 slow-animation-300;
 }
 
+.secondary-white-button {
+    @apply bg-white text-black border border-black rounded-lg hover:bg-black hover:text-white hover:cursor-pointer focus:ring-1 focus:outline-none focus:ring-gray-200 slow-animation-300;
+}
+
 .primary-button {
     @apply bg-black text-white border border-black rounded-lg hover:bg-gray-800 hover:cursor-pointer focus:ring-1 focus:outline-none focus:ring-gray-200 slow-animation-300;
 }
@@ -49,7 +53,11 @@
 }
 
 .default-input {
-    @apply text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:border focus:border-gray-500 focus:ring-0 focus:ring-offset-0  focus:outline-none;
+    @apply text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:border focus:border-gray-500 focus:ring-0 focus:ring-offset-0  focus:outline-none ;
+}
+
+.default-white-input {
+    @apply text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:border focus:border-gray-500 focus:ring-0 focus:ring-offset-0  focus:outline-none ;
 }
 
 input[type="file"]::file-selector-button {

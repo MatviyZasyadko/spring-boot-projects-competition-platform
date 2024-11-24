@@ -3,7 +3,7 @@ package com.ukma.competition.platform.competitions.business_layer;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
-import com.ukma.competition.platform.shared.exception.HandleExceptions;
+import com.ukma.competition.platform.shared.GenericServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -23,32 +23,30 @@ import java.util.Optional;
 @Component
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class CompetitionServiceImpl implements CompetitionService {
+public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity, String, CompetitionRepository> implements CompetitionService {
 
     private static final Marker COMPETITION_MARKER = MarkerManager.getMarker("COMPETITION");
-
-    CompetitionRepository competitionRepository;
     CompetitionProperties competitionProperties;
 
     @Autowired
     public CompetitionServiceImpl(CompetitionRepository repository, CompetitionProperties competitionProperties) {
-        this.competitionRepository = repository;
+        super(repository);
         this.competitionProperties = competitionProperties;
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "competitions", key = "#id"),
-            @CacheEvict(value = "competitionsList", allEntries = true)
+        @CacheEvict(value = "competitions", key = "#id"),
+        @CacheEvict(value = "competitionsList", allEntries = true)
     })
     public Competition updateById(String id, Competition competition) {
-        Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(id);
+        Optional<CompetitionEntity> optionalCompetitionEntity = repository.findById(id);
 
         Marker updateMarker = MarkerManager.getMarker("COMPETITION_UPDATE");
         logger.info(updateMarker, "Updating competition");
 
         if (optionalCompetitionEntity.isPresent()) {
             CompetitionEntity existingCompetitionEntity = optionalCompetitionEntity.get();
-            CompetitionEntity updatedCompetitionEntity = competitionRepository.save(existingCompetitionEntity);
+            CompetitionEntity updatedCompetitionEntity = repository.save(existingCompetitionEntity);
 
             logger.info(updateMarker, "Successfully updated competition with ID: {}", id);
 
@@ -66,7 +64,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     public Competition addProjectToCompetition(String competitionId, ProjectEntity project) {
-        Optional<CompetitionEntity> optionalCompetitionEntity = competitionRepository.findById(competitionId);
+        Optional<CompetitionEntity> optionalCompetitionEntity = repository.findById(competitionId);
 
         if (optionalCompetitionEntity.isPresent()) {
             CompetitionEntity competitionEntity = optionalCompetitionEntity.get();
@@ -79,7 +77,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
             competitionEntity.getProjects().add(project);
 
-            competitionRepository.save(competitionEntity);
+            repository.save(competitionEntity);
 
             return convertEntityToCompetition(competitionEntity);
         } else {
@@ -130,33 +128,31 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "competitions", key = "#competition.id"),
-            @CacheEvict(value = "competitionsList", allEntries = true)
+        @CacheEvict(value = "competitions", key = "#competition.id"),
+        @CacheEvict(value = "competitionsList", allEntries = true)
     })
     public Competition save(Competition competition) {
         CompetitionEntity competitionEntity = convertCompetitionToEntity(competition);
-        CompetitionEntity savedEntity = competitionRepository.saveAndFlush(competitionEntity);
+        CompetitionEntity savedEntity = repository.saveAndFlush(competitionEntity);
         return convertEntityToCompetition(savedEntity);
     }
 
-    @Override
     @Cacheable("competitionsList")
-    public List<Competition> findAll() {
+    public List<Competition> findAllAsDto() {
         Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
 
         logger.info(findMarker, "Retrieving all competitions");
 
-        List<CompetitionEntity> allCompetitionEntities = competitionRepository.findAll();
+        List<CompetitionEntity> allCompetitionEntities = repository.findAll();
 
         return allCompetitionEntities.stream()
             .map(this::convertEntityToCompetition)
             .toList();
     }
 
-    @Override
     @Cacheable(value = "competitions", key = "#id")
-    public Optional<Competition> findById(String id) {
-        Optional<CompetitionEntity> competitionEntity = competitionRepository.findById(id);
+    public Optional<Competition> findByIdAsDto(String id) {
+        Optional<CompetitionEntity> competitionEntity = repository.findById(id);
 
         Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
 
@@ -167,13 +163,13 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public boolean existsById(String id) {
-        Optional<CompetitionEntity> competitionEntity = competitionRepository.findById(id);
+        Optional<CompetitionEntity> competitionEntity = repository.findById(id);
         return competitionEntity.isPresent();
     }
 
     @Override
     @CacheEvict(value = "competitions", key = "#id")
     public void deleteById(String id) {
-        competitionRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }

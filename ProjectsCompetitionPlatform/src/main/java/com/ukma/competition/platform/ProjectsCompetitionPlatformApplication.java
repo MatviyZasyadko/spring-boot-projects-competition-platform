@@ -22,9 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.stream.IntStream;
 
 @SpringBootApplication
 @EnableScheduling
@@ -103,6 +101,28 @@ public class ProjectsCompetitionPlatformApplication implements CommandLineRunner
 
         admin.addProject(firstProject);
         admin.addProject(secondProject);
+        for (int i = 0; i < 19; i++) {
+            admin.addProject(firstProject);
+            firstProject = ProjectEntity.builder()
+                .name("Competitors")
+                .shortDescription("Competitors is an innovative platform where users can showcase their projects, " +
+                                  "participate in various competitions, and win exciting prizes. Designed for creators, developers, and innovators.")
+                .fullDescription("Competitors is an innovative platform where users can showcase their projects, " +
+                                 "participate in various competitions, and win exciting prizes. " +
+                                 "Designed for creators, developers, and innovators, " +
+                                 "it allows users to create detailed profiles for their projects, including descriptions, images, and key features.")
+                .images(
+                    new ArrayList<>() {{
+                        add(
+                            ImageEntity.builder().url("https://static.vecteezy.com/system/resources/previews/008/296/131/non_2x/trophy-icon-isolated-on-white-background-free-vector.jpg")
+                                .isMain(true)
+                                .name("somename.jpg").build()
+                        );
+                    }}
+                )
+                .creator(admin)
+                .build();
+        }
 
         CompetitionEntity competitionEntity = CompetitionEntity.builder()
             .name("first competition")
@@ -121,11 +141,6 @@ public class ProjectsCompetitionPlatformApplication implements CommandLineRunner
         if (userRepository != null) {
             userRepository.save(admin);
 
-            voteRepository.saveAndFlush(Vote.builder()
-                .project(firstProject)
-                .competitionEntity(competitionEntity)
-                .user(admin)
-                .build());
 
 //            List<Vote> allVotes = voteRepository.findAll();
 //            System.out.println("all votes = " + allVotes);

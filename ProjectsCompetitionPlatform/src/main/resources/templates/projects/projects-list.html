@@ -11,7 +11,7 @@
 </head>
 <body class="bg-gray-50">
 <header th:replace="~{layout/header :: header}"></header>
-<main class="custom-container">
+<main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-[95vh]">
     <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">All projects</h2>
     <div class="mt-8 flex justify-between items-center gap-2 px-4">
         <form class="max-w-md">
@@ -25,7 +25,7 @@
                     </svg>
                 </div>
                 <input type="text" id="default-search"
-                       class="block w-80 py-3 px-12 ps-10 default-input"
+                       class="block w-80 py-3 px-12 ps-10 default-white-input"
                        placeholder="Search projects..." required
                        maxlength="22"
                 />
@@ -37,15 +37,14 @@
         </form>
 
         <div>
-            <a class="secondary-button px-3 py-2.5 overflow-x-auto" th:href="@{/ui/projects/create}">Create a new
+            <a class="secondary-white-button px-3 py-2.5 overflow-x-auto" th:href="@{/ui/projects/create}">Create a new
                 project</a>
         </div>
     </div>
     <div>
-        <div class="mt-8 grid grid-cols-[repeat(auto-fill,_minmax(630px,1fr))] gap-6">
-
-            <div th:each="project: ${allProjects}"
-                 class="flex flex-col items-center max-h-52 bg-white border border-gray-200 rounded-lg shadow-md md:flex-row">
+        <div class="mt-8 grid grid-cols-1 gap-6">
+            <div th:each="project: ${projectsPage.content}"
+                 class="flex flex-col items-center max-h-52 bg-white rounded-lg shadow-md md:flex-row">
                 <img class="object-cover w-full rounded-t-lg h-52 md:w-48 md:rounded-none md:rounded-s-lg"
                      th:src="${project.logo != null} ? ${project.logo.url} : '/default-image.jpg'"
                      alt="Project logo"
@@ -64,6 +63,30 @@
         </div>
     </div>
 </main>
+
+<div class="mt-8 p-5 md:w-[85%] md:p-0 mx-auto flex justify-center">
+    <div aria-label="page navigation">
+        <div class="inline-flex -space-x-px text-sm">
+            <div>
+                <a th:href="'/ui/projects?page=' + ${previousPage}"
+                   th:class="'flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 ' + ${previousPage == null ? 'pointer-events-none' : 'pointer-events-auto'}"
+                >Previous</a>
+            </div>
+            <div th:each="pageNumber: ${pageNumbers}" class="inline-flex">
+                <div>
+                    <a th:href="${'/ui/projects?page=' + (pageNumber.value - 1)}" th:text="${pageNumber.value}"
+                       th:class="'flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 ' + ${pageNumber.active ? 'bg-gray-100 text-gray-600 hover:bg-gray-300' : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'}"></a>
+                </div>
+            </div>
+            <div>
+                <a th:href="'/ui/projects?page=' + ${nextPage}"
+                   th:class="'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 ' + ${nextPage == null ? 'pointer-events-none' : 'pointer-events-auto'}"
+                >Next</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer th:replace="~{layout/footer :: footer}"></footer>
 </body>
 </html>
