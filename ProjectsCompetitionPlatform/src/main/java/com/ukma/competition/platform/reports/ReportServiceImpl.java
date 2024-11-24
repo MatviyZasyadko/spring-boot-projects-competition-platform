@@ -1,7 +1,5 @@
 package com.ukma.competition.platform.reports;
 
-import com.ukma.competition.platform.projects.ProjectEntity;
-import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
 import com.ukma.competition.platform.reports.dto.ReportCreateDto;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
 import com.ukma.competition.platform.users.UserEntity;
@@ -12,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,8 +21,9 @@ public class ReportServiceImpl extends GenericServiceImpl<ReportEntity, String, 
     UserService userService;
 
     @Autowired
-    public ReportServiceImpl(ReportRepository repository) {
+    public ReportServiceImpl(ReportRepository repository, UserService userService) {
         super(repository);
+        this.userService = userService;
     }
 
     public List<ReportEntity> findAllByStatus(ReportStatus reportStatus) {
@@ -37,12 +35,12 @@ public class ReportServiceImpl extends GenericServiceImpl<ReportEntity, String, 
         try {
             UserEntity reportCreator = userService.findByEmail(userEmail).orElseThrow();
             ReportEntity report = ReportEntity.builder()
-                    .description(reportCreateDto.getDescription())
-                    .topic(reportCreateDto.getTopic())
-                    .approveDate(null)
-                    .user(reportCreator)
-                    .reportStatus(ReportStatus.IN_PROCESS)
-                    .build();
+                .description(reportCreateDto.getDescription())
+                .topic(reportCreateDto.getTopic())
+                .approveDate(null)
+                .user(reportCreator)
+                .reportStatus(ReportStatus.IN_PROCESS)
+                .build();
 
             super.save(report);
             log.info("Report entity with id {} was successfully created.", report.getId());

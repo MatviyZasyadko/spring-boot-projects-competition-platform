@@ -5,7 +5,9 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,9 +46,9 @@ public class ReportController {
             @Valid @ModelAttribute("reportCreateDto")
             ReportCreateDto reportCreateDto,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes,
-            @AuthenticationPrincipal UserDetails userDetails
+            RedirectAttributes redirectAttributes
     ) {
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         if (reportCreateDto == null || bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute(
                     "org.springframework.validation.BindingResult.reportCreateDto",
@@ -56,13 +58,10 @@ public class ReportController {
         }
 
         try {
-            reportService.saveFromDto(reportCreateDto, userDetails.getUsername());
-            System.out.println("save from dto");
+            reportService.saveFromDto(reportCreateDto, token.getName());
         } catch (Exception exception) {
-            System.out.println("caught error");
             ObjectError error = new ObjectError("globalError", exception.getMessage());
             bindingResult.addError(error);
-
             redirectAttributes.addFlashAttribute(
                     "org.springframework.validation.BindingResult.reportCreateDto",
                     bindingResult
