@@ -14,48 +14,54 @@
 <main class="custom-container">
     <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">All reports</h2>
     <div class="mt-8 flex justify-between items-center gap-2 px-4">
-        <form class="max-w-md">
-            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
-            <div class="relative">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                    </svg>
-                </div>
-                <input type="text" id="default-search"
-                       class="block w-80 py-3 px-12 ps-10 default-input"
-                       placeholder="Search reports..." required
-                       maxlength="22"
-                />
-                <button type="submit"
-                        class="primary-button p-[0.45rem] absolute end-2.5 bottom-[0.20rem]">
-                    Search
-                </button>
-            </div>
-        </form>
-
         <div>
             <a class="secondary-button px-3 py-2.5 overflow-x-auto" th:href="@{/ui/reports/create}">Create a new
                 report</a>
         </div>
     </div>
     <div>
-        <div class="mt-8 grid grid-cols-[repeat(auto-fill,_minmax(630px,1fr))] gap-6">
-
-            <div th:each="report: ${allReports}"
-                 class="flex flex-col items-center max-h-52 bg-white border border-gray-200 rounded-lg shadow-md md:flex-row">
-                <p th:text="${report.topic}"></p>
-                <div class="flex flex-col justify-between p-5 leading-normal">
-                    <h5 th:text="${report.description}" class="mb-3 text-2xl font-bold tracking-tight text-gray-900"></h5>
-                    <p th:text="${report.reportStatus}" class="mb-2 font-normal break-all">
-                    <p th:text="${report.approveDate}" class="mb-2 font-normal break-all">
-                    <p th:text="${report.user}" class="mb-2 font-normal break-all">
-                    </p>
+        <div class="mt-8 page-block">
+            <div class="relative overflow-x-auto">
+                <div class="flex justify-center mt-3">
+                    <h3 class="text-2xl text-center font-bold font-mono">
+                        My reports
+                    </h3>
                 </div>
+                <table class="mt-8 w-full text-sm text-left rtl:text-right">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Topic
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Status
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Approve Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Description
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="report : ${allReports}" class="bg-white border-b">
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                            <span th:text="${report.topic}"></span>
+                        </th>
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                            <span th:text="${report.reportStatus}"></span>
+                        </th>
+                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                            <span th:text="${report.approveDate != null ? report.approveDate : 'Not Approved'}"></span>
+                        </th>
+                        <td class="px-6 py-4">
+                            <span th:text="${report.description}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-
         </div>
     </div>
 </main>

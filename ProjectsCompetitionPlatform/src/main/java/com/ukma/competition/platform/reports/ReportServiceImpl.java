@@ -2,6 +2,7 @@ package com.ukma.competition.platform.reports;
 
 import com.ukma.competition.platform.reports.dto.ReportCreateDto;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
+import com.ukma.competition.platform.users.User;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
 import lombok.AccessLevel;
