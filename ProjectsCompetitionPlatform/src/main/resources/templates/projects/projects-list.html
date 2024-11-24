@@ -24,12 +24,15 @@
                               d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>
-                <input type="text" id="default-search"
+                <input type="text"
+                       id="default-search"
                        class="block w-80 py-3 px-12 ps-10 default-white-input"
-                       placeholder="Search projects..." required
+                       placeholder="Search projects..."
+                       required
                        maxlength="22"
                 />
                 <button type="submit"
+                        th:attr="onclick=|searchProject(event)|"
                         class="primary-button p-[0.45rem] absolute end-2.5 bottom-[0.20rem]">
                     Search
                 </button>
@@ -68,23 +71,64 @@
     <div aria-label="page navigation">
         <div class="inline-flex -space-x-px text-sm">
             <div>
-                <a th:href="'/ui/projects?page=' + ${previousPage}"
-                   th:class="'flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 ' + ${previousPage == null ? 'pointer-events-none' : 'pointer-events-auto'}"
+                <a href="/"
+                   id="previous-page-pagination"
+                   th:class="'pagination flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 ' + ${previousPage == null ? 'pointer-events-none' : 'pointer-events-auto'}"
                 >Previous</a>
             </div>
             <div th:each="pageNumber: ${pageNumbers}" class="inline-flex">
                 <div>
-                    <a th:href="${'/ui/projects?page=' + (pageNumber.value - 1)}" th:text="${pageNumber.value}"
-                       th:class="'flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 ' + ${pageNumber.active ? 'bg-gray-100 text-gray-600 hover:bg-gray-300' : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'}"></a>
+                    <a href="/" th:text="${pageNumber.value}"
+                       th:attr="onclick=|changePage('${pageNumber.value}')|"
+                       th:class="'pagination flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 ' + ${pageNumber.active ? 'bg-gray-100 text-gray-600 hover:bg-gray-300 pointer-events-none' : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'}"></a>
                 </div>
             </div>
             <div>
-                <a th:href="'/ui/projects?page=' + ${nextPage}"
-                   th:class="'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 ' + ${nextPage == null ? 'pointer-events-none' : 'pointer-events-auto'}"
+                <a href="/"
+                   id="next-page-pagination"
+                   th:class="'pagination flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 ' + ${nextPage == null ? 'pointer-events-none' : 'pointer-events-auto'}"
                 >Next</a>
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      document.querySelectorAll('.pagination').forEach(element => element.addEventListener('click', (event) => event.preventDefault()));
+      const previousPageValue = /*[[${previousPage}]]*/ null;
+      const nextPageValue = /*[[${nextPage}]]*/ null;
+
+      document.getElementById('next-page-pagination').addEventListener('click', (event) => {
+        event.preventDefault();
+        if (nextPageValue) {
+          changePage(nextPageValue);
+        }
+      });
+
+      document.getElementById('previous-page-pagination').addEventListener('click', (event) => {
+        event.preventDefault();
+        if (previousPageValue !== null && previousPageValue !== undefined) {
+          changePage(previousPageValue);
+        }
+      });
+
+      function changePage(pageNumber) {
+        if (pageNumber) {
+          const urlParams = new URLSearchParams(window.location.search);
+          urlParams.set('page', (pageNumber - 1));
+          window.location.search = urlParams;
+        }
+      }
+
+      document.getElementById('default-search').value = new URLSearchParams(window.location.search).get('search') || '';
+      function searchProject(event) {
+        event.preventDefault();
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('search', document.getElementById('default-search').value);
+        window.location.search = urlParams;
+      }
+
+      /*]]>*/
+    </script>
 </div>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>

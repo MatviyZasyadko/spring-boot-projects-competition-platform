@@ -1,6 +1,7 @@
 package com.ukma.competition.platform.projects;
 
 import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
+import com.ukma.competition.platform.projects.dto.ProjectListDto;
 import com.ukma.competition.platform.shared.dto.PaginationDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -35,30 +36,23 @@ public class ProjectController {
     ProjectService projectService;
 
     @GetMapping
-    public String projectList(Model model, @PageableDefault(value = 5) Pageable pageable) {
-        Page<ProjectEntity> projectPage = projectService.findAll(null, pageable);
-        model.addAttribute("projectsPage", projectService.findAll(null, pageable));
-        List<PaginationDto> paginationDtoList = new ArrayList<>();
+    public String projectList(Model model, @PageableDefault(value = 5) Pageable pageable, @RequestParam(value = "search", required = false) String search) {
+        ProjectListDto projectPage = projectService.findAllWithSearch(pageable, search);
         if (projectPage.getTotalPages() != 0) {
-            IntStream.rangeClosed(1, projectPage.getTotalPages()).forEach(pageNumber -> paginationDtoList.add(
-                new PaginationDto(
-                    pageNumber,
-                    (pageable.getPageNumber() + 1) == pageNumber
-                )
-            ));
             model.addAttribute(
                 "nextPage",
-                paginationDtoList.getLast() == null || paginationDtoList.getLast().isActive()
+                projectPage.getPaginationDtoList().getLast() == null || projectPage.getPaginationDtoList().getLast().isActive()
                     ? null
-                    : pageable.getPageNumber() + 1);
+                    : pageable.getPageNumber() + 2);
             model.addAttribute(
                 "previousPage",
-                paginationDtoList.getFirst() == null || paginationDtoList.getFirst().isActive()
+                projectPage.getPaginationDtoList().getFirst() == null || projectPage.getPaginationDtoList().getFirst().isActive()
                     ? null
-                    : pageable.getPageNumber() - 1
+                    : pageable.getPageNumber()
             );
         }
-        model.addAttribute("pageNumbers", paginationDtoList);
+        model.addAttribute("pageNumbers", projectPage.getPaginationDtoList());
+        model.addAttribute("projectsPage", projectPage);
 
         return "projects/projects-list";
     }
