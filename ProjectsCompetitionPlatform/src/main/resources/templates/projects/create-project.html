@@ -49,13 +49,13 @@
             >
 
                 <div th:if="${#fields.hasAnyErrors()}"
-                     class="p-4 mt-8 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                     class="p-4 mt-8 text-sm text-red-800 rounded-lg bg-red-50"
                      role="alert">
                     <span class="font-medium">Error!</span> <span th:text="${#fields.allErrors().get(0)}"></span>
                 </div>
 
                 <div th:if="${error != null}"
-                     class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                     class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
                      role="alert">
                     <span class="font-medium">Error!</span> <span th:text="${error}"></span>
                     <script>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label for="fullDescription"
-                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full
+                               class="block mb-2 text-sm font-medium text-gray-900">Full
                             description<span class="text-red-600">*</span></label>
                         <textarea id="fullDescription" rows="8"
                                   class="block p-2.5 w-full default-input"
