@@ -1,6 +1,6 @@
-package com.ukma.competition.platform.projects;
+package com.ukma.competition.platform.reports;
 
-import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
+import com.ukma.competition.platform.reports.dto.ReportCreateDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,59 +17,59 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-
 @Controller
-@RequestMapping("/ui/projects")
+@RequestMapping("/ui/reports")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class ProjectController {
+public class ReportController {
 
-    ProjectService projectService;
+    ReportService reportService;
 
     @GetMapping
-    public String projectList(Model model) {
-        model.addAttribute("allProjects", projectService.findAll());
-        return "projects/projects-list";
+    public String reportList(Model model) {
+        model.addAttribute("allReports", reportService.findAll());
+        return "reports/reports-list";
     }
 
     @GetMapping("/create")
-    public String projectCreate(Model model) {
+    public String reportCreate(Model model) {
         if (model.asMap().isEmpty()) {
-            model.addAttribute("projectCreateDto", new ProjectCreateDto());
+            model.addAttribute("reportCreateDto", new ReportCreateDto());
         }
-        return "projects/create-project";
+        return "reports/create-report";
     }
 
     @PostMapping("/create")
-    public String projectCreateCallback(
-        @Valid @ModelAttribute("projectCreateDto")
-        ProjectCreateDto projectCreateDto,
-        BindingResult bindingResult,
-        RedirectAttributes redirectAttributes,
-        @AuthenticationPrincipal UserDetails userDetails
+    public String reportCreateCallback(
+            @Valid @ModelAttribute("reportCreateDto")
+            ReportCreateDto reportCreateDto,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
-        if (projectCreateDto == null || bindingResult.hasFieldErrors()) {
+        if (reportCreateDto == null || bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute(
-                "org.springframework.validation.BindingResult.projectCreateDto",
-                bindingResult
+                    "org.springframework.validation.BindingResult.reportCreateDto",
+                    bindingResult
             );
-            return "redirect:/ui/projects/create";
+            return "redirect:/ui/reports/create";
         }
 
         try {
-            projectService.saveFromDto(projectCreateDto, userDetails.getUsername());
+            reportService.saveFromDto(reportCreateDto, userDetails.getUsername());
+            System.out.println("save from dto");
         } catch (Exception exception) {
+            System.out.println("caught error");
             ObjectError error = new ObjectError("globalError", exception.getMessage());
             bindingResult.addError(error);
 
             redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult.projectCreateDto",
+                    "org.springframework.validation.BindingResult.reportCreateDto",
                     bindingResult
             );
-            return "redirect:/ui/projects/create";
+            return "redirect:/ui/reports/create";
         }
 
-        return "redirect:/ui/projects";
+        return "redirect:/ui/reports";
     }
 }

@@ -65,7 +65,7 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
             super.save(project);
             log.info("Project entity with id {} was successfully created.", project.getId());
         } catch (Exception exception) {
-            log.error("Error occured while saving a project: {}", exception.getMessage());
+            log.error("Error occurred while saving a project: {}", exception.getMessage());
             throw exception;
         }
     }

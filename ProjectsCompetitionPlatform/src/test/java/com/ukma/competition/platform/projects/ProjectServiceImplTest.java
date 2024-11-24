@@ -54,7 +54,7 @@ class ProjectServiceImplTest {
     }
 
     @Test
-    void saveFromDto_SuccessWithLogo() throws IOException {
+    void saveFromDto_SuccessWithLogo() throws Exception {
         ProjectCreateDto projectCreateDto = new ProjectCreateDto();
         projectCreateDto.setName("Test Project");
         projectCreateDto.setFullDescription("Full Description");
@@ -79,7 +79,7 @@ class ProjectServiceImplTest {
     }
 
     @Test
-    void saveFromDto_SuccessWithoutLogo() throws IOException {
+    void saveFromDto_SuccessWithoutLogo() throws Exception {
         ProjectCreateDto projectCreateDto = new ProjectCreateDto();
         projectCreateDto.setName("Test Project");
         projectCreateDto.setFullDescription("Full Description");
