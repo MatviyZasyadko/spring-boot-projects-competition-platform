@@ -2,6 +2,7 @@ package com.ukma.competition.platform.auth;
 
 import com.ukma.competition.platform.auth.dto.LoginRequestDto;
 import com.ukma.competition.platform.auth.dto.RegistrationRequestDto;
+import com.ukma.competition.platform.reports.ReportService;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
+    ReportService reportService;
 
     @GetMapping("/registration")
     public String registrationPage(Model model) {
@@ -131,7 +133,8 @@ public class AuthenticationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin-page")
-    public String adminPage() {
+    public String adminPage(Model model) {
+        model.addAttribute("allReports", reportService.findAll());
         return "admin-page";
     }
 }

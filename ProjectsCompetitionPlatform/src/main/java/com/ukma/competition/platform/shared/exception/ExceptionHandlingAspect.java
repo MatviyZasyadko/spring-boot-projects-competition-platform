@@ -29,7 +29,7 @@ public class ExceptionHandlingAspect {
     @AfterThrowing(pointcut = "handleExceptionPointcut()", throwing = "ex")
     public void logAfterThrowingException(JoinPoint joinPoint, Exception ex) {
         String methodName = joinPoint.getSignature().toShortString();
-        logger.error("Exception occurred in method " + methodName + " with @HandleExceptions annotation: ", ex);
+        logger.error("Exception occurred in method " + methodName + " with @HandleExceptions annotation: " + ex);
         fileLogging(ex);
     }
 

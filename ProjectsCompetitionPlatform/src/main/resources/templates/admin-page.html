@@ -96,6 +96,52 @@
             </div>
         </div>
 
+        <div> <!-- table with all reports -->
+            <div class="mt-8 page-block">
+                <div class="relative overflow-x-auto">
+                    <div class="flex justify-center mt-3">
+                        <h3 class="text-2xl text-center font-bold font-mono">
+                            My reports
+                        </h3>
+                    </div>
+                    <table class="mt-8 w-full text-sm text-left rtl:text-right">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Topic
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Status
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Approve Date
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Description
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="report : ${allReports}" class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                <span th:text="${report.topic}"></span>
+                            </th>
+                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                <span th:text="${report.reportStatus}"></span>
+                            </th>
+                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                <span th:text="${report.approveDate != null ? report.approveDate : 'Not Approved'}"></span>
+                            </th>
+                            <td class="px-6 py-4">
+                                <span th:text="${report.description}"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <script>
           const options = {
             chart: {
@@ -173,6 +219,65 @@
     </section>
 </main>
 
+<!-- Modal -->
+<div id="reportModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white p-6 rounded-lg w-1/2">
+        <h3 class="text-2xl font-bold text-center mb-4">Report Details</h3>
+        <div id="modalContent">
+            <!-- Modal content will be injected here -->
+        </div>
+        <div class="flex justify-end space-x-4 mt-4">
+            <button id="closeModal" class="px-4 py-2 bg-gray-500 text-white rounded">Close</button>
+            <button id="approveReport" class="px-4 py-2 bg-blue-500 text-white rounded">Approve</button>
+        </div>
+    </div>
+</div>
+
+
 <footer th:replace="~{layout/footer :: footer}"></footer>
+
+<script th:inline="javascript">
+    // JavaScript to open the modal when clicking a row
+    document.addEventListener("DOMContentLoaded", function () {
+        const tableRows = document.querySelectorAll("tbody tr");
+        const modal = document.getElementById("reportModal");
+        const closeModalBtn = document.getElementById("closeModal");
+        const approveReportBtn = document.getElementById("approveReport");
+        const modalContent = document.getElementById("modalContent");
+
+        tableRows.forEach(row => {
+            row.addEventListener("click", function () {
+                const topic = row.querySelector("span:nth-child(1)").innerText;
+                const status = row.querySelector("span:nth-child(2)").innerText;
+                const approveDate = row.querySelector("span:nth-child(3)").innerText || 'Not Approved';
+                const description = row.querySelector("span:nth-child(4)").innerText;
+
+                // Populate modal with report data
+                modalContent.innerHTML = `
+                <p><strong>Topic:</strong> ${topic}</p>
+                <p><strong>Status:</strong> ${status}</p>
+                <p><strong>Approve Date:</strong> ${approveDate}</p>
+                <p><strong>Description:</strong> ${description}</p>
+            `;
+
+                // Show the modal
+                modal.classList.remove("hidden");
+            });
+        });
+
+        // Close modal button functionality
+        closeModalBtn.addEventListener("click", function () {
+            modal.classList.add("hidden");
+        });
+
+        // Optionally handle Approve button click (add logic here)
+        approveReportBtn.addEventListener("click", function () {
+            alert("Report Approved!");
+            modal.classList.add("hidden");
+        });
+    });
+
+
+</script>
 </body>
 </html>

@@ -31,6 +31,10 @@ public class ReportServiceImpl extends GenericServiceImpl<ReportEntity, String, 
         return repository.findAllByReportStatus(reportStatus);
     }
 
+    public List<ReportEntity> findAllByUser(UserEntity user) {
+        return repository.findAllByUser(user);
+    }
+
     @Transactional
     public void saveFromDto(ReportCreateDto reportCreateDto, String userEmail) throws Exception {
         try {

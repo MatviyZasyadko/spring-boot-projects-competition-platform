@@ -1,11 +1,14 @@
 package com.ukma.competition.platform.reports;
 
 import com.ukma.competition.platform.reports.dto.ReportCreateDto;
+import com.ukma.competition.platform.users.UserEntity;
+import com.ukma.competition.platform.users.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,9 +30,13 @@ public class ReportController {
 
     ReportService reportService;
 
+    UserService userService;
+
     @GetMapping
     public String reportList(Model model) {
-        model.addAttribute("allReports", reportService.findAll());
+        Authentication principal = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = userService.findByEmail(principal.getName()).orElse(null);
+        model.addAttribute("userReports", reportService.findAllByUser(user));
         return "reports/reports-list";
     }
 
