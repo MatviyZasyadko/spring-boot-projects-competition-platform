@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.h2database:h2")
+//    implementation("com.h2database:h2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -42,6 +42,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     implementation("com.ukma.edu:spring-boot-starter-cloudinary:0.0.1-SNAPSHOT")
     implementation("org.springframework.boot:spring-boot-starter-log4j2:3.3.4")
+    implementation("com.mysql:mysql-connector-j:9.1.0")
     implementation("io.jsonwebtoken:jjwt-api:0.12.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")

@@ -22,11 +22,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.stream.IntStream;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @SpringBootApplication
 @EnableScheduling
-public class ProjectsCompetitionPlatformApplication implements CommandLineRunner {
+// implements CommandLineRunner
+public class ProjectsCompetitionPlatformApplication {
 
     @Autowired
     UserRepository userRepository;
@@ -47,107 +50,90 @@ public class ProjectsCompetitionPlatformApplication implements CommandLineRunner
         SpringApplication.run(ProjectsCompetitionPlatformApplication.class, args);
     }
 
-    @Override
-    public void run(String... args) {
-        UserEntity admin = UserEntity.builder()
-            .email("admin@mail.com")
-            .fullName("Volodymyr Havryliuk")
-            .password(passwordEncoder.encode("admin"))
-            .userRole(UserRole.ADMIN)
-            .authenticationProvider(AuthenticationProvider.NATIVE)
-            .build();
-
-        ProjectEntity firstProject = ProjectEntity.builder()
-            .name("Competitors")
-            .shortDescription("Competitors is an innovative platform where users can showcase their projects, " +
-                              "participate in various competitions, and win exciting prizes. Designed for creators, developers, and innovators.")
-            .fullDescription("Competitors is an innovative platform where users can showcase their projects, " +
-                             "participate in various competitions, and win exciting prizes. " +
-                             "Designed for creators, developers, and innovators, " +
-                             "it allows users to create detailed profiles for their projects, including descriptions, images, and key features.")
-            .images(
-                new ArrayList<>() {{
-                    add(
-                        ImageEntity.builder().url("https://static.vecteezy.com/system/resources/previews/008/296/131/non_2x/trophy-icon-isolated-on-white-background-free-vector.jpg")
-                            .isMain(true)
-                            .name("somename.jpg").build()
-                    );
-                }}
-            )
-            .creator(admin)
-            .build();
-
-        ProjectEntity secondProject = ProjectEntity.builder()
-            .name("Volo")
-            .shortDescription("Volo is a web platform designed to help individuals and organizations raise funds for " +
-                              "charitable causes. It simplifies the donation process, allowing users to create campaigns," +
-                              " share them with others, and collect contributions securely")
-            .fullDescription("Competitors is an innovative platform where users can showcase their projects, " +
-                             "participate in various competitions, and win exciting prizes. " +
-                             "Designed for creators, developers, and innovators, " +
-                             "it allows users to create detailed profiles for their projects, including descriptions, images, and key features.")
-            .images(
-                new ArrayList<>() {{
-                    add(
-                        ImageEntity.builder().url("https://voloapparel.com/cdn/shop/files/instagramlogo5_480x.jpg?v=1614245885")
-                            .name("somename.jpg")
-                            .isMain(true)
-                            .build()
-                    );
-                }}
-            )
-            .creator(admin)
-            .build();
-
-        admin.addProject(firstProject);
-        admin.addProject(secondProject);
-        for (int i = 0; i < 19; i++) {
-            admin.addProject(firstProject);
-            firstProject = ProjectEntity.builder()
-                .name("Competitors")
-                .shortDescription("Competitors is an innovative platform where users can showcase their projects, " +
-                                  "participate in various competitions, and win exciting prizes. Designed for creators, developers, and innovators.")
-                .fullDescription("Competitors is an innovative platform where users can showcase their projects, " +
-                                 "participate in various competitions, and win exciting prizes. " +
-                                 "Designed for creators, developers, and innovators, " +
-                                 "it allows users to create detailed profiles for their projects, including descriptions, images, and key features.")
-                .images(
-                    new ArrayList<>() {{
-                        add(
-                            ImageEntity.builder().url("https://static.vecteezy.com/system/resources/previews/008/296/131/non_2x/trophy-icon-isolated-on-white-background-free-vector.jpg")
-                                .isMain(true)
-                                .name("somename.jpg").build()
-                        );
-                    }}
-                )
-                .creator(admin)
-                .build();
-        }
-
-        CompetitionEntity competitionEntity = CompetitionEntity.builder()
-            .name("first competition")
-            .description("first competition description")
-            .beginDate(Instant.now())
-            .votingBeginDate(Instant.now())
-            .votingEndDate(Instant.MAX)
-            .hasPrizePool(false)
-            .priceDescription("price description")
-            .prizePool(0.0)
-            .build();
-
-        competitionRepository.saveAndFlush(competitionEntity);
-
-
-        if (userRepository != null) {
-            userRepository.save(admin);
-
-
+//    @Override
+//    public void run(String... args) {
+//        UserEntity admin = UserEntity.builder()
+//            .email("admin@mail.com")
+//            .fullName("Volodymyr Havryliuk")
+//            .password(passwordEncoder.encode("admin"))
+//            .userRole(UserRole.ADMIN)
+//            .authenticationProvider(AuthenticationProvider.NATIVE)
+//            .build();
+//
+//        ProjectEntity firstProject = ProjectEntity.builder()
+//            .name("Competitors")
+//            .shortDescription("Competitors is an innovative platform where users can showcase their projects, " +
+//                              "participate in various competitions, and win exciting prizes. Designed for creators, developers, and innovators.")
+//            .fullDescription("Competitors is an innovative platform where users can showcase their projects, " +
+//                             "participate in various competitions, and win exciting prizes. " +
+//                             "Designed for creators, developers, and innovators, " +
+//                             "it allows users to create detailed profiles for their projects, including descriptions, images, and key features.")
+//            .images(
+//                new ArrayList<>() {{
+//                    add(
+//                        ImageEntity.builder().url("https://static.vecteezy.com/system/resources/previews/008/296/131/non_2x/trophy-icon-isolated-on-white-background-free-vector.jpg")
+//                            .isMain(true)
+//                            .name("somename.jpg").build()
+//                    );
+//                }}
+//            )
+//            .creator(admin)
+//            .build();
+//
+//        ProjectEntity secondProject = ProjectEntity.builder()
+//            .name("Volo")
+//            .shortDescription("Volo is a web platform designed to help individuals and organizations raise funds for " +
+//                              "charitable causes. It simplifies the donation process, allowing users to create campaigns," +
+//                              " share them with others, and collect contributions securely")
+//            .fullDescription("Competitors is an innovative platform where users can showcase their projects, " +
+//                             "participate in various competitions, and win exciting prizes. " +
+//                             "Designed for creators, developers, and innovators, " +
+//                             "it allows users to create detailed profiles for their projects, including descriptions, images, and key features.")
+//            .images(
+//                new ArrayList<>() {{
+//                    add(
+//                        ImageEntity.builder().url("https://voloapparel.com/cdn/shop/files/instagramlogo5_480x.jpg?v=1614245885")
+//                            .name("somename.jpg")
+//                            .isMain(true)
+//                            .build()
+//                    );
+//                }}
+//            )
+//            .creator(admin)
+//            .build();
+//
+//        admin.addProject(firstProject);
+//        admin.addProject(secondProject);
+//
+//        CompetitionEntity competitionEntity = CompetitionEntity.builder()
+//            .name("first competition")
+//            .description("first competition description")
+//            .beginDate(Instant.now())
+//            .votingBeginDate(Instant.now())
+//            .votingEndDate(Instant.now())
+//            .hasPrizePool(false)
+//            .priceDescription("price description")
+//            .prizePool(0.0)
+//            .build();
+//
+//        competitionRepository.saveAndFlush(competitionEntity);
+//
+//
+//        if (userRepository != null) {
+//            userRepository.save(admin);
+//
+//            voteRepository.saveAndFlush(Vote.builder()
+//                .project(firstProject)
+//                .competitionEntity(competitionEntity)
+//                .user(admin)
+//                .build());
+//
 //            List<Vote> allVotes = voteRepository.findAll();
 //            System.out.println("all votes = " + allVotes);
 //
 //            Pageable pageable = PageRequest.of(0, 5);
 //            List<Object[]> x = voteRepository.findTop5ProjectsByVoteCount(pageable);
 //            System.out.println("my req = " + Arrays.toString(x.getFirst()));
-        }
-    }
+//        }
+//    }
 }

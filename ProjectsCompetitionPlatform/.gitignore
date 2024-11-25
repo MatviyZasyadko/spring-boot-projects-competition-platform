@@ -42,6 +42,4 @@ secrets.yml
 .git-hooks/
 node_modules
 
-/.idea
-
-application-dev.properties
+src/main/resources/application-dev.yml
