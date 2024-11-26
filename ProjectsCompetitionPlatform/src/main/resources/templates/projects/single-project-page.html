@@ -18,9 +18,9 @@
                 <div class="relative h-80 overflow-hidden rounded-lg md:h-96">
                     <div th:each="image: ${project.images}" class="hidden duration-700 ease-in-out rounded-xl"
                          data-carousel-item>
-                        <div class="rounded-xl h-80">
+                        <div class="rounded-xl">
                             <img th:src="${image.url}"
-                                 class="absolute block w-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl object-cover"
+                                 class="absolute block w-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl h-80 md:h-96 object-cover border border-black"
                                  alt="project image">
                         </div>
                     </div>
@@ -55,21 +55,24 @@
         <div class="w-3/4 mx-auto">
             <p th:text="${project.name}" class="mt-8 text-3xl font-bold tracking-tight text-gray-900"></p>
 
-            <div class="flex gap-2 items-center mt-10">
-                <div class="h-8 w-8 rounded-full">
-                    <img class="h-8 w-8 rounded-full object-cover"
+            <div class="flex gap-2 items-center mt-8">
+                <div class="h-10 w-10 rounded-full">
+                    <img class="h-10 w-10 rounded-full object-cover"
                          th:src="${project.creator.logoUrl == null} ? '/unknown-user.jpg' : ${project.creator.logoUrl}"
                          alt="user image">
                 </div>
-                <div>
-                    <a th:text="${project.creator.fullName}" href="/ui/main"
-                       class="slow-animation-300 group-hover:underline ease-out"></a>
+                <div class="flex flex-col items-center">
+                    <p class="text-gray-600" th:text="${project.createdAt.toString().replaceAll('T', ' ').substring(0, 16)}"></p>
+                    <div>
+                        <a th:text="${project.creator.fullName}" href="/ui/main"
+                           class="group slow-animation-300 group-hover:underline ease-out"></a>
+                    </div>
                 </div>
                 <div>
 
                 </div>
             </div>
-            <div class="flex flex-col gap-1 mt-10">
+            <div class="flex flex-col gap-1 mt-8">
                 <p class="font-bold tracking-tight">Full description</p>
                 <p class="text-base" th:text="${project.fullDescription}"></p>
             </div>
@@ -78,11 +81,11 @@
                 <hr class="mt-10 w-3/4"/>
             </div>
 
-            <div class="mt-10">
+            <div class="mt-5">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-900">Discussion</h2>
                 </div>
-                <form class="mt-10">
+                <form class="mt-8">
                     <div>
                         <label for="comment" class="sr-only">Your comment</label>
                         <textarea id="comment" rows="6"
@@ -90,7 +93,7 @@
                                   placeholder="Write a comment..." required></textarea>
                     </div>
                     <button type="submit"
-                            class="primary-button py-2.5 px-4 w-auto mt-10">
+                            class="primary-button py-2.5 px-4 w-auto mt-5">
                         Post comment
                     </button>
                 </form>

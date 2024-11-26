@@ -102,7 +102,9 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
     }
 
     private ImageResponseDto buildImageResponseDto(ImageEntity image) {
-        return new ImageResponseDto(
+        return image == null
+            ? null
+            : new ImageResponseDto(
             image.getId(),
             image.getCreatedAt(),
             image.getUpdatedAt(),
