@@ -19,4 +19,5 @@ public class UserDto {
     String id;
     String fullName;
     String email;
+    String logoUrl;
 }

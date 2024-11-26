@@ -48,12 +48,16 @@
         <div class="mt-8 grid grid-cols-1 gap-6">
             <div th:each="project: ${projectsPage.content}"
                  class="flex flex-col items-center max-h-52 bg-white rounded-lg shadow-md md:flex-row">
-                <img class="object-cover w-full rounded-t-lg h-52 md:w-48 md:rounded-none md:rounded-s-lg"
+                <img class="object-cover w-full rounded-t-lg h-52 md:w-48 md:rounded-none md:rounded-s-lg cursor-pointer"
                      th:src="${project.logo != null} ? ${project.logo.url} : '/default-image.jpg'"
                      alt="Project logo"
+                     th:attr="onclick=|redirectToSingleProjectPage('${project.id}')|"
                 >
                 <div class="flex flex-col justify-between p-5 leading-normal">
-                    <h5 th:text="${project.name}" class="mb-3 text-2xl font-bold tracking-tight text-gray-900"></h5>
+                    <h5 th:attr="onclick=|redirectToSingleProjectPage('${project.id}')|"
+                        th:text="${project.name}"
+                        class="mb-3 text-2xl font-bold tracking-tight text-gray-900 cursor-pointer hover:underline">
+                    </h5>
                     <p th:text="${project.shortDescription}" class="mb-2 font-normal break-all">
                     </p>
                     <p class="group text-gray-600 slow-animation-300 ease-in-out">
@@ -133,6 +137,10 @@
           urlParams.set('search', document.getElementById('default-search').value);
         }
         window.location.search = urlParams;
+      }
+
+      function redirectToSingleProjectPage(id) {
+        window.location.href = `/ui/projects/${id}`;
       }
 
       /*]]>*/

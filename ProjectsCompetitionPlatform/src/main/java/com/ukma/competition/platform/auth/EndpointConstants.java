@@ -20,6 +20,7 @@ public class EndpointConstants {
         "/*.js",
         "/*.jpg",
         "/*.png",
+        "/error.html",
         "/ui/login",
         "/ui/registration",
         "/favicon.ico",

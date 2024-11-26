@@ -2,12 +2,10 @@ package com.ukma.competition.platform.projects;
 
 import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
 import com.ukma.competition.platform.projects.dto.ProjectListDto;
-import com.ukma.competition.platform.shared.dto.PaginationDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,14 +16,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/ui/projects")
@@ -36,7 +31,7 @@ public class ProjectController {
     ProjectService projectService;
 
     @GetMapping
-    public String projectList(Model model, @PageableDefault(value = 5) Pageable pageable, @RequestParam(value = "search", required = false) String search) {
+    public String getProjectList(Model model, @PageableDefault(value = 5) Pageable pageable, @RequestParam(value = "search", required = false) String search) {
         ProjectListDto projectPage = projectService.findAllWithSearch(pageable, search);
         if (projectPage.getTotalPages() != 0) {
             model.addAttribute(
@@ -56,6 +51,13 @@ public class ProjectController {
 
         return "projects/projects-list";
     }
+
+    @GetMapping("/{id}")
+    public String getSingleProject(Model model, @PathVariable("id") String id) {
+        model.addAttribute("project", projectService.findOneAsDtoById(id));
+        return "projects/single-project-page";
+    }
+
 
     @GetMapping("/create")
     public String projectCreate(

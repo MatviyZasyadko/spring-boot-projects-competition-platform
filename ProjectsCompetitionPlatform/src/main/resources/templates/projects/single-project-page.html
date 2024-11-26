@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Competitors - Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body class="bg-gray-50">
+<header th:replace="~{layout/header :: header}"></header>
+<main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-screen">
+    <div class="page-block">
+        <div class="flex justify-center">
+            <div id="default-carousel" class="relative w-full" data-carousel="static">
+                <div class="relative h-80 overflow-hidden rounded-lg md:h-96">
+                    <div th:each="image: ${project.images}" class="hidden duration-700 ease-in-out rounded-xl"
+                         data-carousel-item>
+                        <div class="rounded-xl h-80">
+                            <img th:src="${image.url}"
+                                 class="absolute block w-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl object-cover"
+                                 alt="project image">
+                        </div>
+                    </div>
+                </div>
+                <button type="button"
+                        class="absolute top-0 start-1/5 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                        data-carousel-prev>
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-500/30 group-hover:bg-gray-500/50 group-focus:ring-1 group-focus:ring-gray-300 group-focus:outline-none">
+            <svg class="w-4 h-4 text-gray-500 rtl:rotate-180" aria-hidden="true"
+                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 1 1 5l4 4"/>
+            </svg>
+            <span class="sr-only">Previous</span>
+        </span>
+                </button>
+                <button type="button"
+                        class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                        data-carousel-next>
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-500/30 group-hover:bg-gray-500/50 group-focus:ring-1 group-focus:ring-gray-300 group-focus:outline-none">
+            <svg class="w-4 h-4 text-gray-500 rtl:rotate-180" aria-hidden="true"
+                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 9 4-4-4-4"/>
+            </svg>
+            <span class="sr-only">Next</span>
+        </span>
+                </button>
+            </div>
+        </div>
+
+        <div class="w-3/4 mx-auto">
+            <p th:text="${project.name}" class="mt-8 text-3xl font-bold tracking-tight text-gray-900"></p>
+
+            <div class="flex gap-2 items-center mt-10">
+                <div class="h-8 w-8 rounded-full">
+                    <img class="h-8 w-8 rounded-full object-cover"
+                         th:src="${project.creator.logoUrl == null} ? '/unknown-user.jpg' : ${project.creator.logoUrl}"
+                         alt="user image">
+                </div>
+                <div>
+                    <a th:text="${project.creator.fullName}" href="/ui/main"
+                       class="slow-animation-300 group-hover:underline ease-out"></a>
+                </div>
+                <div>
+
+                </div>
+            </div>
+            <div class="flex flex-col gap-1 mt-10">
+                <p class="font-bold tracking-tight">Full description</p>
+                <p class="text-base" th:text="${project.fullDescription}"></p>
+            </div>
+
+            <div class="flex justify-center">
+                <hr class="mt-10 w-3/4"/>
+            </div>
+
+            <div class="mt-10">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-900">Discussion</h2>
+                </div>
+                <form class="mt-10">
+                    <div>
+                        <label for="comment" class="sr-only">Your comment</label>
+                        <textarea id="comment" rows="6"
+                                  class="default-input rounded-lg rounded-t-lg w-full"
+                                  placeholder="Write a comment..." required></textarea>
+                    </div>
+                    <button type="submit"
+                            class="primary-button py-2.5 px-4 w-auto mt-10">
+                        Post comment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+</body>
+</html>

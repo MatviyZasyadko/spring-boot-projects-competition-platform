@@ -17,7 +17,7 @@
             <div class="flex items-center lg:order-2">
                 <div class="relative">
                     <div id="profile-name"
-                         class="flex select-none items-center gap-2 text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none cursor-pointer">
+                         class="flex select-none min-w-48 items-center gap-2 text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none cursor-pointer">
                         <div>
                             <img class="w-7 h-7 rounded-full select-none"
                                  th:src="${#authentication.principal.logoUrl == null} ? '/unknown-user.jpg' : ${#authentication.principal.getLogoUrl()}"
@@ -27,7 +27,7 @@
                         </p>
                     </div>
                     <div id="dropdown-menu"
-                         class="hidden select-none absolute flex-col items-center rounded-lg shadow z-20 w-32 left-[23%] bottom-[-5.5rem]">
+                         class="hidden select-none absolute flex-col items-center rounded-lg shadow z-20 w-32 left-[23%] bottom-[-5.0rem]">
                         <div class="w-full bg-white text-gray-800 hover:bg-gray-50 rounded-t-lg focus:ring-4 focus:ring-gray-300 font-medium text-sm px-4 lg:px-5 py-2 lg:py-2.5 focus:outline-none">
                             <a class="w-full h-full select-none" th:href="@{/ui/logout}">Profile</a>
                         </div>

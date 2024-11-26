@@ -4,7 +4,7 @@ import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.images.dto.ImageResponseDto;
 import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
 import com.ukma.competition.platform.projects.dto.ProjectListDto;
-import com.ukma.competition.platform.projects.dto.ProjectRecordDto;
+import com.ukma.competition.platform.projects.dto.ProjectListItemDto;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
 import com.ukma.competition.platform.shared.dto.PaginationDto;
 import com.ukma.competition.platform.users.UserEntity;
@@ -15,14 +15,11 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,24 +77,37 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
         );
     }
 
-    private ProjectRecordDto convertToDto(ProjectEntity project) {
-        return new ProjectRecordDto(
+    @Override
+    public ProjectListItemDto findOneAsDtoById(String id) {
+        System.out.println();
+        return super.findById(id).map(this::convertToDto).orElseThrow();
+    }
+
+    private ProjectListItemDto convertToDto(ProjectEntity project) {
+        return new ProjectListItemDto(
             project.getId(),
             project.getName(),
             project.getShortDescription(),
             project.getFullDescription(),
-            new ImageResponseDto(
-                project.getLogo().getId(),
-                project.getLogo().getCreatedAt(),
-                project.getLogo().getUpdatedAt(),
-                project.getLogo().getUrl(),
-                project.getLogo().getPublicId()
-            ),
+            buildImageResponseDto(project.getLogo()),
+            project.getImages().stream().filter(image -> !image.getMain()).map(this::buildImageResponseDto).toList(),
             new UserDto(
                 project.getCreator().getId(),
                 project.getCreator().getFullName(),
-                project.getCreator().getEmail()
-            )
+                project.getCreator().getEmail(),
+                project.getCreator().getLogoUrl()
+            ),
+            project.getCreatedAt()
+        );
+    }
+
+    private ImageResponseDto buildImageResponseDto(ImageEntity image) {
+        return new ImageResponseDto(
+            image.getId(),
+            image.getCreatedAt(),
+            image.getUpdatedAt(),
+            image.getUrl(),
+            image.getPublicId()
         );
     }
 
@@ -133,7 +143,7 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
         String publicUrl = cloudinaryService.upload(image, cloudinaryFolder);
         ImageEntity logo = ImageEntity.builder()
             .url(publicUrl)
-            .isMain(isMain)
+            .main(isMain)
             .name(image.getOriginalFilename())
             .build();
         project.addImage(logo);

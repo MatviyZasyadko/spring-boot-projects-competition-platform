@@ -9,17 +9,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
+import java.util.List;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProjectRecordDto {
+public class ProjectListItemDto {
 
     String id;
     String name;
     String shortDescription;
     String fullDescription;
     ImageResponseDto logo;
+    List<ImageResponseDto> images;
     UserDto creator;
+    Instant createdAt;
 }

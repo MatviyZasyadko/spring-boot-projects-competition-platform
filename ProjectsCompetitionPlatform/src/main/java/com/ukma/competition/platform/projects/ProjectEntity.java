@@ -24,7 +24,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "projects")
@@ -72,7 +71,7 @@ public class ProjectEntity extends IdentifiableEntity {
     List<TagEntity> tags = new ArrayList<>();
 
     public ImageEntity getLogo() {
-        return images.stream().filter(ImageEntity::getIsMain).findFirst()
+        return images.stream().filter(ImageEntity::getMain).findFirst()
             .orElse(null);
     }
 

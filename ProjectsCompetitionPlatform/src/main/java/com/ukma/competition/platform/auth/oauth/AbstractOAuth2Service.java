@@ -83,7 +83,7 @@ public abstract class AbstractOAuth2Service {
                 if (userInfoFromResourceServer.getAvatar() != null) {
                     ImageEntity image = ImageEntity.builder()
                         .url(userInfoFromResourceServer.getAvatar())
-                        .isMain(true)
+                        .main(true)
                         .build();
                     userCheck.addImage(image);
                 }

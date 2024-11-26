@@ -98,7 +98,7 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     }
 
     public ImageEntity getLogo() {
-        return images.stream().filter(ImageEntity::getIsMain).findFirst()
+        return images.stream().filter(ImageEntity::getMain).findFirst()
             .orElse(null);
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 public class ProjectListDto {
 
-    List<ProjectRecordDto> content;
+    List<ProjectListItemDto> content;
     List<PaginationDto> paginationDtoList;
     Integer totalPages;
 }
