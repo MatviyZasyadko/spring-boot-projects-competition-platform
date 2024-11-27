@@ -80,6 +80,7 @@
 
             <div class="mt-8">
                 <button class="primary-button p-2"
+                        th:if="${project.creator.id == #authentication.principal.id || #authentication.principal.role.contains('ADMIN')}"
                         th:attr="onclick=|window.location.href = '/ui/projects/update/${project.id}'|">
                     Edit project
                 </button>

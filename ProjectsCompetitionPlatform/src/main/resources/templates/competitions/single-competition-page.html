@@ -4,7 +4,7 @@
         xmlns:th="http://www.thymeleaf.org"
 >
 <head>
-    <title>Competitors - Project</title>
+    <title>Competitors - Competition</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:href="@{/main.css}" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -14,7 +14,7 @@
 <main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-screen">
     <div class="page-block">
         <div class="flex justify-center">
-            <div class="flex gap-10 items-start max-w-2/3">
+            <div class="flex gap-16 items-start max-w-2/3">
                 <div>
                     <div>
                         <img class="object-cover rounded-lg shadow-md h-64 w-56"
@@ -33,10 +33,10 @@
                              class="mt-4 flex select-none min-w-48 items-center gap-2 text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm">
                             <div>
                                 <img class="w-7 h-7 rounded-full select-none"
-                                     th:src="${competition.getLogo() == null} ? '/unknown-user.jpg' : ${competition.getLogo().url}"
+                                     th:src="${competition.organizer.logoUrl == null} ? '/unknown-user.jpg' : ${competition.getLogo().url}"
                                      alt="Rounded avatar">
                             </div>
-                            <div class="select-none te" th:text="${#authentication.principal.fullName}">
+                            <div class="select-none">
                                 <span>Made by:</span> <span th:text="${competition.organizer.getFullName()}"></span>
                             </div>
                         </div>
@@ -45,16 +45,84 @@
                                 Participants amount
                             </p>
                             <p th:text="${competition.projects.size()}" class="mt-2">
-
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <p class="text-3xl font-bold leading-loose">
-                        VovaVovaVova fgdfdfdfdfdfff
-                    </p>
+                    <div class="flex gap-3 items-center">
+                        <p th:text="${competition.name}" class="text-3xl font-bold leading-loose"></p>
+
+                        <div th:if="${competition.finished}" role="alert">
+                            <span class="font-medium p-2 text-sm text-red-800 rounded-lg bg-red-100 inline-block">Finished</span>
+                        </div>
+                        <div th:if="${not competition.finished}" role="alert">
+                            <div class="font-medium p-2 text-sm text-green-800 rounded-lg bg-green-100 inline-block">
+                                <span>Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex gap-3 items-center">
+                        <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"/>
+                        </svg>
+                        <div class="flex flex-col items-start gap-1">
+                            <p class="font-bold">
+                                Finish date
+                            </p>
+
+                            <p class="text-xs"
+                               th:text="${competition.votingEndDate.toString().replaceAll('T', ' ').substring(0, 16)}">
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex gap-3 items-center">
+                        <svg class="h-8 w-8" fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M21,2H3A1,1,0,0,0,2,3V21a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V3A1,1,0,0,0,21,2ZM4,4H20V6H4ZM20,20H4V8H20ZM6,12a1,1,0,0,1,1-1H17a1,1,0,0,1,0,2H7A1,1,0,0,1,6,12Zm0,4a1,1,0,0,1,1-1h5a1,1,0,0,1,0,2H7A1,1,0,0,1,6,16Z"></path>
+                            </g>
+                        </svg>
+                        <div class="flex flex-col items-start gap-1">
+                            <p class="font-bold">
+                                Description
+                            </p>
+
+                            <p class="text-xs" th:text="${competition.description}"></p>
+                        </div>
+                    </div>
+
+                    <div class="relative mt-8">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center">
+                        <span class="px-2 bg-white text-black">
+                            Actions
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-3 mt-6">
+                        <div th:if="${#authentication.principal.id == competition.organizer.id}">
+                            <button type="button"
+                                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg p-1.5 slow-animation-300">
+                                Delete competition
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" data-modal-target="apply-project-modal"
+                                    data-modal-toggle="apply-project-modal"
+                                    class="primary-button font-medium p-1.5">
+                                Apply a project
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,5 +130,52 @@
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
+
+<div id="apply-project-modal" tabindex="-1" aria-hidden="true"
+     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow">
+            <div class="flex items-center justify-between p-2 md:p-5 border-b rounded-t">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Apply a project
+                </h3>
+                <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                        data-modal-toggle="apply-project-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form class="p-4 md:p-5">
+                <div class="col-span-2 sm:col-span-1 mb-7">
+                    <label for="project-select" class="block mb-2 text-sm font-medium text-gray-900">Choose your
+                        project</label>
+                    <select id="project-select"
+                            class="w-full default-input">
+                        <option selected="">Select category</option>
+                        <option value="TV">TV/Monitors</option>
+                        <option value="PC">PC</option>
+                        <option value="GA">Gaming/Console</option>
+                        <option value="PH">Phones</option>
+                    </select>
+                </div>
+                <button type="submit"
+                        class="primary-button p-1.5 flex gap-2 items-center">
+                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    Apply a project
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

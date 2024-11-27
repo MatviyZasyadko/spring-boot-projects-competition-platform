@@ -25,8 +25,8 @@
             <div th:each="competition: ${competitions}"
                  class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                 <a th:href="'/ui/competitions/' + ${competition.id}">
-                    <div class="max-h-[300px] w-full">
-                        <img class="rounded-t-lg object-cover max-h-[300px] w-full"
+                    <div class="h-[300px] w-full">
+                        <img class="rounded-t-lg object-cover h-[300px] w-full"
                              th:src="${competition.logo == null} ? '/default-image.jpg' : ${competition.logo.url}"
                              alt=""/>
                     </div>
@@ -38,13 +38,16 @@
                     </a>
                     <p class="mb-5 font-normal text-gray-700" th:text="${competition.description}"></p>
 
-                    <div class="flex flex-col gap-2">
-                        <div th:if="${competition.finished}" role="alert">
-                            <span class="font-medium p-2 mb-5 text-sm text-red-800 rounded-lg bg-red-100 inline-block">Finished</span>
-                        </div>
-                        <div th:if="${not competition.finished}" role="alert">
-                            <div class="font-medium p-2 mb-5 text-sm text-green-800 rounded-lg bg-green-100 inline-block">
-                                <span>Active</span>
+                    <div class="flex items-center gap-2 mb-5">
+                        <p>Status:</p>
+                        <div class="flex flex-col gap-2">
+                            <div th:if="${competition.finished}" role="alert">
+                                <span class="font-medium p-2 text-sm text-red-800 rounded-lg bg-red-100 inline-block">Finished</span>
+                            </div>
+                            <div th:if="${not competition.finished}" role="alert">
+                                <div class="font-medium p-2 text-sm text-green-800 rounded-lg bg-green-100 inline-block">
+                                    <span>Active</span>
+                                </div>
                             </div>
                         </div>
                     </div>
