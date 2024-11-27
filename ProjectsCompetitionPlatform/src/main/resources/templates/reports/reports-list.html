@@ -42,10 +42,13 @@
                         <th scope="col" class="px-6 py-3">
                             Description
                         </th>
+                        <th scope="col" class="px-6 py-3">
+                            Admin comment
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="report : ${userReports}" class="bg-white border-b">
+                    <tr th:each="report : ${userReports}" class="reportRow bg-white border-b cursor-pointer">
                         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
                             <span th:text="${report.topic}"></span>
                         </th>
@@ -58,6 +61,9 @@
                         <td class="px-6 py-4">
                             <span th:text="${report.description}"></span>
                         </td>
+                        <td class="px-6 py-4">
+                            <span th:text="${report.adminComment != null ? report.adminComment : 'No comment yet'}"></span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -65,6 +71,66 @@
         </div>
     </div>
 </main>
+
+<div id="reportModal"
+     class="fixed inset-0 border-gray-300 shadow-hover bg-opacity-80 flex justify-center items-center hidden">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-2/3 max-w-3xl relative">
+        <div id="modalContent" class="space-y-6">
+            <h3 id="modalTopic" class="text-3xl font-bold text-center mb-6">Report</h3>
+            <div class="flex w-full justify-between">
+                <p id="modalStatus" class="w-3/4 text-lg font-bold"></p>
+                <p id="modalApproveDate" class="text-gray-700 italic w-3/4"></p>
+            </div>
+            <div class="flex items-start flex-col">
+                <p class="font-semibold text-gray-700 w-1/4">Description: </p>
+                <p id="modalDescription" class="text-gray-800 w-3/4"></p>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <p class="font-semibold text-gray-700">Admin comment: </p>
+                <p id="modalComment" class="text-gray-800 w-3/4"></p>
+            </div>
+        </div>
+        <button style="background-color: coral; color: black"
+                class="closeModal px-2 py-1 rounded-lg">
+            Close
+        </button>
+    </div>
+</div>
+
 <footer th:replace="~{layout/footer :: footer}"></footer>
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const reportRows = document.querySelectorAll(".reportRow");
+        const modal = document.getElementById("reportModal");
+        const closeModalBtns = document.querySelectorAll(".closeModal");
+
+        reportRows.forEach((reportRow) => {
+            const reportContent = reportRow.children
+            const status = reportContent.item(1).innerText
+            reportContent.item(1).style.color = status === "APPROVED" ? "green" : "orange"
+            const topic = reportContent.item(0).innerText
+            const approveDate = reportContent.item(2).innerText
+            const description = reportContent.item(3).innerText
+            const reportComment = reportContent.item(4).innerText
+
+            reportRow.addEventListener('click', function () {
+                document.getElementById("modalTopic").textContent = topic
+                document.getElementById("modalStatus").textContent = status
+                document.getElementById("modalApproveDate").textContent = approveDate
+                document.getElementById("modalDescription").textContent = description
+                document.getElementById('modalComment').value = reportComment;
+
+                modal.classList.remove("hidden");
+            });
+        })
+
+        closeModalBtns.forEach((row) => {
+            row.addEventListener("click", function () {
+                modal.classList.add("hidden")
+            })
+        })
+    });
+</script>
 </body>
 </html>

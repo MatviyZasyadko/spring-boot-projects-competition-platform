@@ -16,11 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.time.Instant;
 
 @Controller
 @RequestMapping("/ui/reports")
@@ -77,5 +76,32 @@ public class ReportController {
         }
 
         return "redirect:/ui/reports";
+    }
+
+    @PostMapping("/approve-reopen-report")
+    public String approveOrReopenReport(@RequestParam("reportId") String reportId,
+                                      @RequestParam("action") String action,
+                                      @RequestParam(value = "comment", required = false) String comment,
+                                      Model model) {
+        ReportEntity report = reportService.findById(reportId).orElse(null);
+
+        if (report == null) {
+            return "redirect:/ui/admin-page";
+        }
+
+        if ("approve".equals(action)) {
+            report.setReportStatus(ReportStatus.APPROVED);
+            report.setApproveDate(Instant.now());
+            report.setAdminComment(comment);
+        } else if ("reopen".equals(action)) {
+            report.setReportStatus(ReportStatus.IN_PROCESS);
+            report.setApproveDate(null);
+            report.setAdminComment(comment);
+        }
+
+        reportService.save(report);
+
+        model.addAttribute("allReports", reportService.findAll());
+        return "redirect:/ui/admin-page";
     }
 }

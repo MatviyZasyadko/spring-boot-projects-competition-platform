@@ -36,6 +36,9 @@ public class ReportEntity extends IdentifiableEntity {
     @Column(nullable = false)
     String description;
 
+    @Column
+    String adminComment;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     ReportStatus reportStatus;

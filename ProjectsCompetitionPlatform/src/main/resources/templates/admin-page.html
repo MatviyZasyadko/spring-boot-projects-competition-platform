@@ -139,10 +139,15 @@
                             <th scope="col" class="px-6 py-3">
                                 Description
                             </th>
+                            <th scope="col" class="px-6 py-3">
+                                Admin comment
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="report : ${allReports}" class="reportRow bg-white border-b cursor-pointer">
+                        <tr th:each="report : ${allReports}"
+                            th:attr="data-report_id=${report.getId()}"
+                            class="reportRow bg-white border-b cursor-pointer">
                             <th id="topic" scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
                                 <span th:text="${report.topic}"></span>
                             </th>
@@ -154,6 +159,9 @@
                             </th>
                             <td class="px-6 py-4">
                                 <span th:text="${report.description}"></span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span th:text="${report.adminComment}"></span>
                             </td>
                         </tr>
                         </tbody>
@@ -239,75 +247,45 @@
     </section>
 </main>
 
-<!-- Modal -->
-<!--<div id="reportModal" class="fixed inset-0 border-gray-100 shadow-md bg-opacity-50 flex justify-center items-center hidden">-->
-<!--    <div class="bg-white p-8 rounded-lg shadow-lg w-2/3 max-w-3xl relative">-->
-<!--        <button class="closeModal absolute top-4 right-4 text-gray-500 hover:text-gray-800">-->
-<!--            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-<!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />-->
-<!--            </svg>-->
-<!--        </button>-->
-<!--        <h3 class="text-3xl font-bold text-center mb-6">Report Details</h3>-->
-<!--        <div id="modalContent" class="space-y-4">-->
-<!--            <div class="flex items-start">-->
-<!--                <p class="font-semibold text-gray-700 w-1/4">Topic:</p>-->
-<!--                <p id="modalTopic" class="text-gray-800 w-3/4"></p>-->
-<!--            </div>-->
-<!--            <div class="flex items-start">-->
-<!--                <p class="font-semibold text-gray-700 w-1/4">Status:</p>-->
-<!--                <p id="modalStatus" class="text-gray-800 w-3/4"></p>-->
-<!--            </div>-->
-<!--            <div class="flex items-start">-->
-<!--                <p class="font-semibold text-gray-700 w-1/4">Approve Date:</p>-->
-<!--                <p id="modalApproveDate" class="text-gray-800 w-3/4"></p>-->
-<!--            </div>-->
-<!--            <div class="flex items-start">-->
-<!--                <p class="font-semibold text-gray-700 w-1/4">Description:</p>-->
-<!--                <p id="modalDescription" class="text-gray-800 w-3/4"></p>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="flex justify-around space-x-4 mt-6">-->
-<!--            <button style="background-color: lightgreen; color: white" id="approveReport" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">-->
-<!--                Approve-->
-<!--            </button>-->
-<!--            <button style="background-color: lightgray; color: black" class="closeModal px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">-->
-<!--                Close-->
-<!--            </button>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-<div id="reportModal" class="fixed inset-0 border-gray-300 shadow-hover bg-opacity-80 flex justify-center items-center hidden">
+<div id="reportModal"
+     class="fixed inset-0 border-gray-300 shadow-hover bg-opacity-80 flex justify-center items-center hidden">
     <div class="bg-white p-8 rounded-lg shadow-lg w-2/3 max-w-3xl relative">
-        <div id="modalContent" class="space-y-6">
-            <h3 id="modalTopic" class="text-3xl font-bold text-center mb-6">Report</h3>
-            <div class="flex w-full justify-between">
-                <p id="modalStatus" class="w-3/4 text-lg font-bold"></p>
-                <p id="modalApproveDate" class="text-gray-700 italic w-3/4"></p>
+        <form th:action="@{/ui/reports/approve-reopen-report}" method="post">
+            <div id="modalContent" class="space-y-6">
+                <h3 id="modalTopic" class="text-3xl font-bold text-center mb-6">Report</h3>
+                <div class="flex w-full justify-between">
+                    <p id="modalStatus" class="w-3/4 text-lg font-bold"></p>
+                    <p id="modalApproveDate" class="text-gray-700 italic w-3/4"></p>
+                </div>
+                <div class="flex items-start flex-col">
+                    <p class="font-semibold text-gray-700 w-1/4">Description: </p>
+                    <p id="modalDescription" class="text-gray-800 w-3/4"></p>
+                </div>
+                <div class="flex flex-col space-y-2">
+                    <label for="commentInput" class="font-semibold text-gray-700">Add Comment: </label>
+                    <input type="hidden" name="reportId" id="reportIdInput"/>
+                    <textarea name="comment" id="commentInput"
+                              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows="4" placeholder="Enter your comment..."></textarea>
+                </div>
             </div>
-            <div class="flex items-start flex-col">
-                <p class="font-semibold text-gray-700 w-1/4">Description: </p>
-                <p id="modalDescription" class="text-gray-800 w-3/4"></p>
+            <div class="flex justify-around items-stretch space-x-4 mt-6 gap-2">
+                <button type="submit" name="action" value="approve" style="background-color: lightgreen; color: black"
+                        id="approveReport"
+                        class="px-2 py-1 rounded-lg">
+                    Approve
+                </button>
+                <button type="submit" name="action" value="reopen" style="background-color: orange; color: black"
+                        id="reopenReport"
+                        class="px-2 py-1 rounded-lg">
+                    Reopen
+                </button>
+                <button type="reset" style="background-color: coral; color: black"
+                        class="closeModal px-2 py-1 rounded-lg">
+                    Close
+                </button>
             </div>
-            <div class="flex flex-col space-y-2">
-                <label for="comment" class="font-semibold text-gray-700">Add Comment: </label>
-                <textarea id="comment" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" placeholder="Enter your comment..."></textarea>
-            </div>
-        </div>
-        <div class="flex justify-around items-stretch space-x-4 mt-6 gap-2">
-            <button style="background-color: lightgreen; color: black" id="approveReport"
-                    class="px-2 py-1 rounded-lg">
-                Approve
-            </button>
-            <button style="background-color: orange; color: black" id="reopenReport"
-                    class="px-2 py-1 rounded-lg">
-                Reopen
-            </button>
-            <button style="background-color: coral; color: black"
-                    class="closeModal px-2 py-1 rounded-lg">
-                Close
-            </button>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -319,22 +297,25 @@
         const reportRows = document.querySelectorAll(".reportRow");
         const modal = document.getElementById("reportModal");
         const closeModalBtns = document.querySelectorAll(".closeModal");
-        const approveReportBtn = document.getElementById("approveReport");
-        const modalContent = document.getElementById("modalContent");
 
         reportRows.forEach((reportRow) => {
-            reportRow.addEventListener("click", function () {
-                const reportContent = reportRow.children
-                const topic = reportContent.item(0).textContent
-                const status = reportContent.item(1).textContent
-                const approveDate = reportContent.item(2).textContent
-                const description = reportContent.item(3).textContent
+            const reportId = reportRow.dataset.report_id;
+            const reportContent = reportRow.children
+            const status = reportContent.item(1).innerText
+            reportContent.item(1).style.color = status === "APPROVED" ? "green" : "orange"
+            const topic = reportContent.item(0).innerText
+            const approveDate = reportContent.item(2).innerText
+            const description = reportContent.item(3).innerText
+            const reportComment = reportContent.item(4).innerText
 
-                const modalContentChildren = modalContent.children
+            reportRow.addEventListener('click', function () {
                 document.getElementById("modalTopic").textContent = topic
                 document.getElementById("modalStatus").textContent = status
                 document.getElementById("modalApproveDate").textContent = approveDate
                 document.getElementById("modalDescription").textContent = description
+
+                document.getElementById('reportIdInput').value = reportId;
+                document.getElementById('commentInput').value = reportComment;
 
                 modal.classList.remove("hidden");
             });
@@ -345,11 +326,6 @@
                 modal.classList.add("hidden")
             })
         })
-
-        approveReportBtn.addEventListener("click", function () {
-            alert("Report Approved!");
-            modal.classList.add("hidden");
-        });
     });
 
 
