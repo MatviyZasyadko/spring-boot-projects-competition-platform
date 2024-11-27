@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 
 @Controller
@@ -35,6 +34,12 @@ public class CompetitionController {
         model.addAttribute("competitions", competitionService.findAllAsDto());
 
         return "competitions/competitions-list";
+    }
+
+    @GetMapping("/{id}")
+    public String singleCompetitionPage(Model model, @PathVariable("id") String id) {
+        model.addAttribute("competition", competitionService.findByIdAsDto(id));
+        return "competitions/single-competition-page";
     }
 
     @GetMapping("/create")
@@ -90,56 +95,6 @@ public class CompetitionController {
         binder.registerCustomEditor(LocalDate.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true));
     }
 
-    //
-    //  @PostMapping("/upload")
-    //  public ResponseEntity<CompetitionDto> createNewCompetition(@Valid @RequestBody CompetitionDto newCompetitionDto) {
-    //      Competition newCompetition = convertDtoToCompetition(newCompetitionDto);
-    //      Competition savedCompetition = competitionService.save(newCompetition);
-    //      CompetitionDto savedCompetitionDto = convertCompetitionToDto(savedCompetition);
-    //      return ResponseEntity.status(HttpStatus.CREATED).body(savedCompetitionDto);
-    //  }
-//
-
-    //
-    //  @GetMapping("/{id}")
-    //  public ResponseEntity<CompetitionDto> findById(@PathVariable("id") String id) {
-    //      Optional<CompetitionEntity> optionalCompetition = competitionService.findById(id);
-//
-    //      competitionService.logger.info("Received request to retrieve competition with ID: {}", id);
-//
-    //      ThreadContext.put("competitionID", id);
-//
-    //      if (optionalCompetition.isPresent()) {
-    //          CompetitionDto competitionDto = convertCompetitionToDto(optionalCompetition.get());
-    //          return ResponseEntity.ok(competitionDto);
-    //      } else {
-    //          return ResponseEntity.notFound().build();
-    //      }
-    //  }
-//
-    //  @PutMapping("/{id}")
-    //  public ResponseEntity<CompetitionDto> updateById(
-    //          @PathVariable("id") String id,
-    //          @RequestBody @Valid CompetitionDto competitionDto
-    //  ) {
-//
-    //      competitionService.logger.info("Received request to update competition with ID: {}", id);
-    //      ThreadContext.put("competitionID", id);
-    //      ThreadContext.put("competitionName", competitionDto.getName());
-//
-    //      Competition competition = convertDtoToCompetition(competitionDto);
-    //      try {
-    //          Competition updatedCompetition = competitionService.updateById(id, competition);
-    //          CompetitionDto updatedCompetitionDto = convertCompetitionToDto(updatedCompetition);
-    //          ThreadContext.clearAll();
-    //          return ResponseEntity.ok(updatedCompetitionDto);
-    //      } catch (EntityNotFoundException e) {
-    //          competitionService.logger.error("Failed to update competition. Competition with ID: {} not found", id);
-    //          ThreadContext.clearAll();
-    //          return ResponseEntity.notFound().build();
-    //      }
-    //  }
-//
     //  @DeleteMapping("/{id}")
     //  @ResponseStatus(HttpStatus.NO_CONTENT)
     //  public void deleteById(@PathVariable("id") String id) {
@@ -147,38 +102,4 @@ public class CompetitionController {
     //  }
 //
 //
-    //  private Competition convertDtoToCompetition(CompetitionDto dto) {
-    //      Competition competition = new Competition();
-    //      competition.setName(dto.getName());
-    //      competition.setDescription(dto.getDescription());
-    //      competition.setBeginDate(dto.getBeginDate());
-    //      competition.setVotingBeginDate(dto.getVotingBeginDate());
-    //      competition.setVotingEndDate(dto.getVotingEndDate());
-    //      competition.setHasPrizePool(dto.getHasPrizePool());
-    //      competition.setPriceDescription(dto.getPriceDescription());
-    //      competition.setPrizePool(dto.getPrizePool());
-    //      competition.setImages(dto.getImages());
-    //      competition.setProjects(dto.getProjects());
-    //      competition.setTags(dto.getTags());
-    //      competition.setPayments(dto.getPayments());
-    //      return competition;
-    //  }
-//
-    //  private CompetitionItemDto convertCompetitionToDto(CompetitionEntity competition) {
-    //      CompetitionItemDto dto = new CompetitionItemDto();
-    //      dto.setId(competition.getId());
-    //      dto.setName(competition.getName());
-    //      dto.setDescription(competition.getDescription());
-    //      dto.setBeginDate(competition.getBeginDate());
-    //      dto.setVotingBeginDate(competition.getVotingBeginDate());
-    //      dto.setVotingEndDate(competition.getVotingEndDate());
-    //      dto.setHasPrizePool(competition.getHasPrizePool());
-    //      dto.setPriceDescription(competition.getPriceDescription());
-    //      dto.setPrizePool(competition.getPrizePool());
-    //      dto.setImages(competition.getImages());
-    //      dto.setProjects(competition.getProjects());
-    //      dto.setTags(competition.getTags());
-    //      dto.setPayments(competition.getPayments());
-    //      return dto;
-    //  }
 }

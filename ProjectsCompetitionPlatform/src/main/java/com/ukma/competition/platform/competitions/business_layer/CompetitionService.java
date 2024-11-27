@@ -15,4 +15,6 @@ public interface CompetitionService extends GenericService<CompetitionEntity, St
     void saveFromDto(CompetitionCreateDto competitionCreateDto, String userEmail) throws Exception;
 
     List<CompetitionItemDto> findAllAsDto();
+
+    CompetitionItemDto findByIdAsDto(String id);
 }

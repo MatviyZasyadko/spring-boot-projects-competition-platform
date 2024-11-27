@@ -24,7 +24,7 @@
 
             <div th:each="competition: ${competitions}"
                  class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
-                <a href="#">
+                <a th:href="'/ui/competitions/' + ${competition.id}">
                     <div class="max-h-[300px] w-full">
                         <img class="rounded-t-lg object-cover max-h-[300px] w-full"
                              th:src="${competition.logo == null} ? '/default-image.jpg' : ${competition.logo.url}"
@@ -32,7 +32,7 @@
                     </div>
                 </a>
                 <div class="p-5">
-                    <a href="#">
+                    <a th:href="'/ui/competitions/' + ${competition.id}">
                         <h5 class="mb-4 text-2xl font-bold tracking-tight text-gray-900"
                             th:text="${competition.name}"></h5>
                     </a>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <a href="#"
+                    <a th:href="'/ui/competitions/' + ${competition.id}"
                        class="inline-flex items-center p-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-gray-600">
                         Read more
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"

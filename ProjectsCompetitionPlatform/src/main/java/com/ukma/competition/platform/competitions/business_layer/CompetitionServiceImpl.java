@@ -7,11 +7,11 @@ import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.images.dto.ImageResponseDto;
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.projects.ProjectService;
-import com.ukma.competition.platform.projects.dto.ProjectCreateUpdateDto;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
 import com.ukma.competition.platform.shared.constants.AppConstants;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
+import com.ukma.competition.platform.users.dto.UserDto;
 import com.ukma.edu.spring.boot.starter.cloudinary.service.CloudinaryService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
@@ -20,8 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -106,6 +104,14 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         );
         competitionDto.setProjects(entity.getProjects().stream().map(projectService::convertToDto).toList());
         competitionDto.setFinished(entity.getVotingEndDate().isBefore(Instant.now()) || entity.getVotingEndDate().equals(Instant.now()));
+        competitionDto.setOrganizer(
+            UserDto.builder()
+                .id(entity.getOrganizer().getId())
+                .email(entity.getOrganizer().getEmail())
+                .fullName(entity.getOrganizer().getFullName())
+                .logoUrl(entity.getOrganizer().getLogoUrl())
+                .build()
+        );
 
         return competitionDto;
     }
@@ -144,14 +150,14 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
             .toList();
     }
 
-    public void findByIdAsDto(String id) {
-        //Optional<CompetitionEntity> competitionEntity = repository.findById(id);
-//
-        //Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
-//
-        //logger.info(findMarker, "Searching for competition");
-//
-        //return convertEntityToDto(competitionEntity);
+
+    @Override
+    public CompetitionItemDto findByIdAsDto(String id) {
+        CompetitionEntity competitionEntity = repository.findById(id).orElseThrow();
+        Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
+        logger.info(findMarker, "Searching for competition");
+
+        return convertEntityToDto(competitionEntity);
     }
 
     @Override
