@@ -1,6 +1,5 @@
 package com.ukma.competition.platform.reports;
 
-import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
 import com.ukma.competition.platform.reports.dto.ReportCreateDto;
 import com.ukma.competition.platform.shared.GenericService;
 import com.ukma.competition.platform.users.UserEntity;

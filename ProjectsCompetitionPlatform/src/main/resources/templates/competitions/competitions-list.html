@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Competitors - Competitions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body class="bg-gray-50">
+<header th:replace="~{layout/header :: header}"></header>
+<main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-[95vh]">
+    <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">All competitions</h2>
+    <div class="mt-8 flex justify-between items-center gap-2 px-4">
+        <div>
+            <a class="secondary-white-button px-3 py-2.5 overflow-x-auto" th:href="@{/ui/projects/create}">Create a new
+                competition</a>
+        </div>
+    </div>
+    <div>
+        <div class="mt-8 grid grid-cols-[repeat(auto-fill,_minmax(200px,1fr))] gap-6">
+
+            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+                <a href="#">
+                    <img class="rounded-t-lg" src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg" alt="" />
+                </a>
+                <div class="p-5">
+                    <a href="#">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Noteworthy technology acquisitions 2021</h5>
+                    </a>
+                    <p class="mb-3 font-normal text-gray-700">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                    <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                        Read more
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</main>
+
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      document.querySelectorAll('.pagination').forEach(element => element.addEventListener('click', (event) => event.preventDefault()));
+      const previousPageValue = /*[[${previousPage}]]*/ null;
+      const nextPageValue = /*[[${nextPage}]]*/ null;
+
+      document.getElementById('next-page-pagination').addEventListener('click', (event) => {
+        event.preventDefault();
+        if (nextPageValue) {
+          changePage(nextPageValue);
+        }
+      });
+
+      document.getElementById('previous-page-pagination').addEventListener('click', (event) => {
+        event.preventDefault();
+        if (previousPageValue !== null && previousPageValue !== undefined) {
+          changePage(previousPageValue);
+        }
+      });
+
+      function changePage(pageNumber) {
+        if (pageNumber) {
+          const urlParams = new URLSearchParams(window.location.search);
+          urlParams.set('page', (pageNumber - 1));
+          window.location.search = urlParams;
+        }
+      }
+
+      document.getElementById('default-search').value = new URLSearchParams(window.location.search).get('search') || '';
+
+      function searchProject(event) {
+        event.preventDefault();
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('search') === null || urlParams.get('search') !== document.getElementById('default-search').value) {
+          urlParams.delete('page');
+        }
+        if (!document.getElementById('default-search').value) {
+          urlParams.delete('search');
+        } else {
+          urlParams.set('search', document.getElementById('default-search').value);
+        }
+        window.location.search = urlParams;
+      }
+
+      function redirectToSingleProjectPage(id) {
+        window.location.href = `/ui/projects/${id}`;
+      }
+
+      /*]]>*/
+    </script>
+</div>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+</body>
+</html>

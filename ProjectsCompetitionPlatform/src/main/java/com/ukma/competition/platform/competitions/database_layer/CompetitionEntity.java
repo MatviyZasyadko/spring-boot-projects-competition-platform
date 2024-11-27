@@ -23,10 +23,11 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "competitions")
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -84,4 +85,20 @@ public class CompetitionEntity extends IdentifiableEntity {
 
     @OneToMany(mappedBy = "competition")
     List<PaymentEntity> payments;
+
+    public ImageEntity getLogo() {
+        return images.stream().filter(ImageEntity::getMain).findFirst()
+            .orElse(null);
+    }
+
+    public String getLogoUrl() {
+        return Optional.ofNullable(this.getLogo())
+            .map(ImageEntity::getUrl)
+            .orElse(null);
+    }
+
+    public void addImage(ImageEntity image) {
+        this.images.add(image);
+        image.getCompetitions().add(this);
+    }
 }

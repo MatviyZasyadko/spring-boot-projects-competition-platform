@@ -2,7 +2,8 @@ package com.ukma.competition.platform.competitions.business_layer;
 
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
-import com.ukma.competition.platform.projects.ProjectEntity;
+import com.ukma.competition.platform.competitions.presentation_layer.CompetitionItemDto;
+import com.ukma.competition.platform.projects.ProjectService;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
@@ -27,11 +28,17 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
 
     private static final Marker COMPETITION_MARKER = MarkerManager.getMarker("COMPETITION");
     CompetitionProperties competitionProperties;
+    ProjectService projectService;
 
     @Autowired
-    public CompetitionServiceImpl(CompetitionRepository repository, CompetitionProperties competitionProperties) {
+    public CompetitionServiceImpl(
+        CompetitionRepository repository,
+        CompetitionProperties competitionProperties,
+        ProjectService projectService
+    ) {
         super(repository);
         this.competitionProperties = competitionProperties;
+        this.projectService = projectService;
     }
 
     @Caching(evict = {
@@ -50,7 +57,7 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
 
             logger.info(updateMarker, "Successfully updated competition with ID: {}", id);
 
-            return convertEntityToCompetition(updatedCompetitionEntity);
+            return null;
         } else {
             logger.error(updateMarker, "Failed to update competition with ID: {}. Not found.", id);
             ThreadContext.clearAll();
@@ -63,50 +70,46 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         return currentProjects < competitionProperties.getMaxProjects();
     }
 
-    public Competition addProjectToCompetition(String competitionId, ProjectEntity project) {
-        Optional<CompetitionEntity> optionalCompetitionEntity = repository.findById(competitionId);
+    // public Competition addProjectToCompetition(String competitionId, ProjectEntity project) {
+    //     Optional<CompetitionEntity> optionalCompetitionEntity = repository.findById(competitionId);
+//
+    //     if (optionalCompetitionEntity.isPresent()) {
+    //         CompetitionEntity competitionEntity = optionalCompetitionEntity.get();
+//
+    //         Competition competition = convertEntityToCompetition(competitionEntity);
+//
+    //         if (!canAddProject(competition)) {
+    //             throw new IllegalArgumentException("Cannot add more projects: limit reached");
+    //         }
+//
+    //         competitionEntity.getProjects().add(project);
+//
+    //         repository.save(competitionEntity);
+//
+    //         return convertEntityToCompetition(competitionEntity);
+    //     } else {
+    //         throw new EntityNotFoundException("Competition not found with ID: " + competitionId);
+    //     }
+    // }
 
-        if (optionalCompetitionEntity.isPresent()) {
-            CompetitionEntity competitionEntity = optionalCompetitionEntity.get();
 
-            Competition competition = convertEntityToCompetition(competitionEntity);
-
-            if (!canAddProject(competition)) {
-                throw new IllegalArgumentException("Cannot add more projects: limit reached");
-            }
-
-            competitionEntity.getProjects().add(project);
-
-            repository.save(competitionEntity);
-
-            return convertEntityToCompetition(competitionEntity);
-        } else {
-            throw new EntityNotFoundException("Competition not found with ID: " + competitionId);
-        }
-    }
-
-
-    private Competition convertEntityToCompetition(CompetitionEntity entity) {
-        Competition competition = new Competition();
+    private CompetitionItemDto convertEntityToDto(CompetitionEntity entity) {
+        CompetitionItemDto competition = new CompetitionItemDto();
         competition.setId(entity.getId());
         competition.setName(entity.getName());
         competition.setDescription(entity.getDescription());
         competition.setBeginDate(entity.getBeginDate());
         competition.setVotingBeginDate(entity.getVotingBeginDate());
         competition.setVotingEndDate(entity.getVotingEndDate());
-        competition.setHasPrizePool(entity.getHasPrizePool());
-        competition.setPriceDescription(entity.getPriceDescription());
-        competition.setPrizePool(entity.getPrizePool());
         competition.setImages(entity.getImages());
-        competition.setProjects(entity.getProjects());
-        competition.setTags(entity.getTags());
-        competition.setPayments(entity.getPayments());
+        competition.setProjects(entity.getProjects().stream().map(projectService::convertToDto).toList());
+
         return competition;
     }
 
-    private Optional<Competition> convertEntityToCompetition(Optional<CompetitionEntity> entity) {
+    private Optional<Competition> convertEntityToDto(Optional<CompetitionEntity> entity) {
 
-        return entity.isEmpty() ? Optional.empty() : convertEntityToCompetition(entity);
+        return entity.isEmpty() ? Optional.empty() : convertEntityToDto(entity);
     }
 
     private CompetitionEntity convertCompetitionToEntity(Competition competition) {
@@ -134,19 +137,18 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
     public Competition save(Competition competition) {
         CompetitionEntity competitionEntity = convertCompetitionToEntity(competition);
         CompetitionEntity savedEntity = repository.saveAndFlush(competitionEntity);
-        return convertEntityToCompetition(savedEntity);
+        return null;
     }
 
     @Cacheable("competitionsList")
-    public List<Competition> findAllAsDto() {
+    public List<CompetitionItemDto> findAllAsDto() {
         Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
-
         logger.info(findMarker, "Retrieving all competitions");
 
         List<CompetitionEntity> allCompetitionEntities = repository.findAll();
 
         return allCompetitionEntities.stream()
-            .map(this::convertEntityToCompetition)
+            .map(this::convertEntityToDto)
             .toList();
     }
 
@@ -158,7 +160,7 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
 
         logger.info(findMarker, "Searching for competition");
 
-        return convertEntityToCompetition(competitionEntity);
+        return convertEntityToDto(competitionEntity);
     }
 
     @Override

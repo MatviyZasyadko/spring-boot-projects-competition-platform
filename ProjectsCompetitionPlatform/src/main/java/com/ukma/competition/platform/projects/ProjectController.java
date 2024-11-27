@@ -1,6 +1,7 @@
 package com.ukma.competition.platform.projects;
 
-import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ukma.competition.platform.projects.dto.ProjectCreateUpdateDto;
 import com.ukma.competition.platform.projects.dto.ProjectListDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -58,7 +59,6 @@ public class ProjectController {
         return "projects/single-project-page";
     }
 
-
     @GetMapping("/create")
     public String projectCreate(
         Model model,
@@ -66,7 +66,67 @@ public class ProjectController {
         String error
     ) {
         if (model.asMap().isEmpty()) {
-            model.addAttribute("projectCreateDto", new ProjectCreateDto());
+            model.addAttribute("projectCreateUpdateDto", new ProjectCreateUpdateDto());
+        }
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
+
+        return "projects/create-project";
+    }
+
+    @PostMapping("/create")
+    public String projectCreateCallback(
+        @Valid @ModelAttribute("projectCreateUpdateDto")
+        ProjectCreateUpdateDto projectCreateUpdateDto,
+        BindingResult bindingResult,
+        RedirectAttributes redirectAttributes,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        if (projectCreateUpdateDto == null || bindingResult.hasFieldErrors()) {
+            redirectAttributes.addFlashAttribute(
+                "org.springframework.validation.BindingResult.projectCreateUpdateDto",
+                bindingResult
+            );
+            return "redirect:/ui/projects/create";
+        }
+
+        try {
+            if (projectCreateUpdateDto.getImages() == null || projectCreateUpdateDto.getImages().isEmpty()) {
+                ObjectError error = new ObjectError("globalError", "You should provide at least one image for project");
+                bindingResult.addError(error);
+
+                redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.projectCreateUpdateDto",
+                    bindingResult
+                );
+                return "redirect:/ui/projects/create";
+            }
+            projectService.saveFromDto(projectCreateUpdateDto, userDetails.getUsername());
+        } catch (Exception exception) {
+            ObjectError error = new ObjectError("globalError", exception.getMessage());
+            bindingResult.addError(error);
+
+            redirectAttributes.addFlashAttribute(
+                "org.springframework.validation.BindingResult.projectCreateUpdateDto",
+                bindingResult
+            );
+            return "redirect:/ui/projects/create";
+        }
+
+        return "redirect:/ui/projects";
+    }
+
+    @GetMapping("/update/{id}")
+    public String projectUpdate(
+        Model model,
+        @PathVariable("id")
+        String id,
+        @RequestParam(value = "error", required = false)
+        String error
+    ) throws JsonProcessingException {
+        if (model.asMap().isEmpty()) {
+            model.addAttribute("projectCreateUpdateDto", projectService.buildUpdateDto(id));
             if (error != null) {
                 model.addAttribute("error", error);
             }
@@ -74,35 +134,36 @@ public class ProjectController {
         return "projects/create-project";
     }
 
-    @PostMapping("/create")
-    public String projectCreateCallback(
-        @Valid @ModelAttribute("projectCreateDto")
-        ProjectCreateDto projectCreateDto,
+    @PostMapping("/update/{id}")
+    public String projectUpdateCallback(
+        @ModelAttribute("projectCreateUpdateDto") @Valid
+        ProjectCreateUpdateDto projectCreateUpdateDto,
         BindingResult bindingResult,
         RedirectAttributes redirectAttributes,
+        @PathVariable("id") String id,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        if (projectCreateDto == null || bindingResult.hasFieldErrors()) {
+        if (projectCreateUpdateDto == null || bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute(
-                "org.springframework.validation.BindingResult.projectCreateDto",
+                "org.springframework.validation.BindingResult.projectCreateUpdateDto",
                 bindingResult
             );
-            return "redirect:/ui/projects/create";
+            return "redirect:/ui/projects/update/" + id;
         }
 
         try {
-            projectService.saveFromDto(projectCreateDto, userDetails.getUsername());
+            projectService.saveFromDto(projectCreateUpdateDto, userDetails.getUsername());
         } catch (Exception exception) {
             ObjectError error = new ObjectError("globalError", exception.getMessage());
             bindingResult.addError(error);
 
             redirectAttributes.addFlashAttribute(
-                "org.springframework.validation.BindingResult.projectCreateDto",
+                "org.springframework.validation.BindingResult.projectCreateUpdateDto",
                 bindingResult
             );
-            return "redirect:/ui/projects/create";
+            return "redirect:/ui/projects/update/" + id;
         }
 
-        return "redirect:/ui/projects";
+        return "redirect:/ui/projects/" + id;
     }
 }

@@ -1,6 +1,6 @@
 package com.ukma.competition.platform.projects;
 
-import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
+import com.ukma.competition.platform.projects.dto.ProjectCreateUpdateDto;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
 import com.ukma.edu.spring.boot.starter.cloudinary.service.CloudinaryService;
@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -55,7 +54,7 @@ class ProjectServiceImplTest {
 
     @Test
     void saveFromDto_SuccessWithLogo() throws Exception {
-        ProjectCreateDto projectCreateDto = new ProjectCreateDto();
+        ProjectCreateUpdateDto projectCreateDto = new ProjectCreateUpdateDto();
         projectCreateDto.setName("Test Project");
         projectCreateDto.setFullDescription("Full Description");
         projectCreateDto.setShortDescription("Short Description");
@@ -80,7 +79,7 @@ class ProjectServiceImplTest {
 
     @Test
     void saveFromDto_SuccessWithoutLogo() throws Exception {
-        ProjectCreateDto projectCreateDto = new ProjectCreateDto();
+        ProjectCreateUpdateDto projectCreateDto = new ProjectCreateUpdateDto();
         projectCreateDto.setName("Test Project");
         projectCreateDto.setFullDescription("Full Description");
         projectCreateDto.setShortDescription("Short Description");
@@ -99,7 +98,7 @@ class ProjectServiceImplTest {
 
     @Test
     void saveFromDto_UserNotFound() {
-        ProjectCreateDto projectCreateDto = new ProjectCreateDto();
+        ProjectCreateUpdateDto projectCreateDto = new ProjectCreateUpdateDto();
         when(userService.findByEmail(USER_EMAIL)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> projectService.saveFromDto(projectCreateDto, USER_EMAIL))

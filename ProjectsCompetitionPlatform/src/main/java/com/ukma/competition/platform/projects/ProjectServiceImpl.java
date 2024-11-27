@@ -1,8 +1,11 @@
 package com.ukma.competition.platform.projects;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.images.dto.ImageResponseDto;
-import com.ukma.competition.platform.projects.dto.ProjectCreateDto;
+import com.ukma.competition.platform.projects.dto.ProjectCreateUpdateDto;
 import com.ukma.competition.platform.projects.dto.ProjectListDto;
 import com.ukma.competition.platform.projects.dto.ProjectListItemDto;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 @Service
@@ -38,12 +42,14 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
     String cloudinaryFolder;
     UserService userService;
     CloudinaryService cloudinaryService;
+    ObjectMapper objectMapper;
 
     @Autowired
     public ProjectServiceImpl(
         ProjectRepository repository,
         UserService userService,
         CloudinaryService cloudinaryService,
+        ObjectMapper objectMapper,
         @Value("${spring.cloudinary.folder}")
         String cloudinaryFolder
     ) {
@@ -51,6 +57,7 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
         this.userService = userService;
         this.cloudinaryService = cloudinaryService;
         this.cloudinaryFolder = cloudinaryFolder;
+        this.objectMapper = objectMapper;
     }
 
     @Transactional(readOnly = true)
@@ -79,11 +86,10 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
 
     @Override
     public ProjectListItemDto findOneAsDtoById(String id) {
-        System.out.println();
         return super.findById(id).map(this::convertToDto).orElseThrow();
     }
 
-    private ProjectListItemDto convertToDto(ProjectEntity project) {
+    public ProjectListItemDto convertToDto(ProjectEntity project) {
         return new ProjectListItemDto(
             project.getId(),
             project.getName(),
@@ -109,13 +115,75 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
             image.getCreatedAt(),
             image.getUpdatedAt(),
             image.getUrl(),
-            image.getPublicId()
+            image.getPublicId(),
+            image.getName()
         );
+    }
+
+    public ProjectCreateUpdateDto buildUpdateDto(String id) throws JsonProcessingException {
+        ProjectEntity project = this.findById(id).orElseThrow();
+
+        ProjectCreateUpdateDto projectCreateUpdateDto = new ProjectCreateUpdateDto();
+        projectCreateUpdateDto.setName(project.getName());
+        projectCreateUpdateDto.setShortDescription(project.getShortDescription());
+        projectCreateUpdateDto.setFullDescription(project.getFullDescription());
+        projectCreateUpdateDto.setLogoUrl(project.getLogoUrl());
+        projectCreateUpdateDto.setUploadedImagesJson(
+            objectMapper.writeValueAsString(
+                project.getImages().stream().filter(image -> !image.getMain())
+                    .map(this::buildImageResponseDto)
+                    .toList()
+            )
+        );
+        projectCreateUpdateDto.setCreatorId(project.getCreator().getId());
+        projectCreateUpdateDto.setUpdate(true);
+        projectCreateUpdateDto.setProjectId(id);
+
+        return projectCreateUpdateDto;
+    }
+
+    @Transactional
+    public void updateCallback(ProjectCreateUpdateDto projectCreateUpdateDto, String id) throws IOException {
+        ProjectEntity project = this.findById(id).orElseThrow();
+
+        project.setName(projectCreateUpdateDto.getName());
+        project.setShortDescription(projectCreateUpdateDto.getShortDescription());
+        project.setFullDescription(projectCreateUpdateDto.getFullDescription());
+
+        if (projectCreateUpdateDto.getLogo() != null) {
+            if (project.getLogo() != null) {
+                cloudinaryService.remove(project.getLogo().getPublicId(), cloudinaryFolder);
+                project.removeImage(project.getLogo());
+            }
+            saveImage(project, projectCreateUpdateDto.getLogo(), true);
+        }
+
+        List<ImageResponseDto> imageResponseDtoList = objectMapper.readValue(projectCreateUpdateDto.getUploadedImagesJson(), new TypeReference<>() {
+        });
+
+        for (ImageResponseDto imageFromForm : imageResponseDtoList) {
+            boolean imageWasDeleted = !project.getImages()
+                .stream()
+                .filter(image -> !image.getMain())
+                .map(ImageEntity::getId).toList()
+                .contains(imageFromForm.getId());
+            if (imageWasDeleted) {
+                ImageEntity imageToDelete = project.getImages()
+                    .stream()
+                    .filter(image -> Objects.equals(image.getId(), imageFromForm.getId()))
+                    .findFirst()
+                    .orElseThrow();
+                cloudinaryService.remove(imageToDelete.getPublicId(), cloudinaryFolder);
+                project.removeImage(imageToDelete);
+            }
+        }
+
+        this.save(project);
     }
 
     @Override
     @Transactional
-    public void saveFromDto(ProjectCreateDto projectCreateDto, String userEmail) throws Exception {
+    public void saveFromDto(ProjectCreateUpdateDto projectCreateDto, String userEmail) throws Exception {
         try {
             UserEntity projectCreator = userService.findByEmail(userEmail).orElseThrow();
             ProjectEntity project = ProjectEntity.builder()

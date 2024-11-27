@@ -20,6 +20,7 @@ public class ImageResponseDto extends BaseDto {
 
     String url;
     String publicId;
+    String name;
 
     @Builder
     public ImageResponseDto(
@@ -27,10 +28,12 @@ public class ImageResponseDto extends BaseDto {
         Instant createdAt,
         Instant updatedAt,
         String url,
-        String publicId
+        String publicId,
+        String name
     ) {
         super(id, createdAt, updatedAt);
         this.url = url;
         this.publicId = publicId;
+        this.name = name;
     }
 }

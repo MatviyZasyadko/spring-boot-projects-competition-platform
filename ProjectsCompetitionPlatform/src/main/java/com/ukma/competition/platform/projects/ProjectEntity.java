@@ -75,9 +75,18 @@ public class ProjectEntity extends IdentifiableEntity {
             .orElse(null);
     }
 
+    public String getLogoUrl() {
+        return this.getLogo() == null ? null : this.getLogo().getUrl();
+    }
+
     public void addImage(ImageEntity image) {
         this.images.add(image);
         image.getProjects().add(this);
+    }
+
+    public void removeImage(ImageEntity image) {
+        this.images.remove(image);
+        image.getProjects().remove(this);
     }
 }
 

@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProjectCreateDto {
+public class ProjectCreateUpdateDto {
 
     @Length(min = 3, max = 30, message = "Name value should contain from 3 to 30 characters!")
     String name;
@@ -32,8 +32,17 @@ public class ProjectCreateDto {
     @ImageFile
     MultipartFile logo;
 
-    @ImageFile(nullable = false)
-    @Size(min = 1, message = "You should provide at least one image for your project!")
     @Size(max = 10, message = "You can provide no more than 10 images for your project!")
+    @ImageFile(nullable = false)
     List<MultipartFile> images;
+
+    String uploadedImagesJson = "";
+
+    String logoUrl;
+
+    String creatorId;
+
+    String projectId = "";
+
+    boolean isUpdate = false;
 }

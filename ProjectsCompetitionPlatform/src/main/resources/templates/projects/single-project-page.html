@@ -18,9 +18,9 @@
                 <div class="relative h-80 overflow-hidden rounded-lg md:h-96">
                     <div th:each="image: ${project.images}" class="hidden duration-700 ease-in-out rounded-xl"
                          data-carousel-item>
-                        <div class="rounded-xl">
+                        <div class="rounded-xl shadow">
                             <img th:src="${image.url}"
-                                 class="absolute block w-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl h-80 md:h-96 object-cover border border-black"
+                                 class="absolute block w-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl h-80 md:h-96 object-cover shadow"
                                  alt="project image">
                         </div>
                     </div>
@@ -62,7 +62,8 @@
                          alt="user image">
                 </div>
                 <div class="flex flex-col items-center">
-                    <p class="text-gray-600" th:text="${project.createdAt.toString().replaceAll('T', ' ').substring(0, 16)}"></p>
+                    <p class="text-gray-600"
+                       th:text="${project.createdAt.toString().replaceAll('T', ' ').substring(0, 16)}"></p>
                     <div>
                         <a th:text="${project.creator.fullName}" href="/ui/main"
                            class="group slow-animation-300 group-hover:underline ease-out"></a>
@@ -75,6 +76,13 @@
             <div class="flex flex-col gap-1 mt-8">
                 <p class="font-bold tracking-tight">Full description</p>
                 <p class="text-base" th:text="${project.fullDescription}"></p>
+            </div>
+
+            <div class="mt-8">
+                <button class="primary-button p-2"
+                        th:attr="onclick=|window.location.href = '/ui/projects/update/${project.id}'|">
+                    Edit project
+                </button>
             </div>
 
             <div class="flex justify-center">

@@ -39,10 +39,10 @@
 <main class="custom-container">
     <section class="page-block">
         <div class="mx-auto my-auto max-w-3xl">
-            <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">Create a project</h2>
+            <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin"><span
+                    th:text="${projectCreateUpdateDto.update} ? 'Update' : 'Create'"></span> a project</h2>
             <form
-                    th:action="@{/ui/projects/create}"
-                    th:object="${projectCreateDto}"
+                    th:object="${projectCreateUpdateDto}"
                     method="POST"
                     enctype="multipart/form-data"
                     onsubmit="handleSubmit(event);"
@@ -66,7 +66,7 @@
                 <div class="flex flex-col items-center mt-6">
                     <div>
                         <img class="object-cover rounded-lg shadow-md h-52 w-48"
-                             src="/default-image.jpg"
+                             th:src="${projectCreateUpdateDto.update && projectCreateUpdateDto.logoUrl != null} ? ${projectCreateUpdateDto.logoUrl} : '/default-image.jpg'"
                              alt="Project logo"
                              id="project_logo"
                         >
@@ -122,6 +122,11 @@
                                     Remove all images
                                 </button>
                             </div>
+                            <input class="hidden" id="logo-url" th:field="*{logoUrl}"/>
+                            <input class="hidden" id="uploaded-images-json" th:field="*{uploadedImagesJson}"/>
+                            <input class="hidden" th:field="*{projectId}"/>
+                            <input class="hidden" type="checkbox" th:field="*{update}"/>
+
                         </div>
                         <script>
 
@@ -177,7 +182,7 @@
                     <div>
                         <button type="submit"
                                 class="primary-button px-4 py-2">
-                            Create a project
+                            <span th:text="${projectCreateUpdateDto.update} ? 'Update' : 'Create'"></span> a project
                         </button>
                     </div>
                 </div>
@@ -192,7 +197,8 @@
     <li class="block p-1 w-1/2 lg:w-1/3 h-28">
         <article tabindex="0"
                  class="group w-full h-full rounded-md focus:outline-none focus:shadow-outline elative bg-gray-100 cursor-pointer relative shadow">
-            <img alt="upload preview" class="img-preview hidden w-full h-full sticky object-cover rounded-md bg-fixed" src=""/>
+            <img alt="upload preview" class="img-preview hidden w-full h-full sticky object-cover rounded-md bg-fixed"
+                 src=""/>
 
             <section class="flex flex-col rounded-md text-xs break-words w-full h-full z-20 absolute top-0 py-2 px-3">
                 <h1 class="flex-1 group-hover:text-blue-800"></h1>
@@ -252,16 +258,17 @@
 </template>
 
 <script th:inline="javascript">
+  /*<![CDATA[*/
   const fileTemplate = document.getElementById('file-template');
   const imageTemplate = document.getElementById('image-template');
   const empty = document.getElementById('empty');
-
-  //if (filesFromServerJson) {
-  //  parsedFilesFromServer = JSON.parse(filesFromServerJson);
-  //}
-
   let USER_FILES = {};
-  let FILES_FROM_SERVER = {};
+  let FILES_FROM_SERVER = [];
+
+  const uploadedImagesJson = document.getElementById('uploaded-images-json').value;
+  if (uploadedImagesJson) {
+    FILES_FROM_SERVER = JSON.parse(uploadedImagesJson);
+  }
 
   function addFile(target, file) {
     const isImage = file.type.match('image.*'),
@@ -285,6 +292,24 @@
     target.prepend(clone);
 
     USER_FILES[objectURL] = file;
+  }
+
+  function addFilesFromServer(target, file) {
+    const objectURL = file.url;
+    const clone = imageTemplate.content.cloneNode(true);
+
+    clone.querySelector('h1').textContent = file.name;
+    clone.querySelector('li').id = objectURL;
+    clone.querySelector('.delete').dataset.target = objectURL;
+    clone.querySelector('.delete').dataset.fromServer = 'true';
+
+    Object.assign(clone.querySelector('img'), {
+      src: objectURL,
+      alt: file.name,
+    });
+
+    empty.classList.add('hidden');
+    target.prepend(clone);
   }
 
   const gallery = document.getElementById('gallery');
@@ -331,7 +356,14 @@
       const ou = target.dataset.target;
       document.getElementById(ou).remove(ou);
       gallery.children.length === 1 && empty.classList.remove('hidden');
-      delete USER_FILES[ou];
+      if (target.dataset.fromServer) {
+        let currentImageStateAsJson = document.getElementById('uploaded-images-json').value;
+        let currentImageState = JSON.parse(currentImageStateAsJson);
+        currentImageState = currentImageState.filter(image => image.url !== target.dataset.target);
+        document.getElementById('uploaded-images-json').value = JSON.stringify(currentImageState);
+      } else {
+        delete USER_FILES[ou];
+      }
     }
   };
 
@@ -367,10 +399,25 @@
       gallery.lastChild.remove();
     }
     USER_FILES = {};
-    FILES_FROM_SERVER = {};
+    FILES_FROM_SERVER = [];
     empty.classList.remove('hidden');
     gallery.append(empty);
   };
+
+  const isUpdate = /*[[${projectCreateUpdateDto.update}]]*/ false;
+  if (isUpdate) {
+    const projectCreatorId = /*[[${projectCreateUpdateDto.creatorId}]]*/ Number.MAX_VALUE;
+    const currentUserId = /*[[${#authentication.principal.id}]]*/ Number.MIN_VALUE;
+    if (projectCreatorId !== currentUserId) {
+      window.location.href = '/ui/projects';
+    }
+    FILES_FROM_SERVER.forEach(fileFromServer => {
+      addFilesFromServer(gallery, fileFromServer);
+    });
+  }
+
+
+  /*]]>*/
 </script>
 </body>
 </html>
