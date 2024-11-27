@@ -9,20 +9,16 @@ import com.ukma.competition.platform.projects.ProjectRepository;
 import com.ukma.competition.platform.users.UserRole;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserRepository;
-import com.ukma.competition.platform.votes.Vote;
 import com.ukma.competition.platform.votes.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.stream.IntStream;
 
 @SpringBootApplication
 @EnableScheduling
@@ -153,31 +149,17 @@ public class ProjectsCompetitionPlatformApplication implements CommandLineRunner
                 .creator(admin)
                 .build();
         }
+        if (userRepository != null) {
+            userRepository.save(admin);
+        }
 
         CompetitionEntity competitionEntity = CompetitionEntity.builder()
             .name("first competition")
             .description("first competition description")
-            .beginDate(Instant.now())
-            .votingBeginDate(Instant.now())
             .votingEndDate(Instant.MAX)
-            .hasPrizePool(false)
-            .priceDescription("price description")
-            .prizePool(0.0)
+            .organizer(admin)
             .build();
 
         competitionRepository.saveAndFlush(competitionEntity);
-
-
-        if (userRepository != null) {
-            userRepository.save(admin);
-
-
-//            List<Vote> allVotes = voteRepository.findAll();
-//            System.out.println("all votes = " + allVotes);
-//
-//            Pageable pageable = PageRequest.of(0, 5);
-//            List<Object[]> x = voteRepository.findTop5ProjectsByVoteCount(pageable);
-//            System.out.println("my req = " + Arrays.toString(x.getFirst()));
-        }
     }
 }

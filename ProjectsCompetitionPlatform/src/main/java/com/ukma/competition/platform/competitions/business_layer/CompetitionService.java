@@ -1,18 +1,18 @@
 package com.ukma.competition.platform.competitions.business_layer;
 
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
+import com.ukma.competition.platform.competitions.presentation_layer.CompetitionItemDto;
 import com.ukma.competition.platform.shared.GenericService;
-import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
+
+import java.util.List;
 
 public interface CompetitionService extends GenericService<CompetitionEntity, String> {
 
     Logger logger = LogManager.getLogger(CompetitionServiceImpl.class);
 
-    Competition updateById(String id, Competition entity) throws EntityNotFoundException;
+    void saveFromDto(CompetitionCreateDto competitionCreateDto, String userEmail) throws Exception;
 
-    Competition save(Competition competition);
+    List<CompetitionItemDto> findAllAsDto();
 }

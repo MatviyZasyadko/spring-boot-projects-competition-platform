@@ -1,17 +1,26 @@
 package com.ukma.competition.platform.competitions.presentation_layer;
 
+import com.ukma.competition.platform.competitions.business_layer.CompetitionCreateDto;
 import com.ukma.competition.platform.competitions.business_layer.CompetitionService;
-import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
-import com.ukma.competition.platform.projects.ProjectService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.logging.log4j.ThreadContext;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+
 
 @Controller
 @RequestMapping("ui/competitions")
@@ -20,7 +29,66 @@ import java.util.List;
 public class CompetitionController {
 
     CompetitionService competitionService;
-    ProjectService projectService;
+
+    @GetMapping
+    public String findAllAsDto(Model model) {
+        model.addAttribute("competitions", competitionService.findAllAsDto());
+
+        return "competitions/competitions-list";
+    }
+
+    @GetMapping("/create")
+    public String competitionCreate(
+        Model model,
+        @RequestParam(value = "error", required = false)
+        String error
+    ) {
+        if (model.asMap().isEmpty()) {
+            model.addAttribute("competitionCreateDto", new CompetitionCreateDto());
+        }
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
+
+        return "competitions/create-competition";
+    }
+
+    @PostMapping("/create")
+    public String competitionCreateCallback(
+        @Valid @ModelAttribute("competitionCreateDto")
+        CompetitionCreateDto competitionCreateDto,
+        BindingResult bindingResult,
+        RedirectAttributes redirectAttributes,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        if (competitionCreateDto == null || bindingResult.hasFieldErrors()) {
+            redirectAttributes.addFlashAttribute(
+                "org.springframework.validation.BindingResult.competitionCreateDto",
+                bindingResult
+            );
+            return "redirect:/ui/competitions/create";
+        }
+
+        try {
+            competitionService.saveFromDto(competitionCreateDto, userDetails.getUsername());
+        } catch (Exception exception) {
+            ObjectError error = new ObjectError("globalError", exception.getMessage());
+            bindingResult.addError(error);
+
+            redirectAttributes.addFlashAttribute(
+                "org.springframework.validation.BindingResult.competitionCreateDto",
+                bindingResult
+            );
+            return "redirect:/ui/competitions/create";
+        }
+
+        return "redirect:/ui/competitions";
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(LocalDate.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true));
+    }
 
     //
     //  @PostMapping("/upload")
@@ -31,18 +99,6 @@ public class CompetitionController {
     //      return ResponseEntity.status(HttpStatus.CREATED).body(savedCompetitionDto);
     //  }
 //
-    @GetMapping
-    public String findAll(Model model) {
-        competitionService.logger.info("Received request to retrieve all competitions");
-        ThreadContext.put("methodName", "findAll");
-        ThreadContext.put("id", "1");
-        List<CompetitionEntity> allCompetitions = competitionService.findAll();
-        //List<CompetitionItemDto> allCompetitionDtos = allCompetitions.stream()
-        //    .map(this::convertCompetitionToDto)
-        //    .toList();
-        ThreadContext.clearAll();
-        return "competitions/competitions-list";
-    }
 
     //
     //  @GetMapping("/{id}")
@@ -108,21 +164,21 @@ public class CompetitionController {
     //      return competition;
     //  }
 //
-  //  private CompetitionItemDto convertCompetitionToDto(CompetitionEntity competition) {
-  //      CompetitionItemDto dto = new CompetitionItemDto();
-  //      dto.setId(competition.getId());
-  //      dto.setName(competition.getName());
-  //      dto.setDescription(competition.getDescription());
-  //      dto.setBeginDate(competition.getBeginDate());
-  //      dto.setVotingBeginDate(competition.getVotingBeginDate());
-  //      dto.setVotingEndDate(competition.getVotingEndDate());
-  //      dto.setHasPrizePool(competition.getHasPrizePool());
-  //      dto.setPriceDescription(competition.getPriceDescription());
-  //      dto.setPrizePool(competition.getPrizePool());
-  //      dto.setImages(competition.getImages());
-  //      dto.setProjects(competition.getProjects());
-  //      dto.setTags(competition.getTags());
-  //      dto.setPayments(competition.getPayments());
-  //      return dto;
-  //  }
+    //  private CompetitionItemDto convertCompetitionToDto(CompetitionEntity competition) {
+    //      CompetitionItemDto dto = new CompetitionItemDto();
+    //      dto.setId(competition.getId());
+    //      dto.setName(competition.getName());
+    //      dto.setDescription(competition.getDescription());
+    //      dto.setBeginDate(competition.getBeginDate());
+    //      dto.setVotingBeginDate(competition.getVotingBeginDate());
+    //      dto.setVotingEndDate(competition.getVotingEndDate());
+    //      dto.setHasPrizePool(competition.getHasPrizePool());
+    //      dto.setPriceDescription(competition.getPriceDescription());
+    //      dto.setPrizePool(competition.getPrizePool());
+    //      dto.setImages(competition.getImages());
+    //      dto.setProjects(competition.getProjects());
+    //      dto.setTags(competition.getTags());
+    //      dto.setPayments(competition.getPayments());
+    //      return dto;
+    //  }
 }
