@@ -1,105 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+>
 <head>
-    <meta charset="UTF-8">
-    <title>Competitors - Competition</title>
+    <title>Competitors - Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <body class="bg-gray-50">
 <header th:replace="~{layout/header :: header}"></header>
 <main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-screen">
     <div class="page-block">
         <div class="flex justify-center">
-            <div id="default-carousel" class="relative w-full" data-carousel="static">
-                <div class="relative h-80 overflow-hidden rounded-lg md:h-96">
-                    <div th:each="image: ${competition.images}" class="hidden duration-700 ease-in-out rounded-xl"
-                         data-carousel-item>
-                        <div class="rounded-xl shadow">
-                            <img th:src="${image.url}"
-                                 class="absolute block w-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl h-80 md:h-96 object-cover shadow"
-                                 alt="project image">
+            <div class="flex gap-10 items-start max-w-2/3">
+                <div>
+                    <div>
+                        <img class="object-cover rounded-lg shadow-md h-64 w-56"
+                             th:src="${competition.logo == null} ? '/default-image.jpg' : ${competition.logo.url}"
+                             alt="competition logo"
+                             id="project_logo"
+                        >
+                    </div>
+                    <div class="mt-5">
+                        <div class="mt-2">
+                            <p class="border-b border-gray-300 py-1">
+                                Organizer
+                            </p>
+                        </div>
+                        <div id="profile-name"
+                             class="mt-4 flex select-none min-w-48 items-center gap-2 text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm">
+                            <div>
+                                <img class="w-7 h-7 rounded-full select-none"
+                                     th:src="${competition.getLogo() == null} ? '/unknown-user.jpg' : ${competition.getLogo().url}"
+                                     alt="Rounded avatar">
+                            </div>
+                            <div class="select-none te" th:text="${#authentication.principal.fullName}">
+                                <span>Made by:</span> <span th:text="${competition.organizer.getFullName()}"></span>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <p class="border-b border-gray-300 py-1">
+                                Participants amount
+                            </p>
+                            <p th:text="${competition.projects.size()}" class="mt-2">
+
+                            </p>
                         </div>
                     </div>
                 </div>
-                <button type="button"
-                        class="absolute top-0 start-1/5 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-                        data-carousel-prev>
-        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-500/30 group-hover:bg-gray-500/50 group-focus:ring-1 group-focus:ring-gray-300 group-focus:outline-none">
-            <svg class="w-4 h-4 text-gray-500 rtl:rotate-180" aria-hidden="true"
-                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M5 1 1 5l4 4"/>
-            </svg>
-            <span class="sr-only">Previous</span>
-        </span>
-                </button>
-                <button type="button"
-                        class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-                        data-carousel-next>
-        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-500/30 group-hover:bg-gray-500/50 group-focus:ring-1 group-focus:ring-gray-300 group-focus:outline-none">
-            <svg class="w-4 h-4 text-gray-500 rtl:rotate-180" aria-hidden="true"
-                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="m1 9 4-4-4-4"/>
-            </svg>
-            <span class="sr-only">Next</span>
-        </span>
-                </button>
-            </div>
-        </div>
 
-        <div class="w-3/4 mx-auto">
-            <p th:text="${competition.name}" class="mt-8 text-3xl font-bold tracking-tight text-gray-900"></p>
-
-            <div class="flex gap-2 items-center mt-8">
-                <div class="h-10 w-10 rounded-full">
-                    <img class="h-10 w-10 rounded-full object-cover"
-                         th:src="${competition.creator.logoUrl == null} ? '/unknown-user.jpg' : ${project.creator.logoUrl}"
-                         alt="user image">
-                </div>
-                <div class="flex flex-col items-center">
-                    <p class="text-gray-600"
-                       th:text="${competition.createdAt.toString().replaceAll('T', ' ').substring(0, 16)}"></p>
-                    <div>
-                        <a th:text="${competition.creator.fullName}" href="/ui/main"
-                           class="group slow-animation-300 group-hover:underline ease-out"></a>
-                    </div>
-                </div>
                 <div>
-
+                    <p class="text-3xl font-bold leading-loose">
+                        VovaVovaVova fgdfdfdfdfdfff
+                    </p>
                 </div>
-            </div>
-            <div class="flex flex-col gap-1 mt-8">
-                <p class="font-bold tracking-tight">Full description</p>
-                <p class="text-base" th:text="${competition.description}"></p>
-            </div>
-
-            <div class="mt-8">
-                <button class="primary-button p-2"
-                        th:attr="onclick=|window.location.href = '/ui/projects/update/${project.id}'|">
-                    Edit project
-                </button>
-            </div>
-
-            <div class="flex justify-center">
-                <hr class="mt-10 w-3/4"/>
-            </div>
-
-            <div class="mt-5">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-gray-900">Discussion</h2>
-                </div>
-                <form class="mt-8">
-                    <div>
-                        <label for="comment" class="sr-only">Your comment</label>
-                        <textarea id="comment" rows="6"
-                                  class="default-input rounded-lg rounded-t-lg w-full"
-                                  placeholder="Write a comment..." required></textarea>
-                    </div>
-                    <button type="submit"
-                            class="primary-button py-2.5 px-4 w-auto mt-5">
-                        Post comment
-                    </button>
-                </form>
             </div>
         </div>
     </div>

@@ -10,9 +10,9 @@ public class AppConstants {
 
     public static String ACCESS_TOKEN_NAME;
 
+    public static String cloudinaryFolder;
 
     private AppConstants() {}
-
 
     @Value("${oauth2.provider.discord.url.avatars}")
     public void setDiscordAvatarBaseUrl(String value) {
@@ -22,5 +22,10 @@ public class AppConstants {
     @Value("${spring.security.access.token.name}")
     public void setAccessTokenName(String value) {
         ACCESS_TOKEN_NAME = value;
+    }
+
+    @Value("${spring.cloudinary.folder}")
+    public void setCloudinaryFolder(String value) {
+        cloudinaryFolder = value;
     }
 }

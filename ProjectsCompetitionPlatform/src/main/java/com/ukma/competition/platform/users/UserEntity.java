@@ -1,6 +1,7 @@
 package com.ukma.competition.platform.users;
 
 import com.ukma.competition.platform.auth.oauth.AuthenticationProvider;
+import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.payments.PaymentEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
@@ -67,6 +68,10 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     List<ProjectEntity> projects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<CompetitionEntity> competitions = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(

@@ -9,6 +9,7 @@ import com.ukma.competition.platform.projects.dto.ProjectCreateUpdateDto;
 import com.ukma.competition.platform.projects.dto.ProjectListDto;
 import com.ukma.competition.platform.projects.dto.ProjectListItemDto;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
+import com.ukma.competition.platform.shared.constants.AppConstants;
 import com.ukma.competition.platform.shared.dto.PaginationDto;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
@@ -19,7 +20,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,7 +39,6 @@ import java.util.stream.IntStream;
 public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String, ProjectRepository>
     implements ProjectService {
 
-    String cloudinaryFolder;
     UserService userService;
     CloudinaryService cloudinaryService;
     ObjectMapper objectMapper;
@@ -49,14 +48,11 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
         ProjectRepository repository,
         UserService userService,
         CloudinaryService cloudinaryService,
-        ObjectMapper objectMapper,
-        @Value("${spring.cloudinary.folder}")
-        String cloudinaryFolder
+        ObjectMapper objectMapper
     ) {
         super(repository);
         this.userService = userService;
         this.cloudinaryService = cloudinaryService;
-        this.cloudinaryFolder = cloudinaryFolder;
         this.objectMapper = objectMapper;
     }
 
@@ -152,7 +148,7 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
 
         if (projectCreateUpdateDto.getLogo() != null) {
             if (project.getLogo() != null) {
-                cloudinaryService.remove(project.getLogo().getPublicId(), cloudinaryFolder);
+                cloudinaryService.remove(project.getLogo().getPublicId(), AppConstants.cloudinaryFolder);
                 project.removeImage(project.getLogo());
             }
             saveImage(project, projectCreateUpdateDto.getLogo(), true);
@@ -173,7 +169,7 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
                     .filter(image -> Objects.equals(image.getId(), imageFromForm.getId()))
                     .findFirst()
                     .orElseThrow();
-                cloudinaryService.remove(imageToDelete.getPublicId(), cloudinaryFolder);
+                cloudinaryService.remove(imageToDelete.getPublicId(), AppConstants.cloudinaryFolder);
                 project.removeImage(imageToDelete);
             }
         }
@@ -210,7 +206,7 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
 
 
     private void saveImage(ProjectEntity project, MultipartFile image, boolean isMain) throws IOException {
-        String publicUrl = cloudinaryService.upload(image, cloudinaryFolder);
+        String publicUrl = cloudinaryService.upload(image, AppConstants.cloudinaryFolder);
         ImageEntity logo = ImageEntity.builder()
             .url(publicUrl)
             .main(isMain)
