@@ -32,9 +32,9 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
 
     @Autowired
     public CompetitionServiceImpl(
-        CompetitionRepository repository,
-        CompetitionProperties competitionProperties,
-        ProjectService projectService
+            CompetitionRepository repository,
+            CompetitionProperties competitionProperties,
+            ProjectService projectService
     ) {
         super(repository);
         this.competitionProperties = competitionProperties;
@@ -42,8 +42,8 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
     }
 
     @Caching(evict = {
-        @CacheEvict(value = "competitions", key = "#id"),
-        @CacheEvict(value = "competitionsList", allEntries = true)
+            @CacheEvict(value = "competitions", key = "#id"),
+            @CacheEvict(value = "competitionsList", allEntries = true)
     })
     public Competition updateById(String id, Competition competition) {
         Optional<CompetitionEntity> optionalCompetitionEntity = repository.findById(id);
@@ -103,6 +103,7 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         competition.setVotingEndDate(entity.getVotingEndDate());
         competition.setImages(entity.getImages());
         competition.setProjects(entity.getProjects().stream().map(projectService::convertToDto).toList());
+        competition.setCreator(entity.getCreator());
 
         return competition;
     }
@@ -114,25 +115,26 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
 
     private CompetitionEntity convertCompetitionToEntity(Competition competition) {
         return CompetitionEntity.builder()
-            .name(competition.getName())
-            .description(competition.getDescription())
-            .beginDate(competition.getBeginDate())
-            .votingBeginDate(competition.getVotingBeginDate())
-            .votingEndDate(competition.getVotingEndDate())
-            .hasPrizePool(competition.getHasPrizePool())
-            .priceDescription(competition.getPriceDescription())
-            .prizePool(competition.getPrizePool())
-            .images(competition.getImages())
-            .projects(competition.getProjects())
-            .tags(competition.getTags())
-            .payments(competition.getPayments())
-            .build();
+                .name(competition.getName())
+                .description(competition.getDescription())
+                .beginDate(competition.getBeginDate())
+                .votingBeginDate(competition.getVotingBeginDate())
+                .votingEndDate(competition.getVotingEndDate())
+                .hasPrizePool(competition.getHasPrizePool())
+                .priceDescription(competition.getPriceDescription())
+                .prizePool(competition.getPrizePool())
+                .images(competition.getImages())
+                .projects(competition.getProjects())
+                .tags(competition.getTags())
+                .payments(competition.getPayments())
+                .creator(competition.getCreator())
+                .build();
     }
 
     @Override
     @Caching(evict = {
-        @CacheEvict(value = "competitions", key = "#competition.id"),
-        @CacheEvict(value = "competitionsList", allEntries = true)
+            @CacheEvict(value = "competitions", key = "#competition.id"),
+            @CacheEvict(value = "competitionsList", allEntries = true)
     })
     public Competition save(Competition competition) {
         CompetitionEntity competitionEntity = convertCompetitionToEntity(competition);
@@ -148,8 +150,8 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         List<CompetitionEntity> allCompetitionEntities = repository.findAll();
 
         return allCompetitionEntities.stream()
-            .map(this::convertEntityToDto)
-            .toList();
+                .map(this::convertEntityToDto)
+                .toList();
     }
 
     @Cacheable(value = "competitions", key = "#id")

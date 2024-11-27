@@ -4,6 +4,8 @@ import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.projects.dto.ProjectListItemDto;
 import com.ukma.competition.platform.shared.dto.BaseDto;
 import com.ukma.competition.platform.shared.validations.WithinTwoYears;
+import com.ukma.competition.platform.users.User;
+import com.ukma.competition.platform.users.UserEntity;
 import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -50,4 +52,6 @@ public class CompetitionItemDto extends BaseDto {
     private List<ImageEntity> images;
 
     private List<ProjectListItemDto> projects;
+
+    private UserEntity creator;
 }

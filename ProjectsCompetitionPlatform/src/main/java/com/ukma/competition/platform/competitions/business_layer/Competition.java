@@ -5,6 +5,7 @@ import com.ukma.competition.platform.payments.PaymentEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.tags.TagEntity;
+import com.ukma.competition.platform.users.UserEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -29,4 +30,5 @@ public class Competition extends IdentifiableEntity {
     List<ProjectEntity> projects;
     List<TagEntity> tags;
     List<PaymentEntity> payments;
+    UserEntity creator;
 }

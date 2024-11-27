@@ -3,14 +3,20 @@ package com.ukma.competition.platform.competitions.presentation_layer;
 import com.ukma.competition.platform.competitions.business_layer.CompetitionService;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.ProjectService;
+import com.ukma.competition.platform.users.UserEntity;
+import com.ukma.competition.platform.users.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.ThreadContext;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 @Controller
@@ -21,6 +27,38 @@ public class CompetitionController {
 
     CompetitionService competitionService;
     ProjectService projectService;
+    UserService userService;
+
+    @GetMapping("/{id}")
+    public String getSingleCompetition(Model model, @PathVariable("id") String id) {
+//        CompetitionEntity competition = competitionService.findById(id).orElse(null);
+        Authentication principal = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = userService.findByEmail(principal.getName()).orElse(null);
+        if (user == null) {
+            System.out.println("user is null");
+            return "redirect:/ui/competitions";
+        }
+
+        CompetitionEntity competition = CompetitionEntity.builder()
+                .name("first competition")
+                .description("first competition description")
+                .beginDate(Instant.now())
+                .votingBeginDate(Instant.now())
+                .votingEndDate(Instant.now().plus(Duration.ofDays(1)))
+                .hasPrizePool(false)
+                .priceDescription("price description")
+                .prizePool(0.0)
+                .creator(user)
+                .build();
+
+        if (competition == null) {
+            System.out.println("compet is null");
+            return "redirect:/ui/competitions";
+        }
+
+        model.addAttribute("competition", competition);
+        return "competitions/single-competition-page";
+    }
 
     //
     //  @PostMapping("/upload")
@@ -31,6 +69,7 @@ public class CompetitionController {
     //      return ResponseEntity.status(HttpStatus.CREATED).body(savedCompetitionDto);
     //  }
 //
+
     @GetMapping
     public String findAll(Model model) {
         competitionService.logger.info("Received request to retrieve all competitions");
@@ -108,21 +147,21 @@ public class CompetitionController {
     //      return competition;
     //  }
 //
-  //  private CompetitionItemDto convertCompetitionToDto(CompetitionEntity competition) {
-  //      CompetitionItemDto dto = new CompetitionItemDto();
-  //      dto.setId(competition.getId());
-  //      dto.setName(competition.getName());
-  //      dto.setDescription(competition.getDescription());
-  //      dto.setBeginDate(competition.getBeginDate());
-  //      dto.setVotingBeginDate(competition.getVotingBeginDate());
-  //      dto.setVotingEndDate(competition.getVotingEndDate());
-  //      dto.setHasPrizePool(competition.getHasPrizePool());
-  //      dto.setPriceDescription(competition.getPriceDescription());
-  //      dto.setPrizePool(competition.getPrizePool());
-  //      dto.setImages(competition.getImages());
-  //      dto.setProjects(competition.getProjects());
-  //      dto.setTags(competition.getTags());
-  //      dto.setPayments(competition.getPayments());
-  //      return dto;
-  //  }
+    //  private CompetitionItemDto convertCompetitionToDto(CompetitionEntity competition) {
+    //      CompetitionItemDto dto = new CompetitionItemDto();
+    //      dto.setId(competition.getId());
+    //      dto.setName(competition.getName());
+    //      dto.setDescription(competition.getDescription());
+    //      dto.setBeginDate(competition.getBeginDate());
+    //      dto.setVotingBeginDate(competition.getVotingBeginDate());
+    //      dto.setVotingEndDate(competition.getVotingEndDate());
+    //      dto.setHasPrizePool(competition.getHasPrizePool());
+    //      dto.setPriceDescription(competition.getPriceDescription());
+    //      dto.setPrizePool(competition.getPrizePool());
+    //      dto.setImages(competition.getImages());
+    //      dto.setProjects(competition.getProjects());
+    //      dto.setTags(competition.getTags());
+    //      dto.setPayments(competition.getPayments());
+    //      return dto;
+    //  }
 }
