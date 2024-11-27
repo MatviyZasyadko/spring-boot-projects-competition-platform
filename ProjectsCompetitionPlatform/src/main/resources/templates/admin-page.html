@@ -6,6 +6,26 @@
     <link th:href="@{/main.css}" rel="stylesheet"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        #reportModal {
+            backdrop-filter: blur(5px); /* Adds a subtle blur effect to the background */
+        }
+
+        #reportModal .bg-white {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
 <header th:replace="~{layout/header :: header}"></header>
@@ -122,8 +142,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="report : ${allReports}" class="bg-white border-b">
-                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                        <tr th:each="report : ${allReports}" class="reportRow bg-white border-b cursor-pointer">
+                            <th id="topic" scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
                                 <span th:text="${report.topic}"></span>
                             </th>
                             <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
@@ -143,92 +163,150 @@
         </div>
 
         <script>
-          const options = {
-            chart: {
-              height: '100%',
-              maxWidth: '100%',
-              type: 'area',
-              fontFamily: 'Inter, sans-serif',
-              dropShadow: {
-                enabled: false,
-              },
-              toolbar: {
-                show: false,
-              },
-            },
-            tooltip: {
-              enabled: true,
-              x: {
-                show: false,
-              },
-            },
-            fill: {
-              type: 'gradient',
-              gradient: {
-                opacityFrom: 0.55,
-                opacityTo: 0,
-                shade: '#1C64F2',
-                gradientToColors: ['#1C64F2'],
-              },
-            },
-            dataLabels: {
-              enabled: false,
-            },
-            stroke: {
-              width: 6,
-            },
-            grid: {
-              show: false,
-              strokeDashArray: 4,
-              padding: {
-                left: 2,
-                right: 2,
-                top: 0,
-              },
-            },
-            series: [
-              {
-                name: 'New users',
-                data: [6500, 6418, 6456, 6526, 6356, 6456],
-                color: '#1A56DB',
-              },
-            ],
-            xaxis: {
-              categories: ['01 February', '02 February', '03 February', '04 February', '05 February', '06 February', '07 February'],
-              labels: {
-                show: false,
-              },
-              axisBorder: {
-                show: false,
-              },
-              axisTicks: {
-                show: false,
-              },
-            },
-            yaxis: {
-              show: false,
-            },
-          };
+            const options = {
+                chart: {
+                    height: '100%',
+                    maxWidth: '100%',
+                    type: 'area',
+                    fontFamily: 'Inter, sans-serif',
+                    dropShadow: {
+                        enabled: false,
+                    },
+                    toolbar: {
+                        show: false,
+                    },
+                },
+                tooltip: {
+                    enabled: true,
+                    x: {
+                        show: false,
+                    },
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        opacityFrom: 0.55,
+                        opacityTo: 0,
+                        shade: '#1C64F2',
+                        gradientToColors: ['#1C64F2'],
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                stroke: {
+                    width: 6,
+                },
+                grid: {
+                    show: false,
+                    strokeDashArray: 4,
+                    padding: {
+                        left: 2,
+                        right: 2,
+                        top: 0,
+                    },
+                },
+                series: [
+                    {
+                        name: 'New users',
+                        data: [6500, 6418, 6456, 6526, 6356, 6456],
+                        color: '#1A56DB',
+                    },
+                ],
+                xaxis: {
+                    categories: ['01 February', '02 February', '03 February', '04 February', '05 February', '06 February', '07 February'],
+                    labels: {
+                        show: false,
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    show: false,
+                },
+            };
 
-          if (document.getElementById('area-chart') && typeof ApexCharts !== 'undefined') {
-            const chart = new ApexCharts(document.getElementById('area-chart'), options);
-            chart.render();
-          }
+            if (document.getElementById('area-chart') && typeof ApexCharts !== 'undefined') {
+                const chart = new ApexCharts(document.getElementById('area-chart'), options);
+                chart.render();
+            }
         </script>
 
     </section>
 </main>
 
 <!-- Modal -->
-<div id="reportModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center hidden">
-    <div class="bg-white p-6 rounded-lg w-1/2">
-        <h3 class="text-2xl font-bold text-center mb-4">Report Details</h3>
-        <div id="modalContent">
-            <!-- Modal content will be injected here -->
+<!--<div id="reportModal" class="fixed inset-0 border-gray-100 shadow-md bg-opacity-50 flex justify-center items-center hidden">-->
+<!--    <div class="bg-white p-8 rounded-lg shadow-lg w-2/3 max-w-3xl relative">-->
+<!--        <button class="closeModal absolute top-4 right-4 text-gray-500 hover:text-gray-800">-->
+<!--            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />-->
+<!--            </svg>-->
+<!--        </button>-->
+<!--        <h3 class="text-3xl font-bold text-center mb-6">Report Details</h3>-->
+<!--        <div id="modalContent" class="space-y-4">-->
+<!--            <div class="flex items-start">-->
+<!--                <p class="font-semibold text-gray-700 w-1/4">Topic:</p>-->
+<!--                <p id="modalTopic" class="text-gray-800 w-3/4"></p>-->
+<!--            </div>-->
+<!--            <div class="flex items-start">-->
+<!--                <p class="font-semibold text-gray-700 w-1/4">Status:</p>-->
+<!--                <p id="modalStatus" class="text-gray-800 w-3/4"></p>-->
+<!--            </div>-->
+<!--            <div class="flex items-start">-->
+<!--                <p class="font-semibold text-gray-700 w-1/4">Approve Date:</p>-->
+<!--                <p id="modalApproveDate" class="text-gray-800 w-3/4"></p>-->
+<!--            </div>-->
+<!--            <div class="flex items-start">-->
+<!--                <p class="font-semibold text-gray-700 w-1/4">Description:</p>-->
+<!--                <p id="modalDescription" class="text-gray-800 w-3/4"></p>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="flex justify-around space-x-4 mt-6">-->
+<!--            <button style="background-color: lightgreen; color: white" id="approveReport" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">-->
+<!--                Approve-->
+<!--            </button>-->
+<!--            <button style="background-color: lightgray; color: black" class="closeModal px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">-->
+<!--                Close-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<div id="reportModal" class="fixed inset-0 border-gray-300 shadow-hover bg-opacity-80 flex justify-center items-center hidden">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-2/3 max-w-3xl relative">
+        <div id="modalContent" class="space-y-6">
+            <h3 id="modalTopic" class="text-3xl font-bold text-center mb-6">Report</h3>
+            <div class="flex w-full justify-between">
+                <p id="modalStatus" class="w-3/4 text-lg font-bold"></p>
+                <p id="modalApproveDate" class="text-gray-700 italic w-3/4"></p>
+            </div>
+            <div class="flex items-start flex-col">
+                <p class="font-semibold text-gray-700 w-1/4">Description: </p>
+                <p id="modalDescription" class="text-gray-800 w-3/4"></p>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <label for="comment" class="font-semibold text-gray-700">Add Comment: </label>
+                <textarea id="comment" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" placeholder="Enter your comment..."></textarea>
+            </div>
         </div>
-        <div class="flex justify-end space-x-4 mt-4">
-            <button id="closeModal" class="px-4 py-2 bg-gray-500 text-white rounded">Close</button>
-            <button id="approveReport" class="px-4 py-2 bg-blue-500 text-white rounded">Approve</button>
+        <div class="flex justify-around items-stretch space-x-4 mt-6 gap-2">
+            <button style="background-color: lightgreen; color: black" id="approveReport"
+                    class="px-2 py-1 rounded-lg">
+                Approve
+            </button>
+            <button style="background-color: orange; color: black" id="reopenReport"
+                    class="px-2 py-1 rounded-lg">
+                Reopen
+            </button>
+            <button style="background-color: coral; color: black"
+                    class="closeModal px-2 py-1 rounded-lg">
+                Close
+            </button>
         </div>
     </div>
 </div>
@@ -237,40 +315,37 @@
 <footer th:replace="~{layout/footer :: footer}"></footer>
 
 <script th:inline="javascript">
-    // JavaScript to open the modal when clicking a row
     document.addEventListener("DOMContentLoaded", function () {
-        const tableRows = document.querySelectorAll("tbody tr");
+        const reportRows = document.querySelectorAll(".reportRow");
         const modal = document.getElementById("reportModal");
-        const closeModalBtn = document.getElementById("closeModal");
+        const closeModalBtns = document.querySelectorAll(".closeModal");
         const approveReportBtn = document.getElementById("approveReport");
         const modalContent = document.getElementById("modalContent");
 
-        tableRows.forEach(row => {
-            row.addEventListener("click", function () {
-                const topic = row.querySelector("span:nth-child(1)").innerText;
-                const status = row.querySelector("span:nth-child(2)").innerText;
-                const approveDate = row.querySelector("span:nth-child(3)").innerText || 'Not Approved';
-                const description = row.querySelector("span:nth-child(4)").innerText;
+        reportRows.forEach((reportRow) => {
+            reportRow.addEventListener("click", function () {
+                const reportContent = reportRow.children
+                const topic = reportContent.item(0).textContent
+                const status = reportContent.item(1).textContent
+                const approveDate = reportContent.item(2).textContent
+                const description = reportContent.item(3).textContent
 
-                // Populate modal with report data
-                modalContent.innerHTML = `
-                <p><strong>Topic:</strong> ${topic}</p>
-                <p><strong>Status:</strong> ${status}</p>
-                <p><strong>Approve Date:</strong> ${approveDate}</p>
-                <p><strong>Description:</strong> ${description}</p>
-            `;
+                const modalContentChildren = modalContent.children
+                document.getElementById("modalTopic").textContent = topic
+                document.getElementById("modalStatus").textContent = status
+                document.getElementById("modalApproveDate").textContent = approveDate
+                document.getElementById("modalDescription").textContent = description
 
-                // Show the modal
                 modal.classList.remove("hidden");
             });
-        });
+        })
 
-        // Close modal button functionality
-        closeModalBtn.addEventListener("click", function () {
-            modal.classList.add("hidden");
-        });
+        closeModalBtns.forEach((row) => {
+            row.addEventListener("click", function () {
+                modal.classList.add("hidden")
+            })
+        })
 
-        // Optionally handle Approve button click (add logic here)
         approveReportBtn.addEventListener("click", function () {
             alert("Report Approved!");
             modal.classList.add("hidden");
