@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -57,6 +58,12 @@ public class ProjectController {
         commentCreateDto.setProjectId(id);
         model.addAttribute("commentCreateDto", commentCreateDto);
         return "projects/single-project-page";
+    }
+
+    @DeleteMapping("/{id}/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSingleProject(@PathVariable("id") String id) {
+        projectService.deleteById(id);
     }
 
     @PostMapping("/add-comment")

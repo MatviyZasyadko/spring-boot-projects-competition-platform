@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @Setter
 public class CompetitionItemDto extends BaseDto {
-
     String name;
     String description;
     Instant votingEndDate;

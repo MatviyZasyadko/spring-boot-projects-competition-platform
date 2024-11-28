@@ -190,6 +190,10 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         return null;
     }
 
+    public List<CompetitionItemDto> findAllByOrganizer(UserEntity user) {
+        List<CompetitionEntity> competitionEntities = repository.findAllByOrganizer(user);
+        return competitionEntities.stream().map(this::convertEntityToDto).toList();
+    }
 
     public List<CompetitionItemDto> findAllAsDto() {
         Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");

@@ -14,6 +14,11 @@
 <main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-[95vh]">
     <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">All projects</h2>
     <div class="mt-8 flex justify-between items-center gap-2 px-4">
+        <div>
+            <a class="secondary-white-button px-3 py-2.5 overflow-x-auto" th:href="@{/ui/projects/create}">Create a new
+                project</a>
+        </div>
+
         <form class="max-w-md">
             <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
             <div class="relative">
@@ -38,11 +43,6 @@
                 </button>
             </div>
         </form>
-
-        <div>
-            <a class="secondary-white-button px-3 py-2.5 overflow-x-auto" th:href="@{/ui/projects/create}">Create a new
-                project</a>
-        </div>
     </div>
     <div>
         <div class="mt-8 grid grid-cols-1 gap-6">

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Competitors - Profile</title>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        #reportModal {
+            backdrop-filter: blur(5px); /* Adds a subtle blur effect to the background */
+        }
+
+        #reportModal .bg-white {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header th:replace="~{layout/header :: header}"></header>
+
+<main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-[95vh]">
+
+
+    <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">My competitions</h2>
+    <div class="mt-8 flex justify-between items-center gap-2 px-4">
+        <div>
+            <a class="secondary-white-button px-3 py-2.5 overflow-x-auto" th:href="@{/ui/competitions/create}">Create a
+                new competition</a>
+        </div>
+    </div>
+    <div>
+        <div class="mt-10 grid grid-cols-[repeat(auto-fill,_minmax(300px,1fr))] gap-6">
+
+            <div th:each="competition: ${userCompetitions}"
+                 class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+                <a th:href="'/ui/competitions/' + ${competition.id}">
+                    <div class="h-[300px] w-full">
+                        <img class="rounded-t-lg object-cover h-[300px] w-full"
+                             th:src="${competition.logo == null} ? '/default-image.jpg' : ${competition.logo.url}"
+                             alt=""/>
+                    </div>
+                </a>
+                <div class="p-5">
+                    <a th:href="'/ui/competitions/' + ${competition.id}">
+                        <h5 class="mb-4 text-2xl font-bold tracking-tight text-gray-900"
+                            th:text="${competition.name}"></h5>
+                    </a>
+                    <p class="mb-5 font-normal text-gray-700" th:text="${competition.description}"></p>
+
+                    <div class="flex items-center gap-2 mb-5">
+                        <p>Status:</p>
+                        <div class="flex flex-col gap-2">
+                            <div th:if="${competition.finished}" role="alert">
+                                <span class="font-medium p-2 text-sm text-red-800 rounded-lg bg-red-100 inline-block">Finished</span>
+                            </div>
+                            <div th:if="${not competition.finished}" role="alert">
+                                <div class="font-medium p-2 text-sm text-green-800 rounded-lg bg-green-100 inline-block">
+                                    <span>Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a th:href="'/ui/competitions/' + ${competition.id}"
+                       class="inline-flex items-center p-2 text-sm font-medium text-center text-white bg-black rounded-lg hover:bg-gray-600">
+                        Read more
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <h2 class="mt-9 text-3xl text-center leading-[3.75rem] font-bold font-palanquin">My projects</h2>
+    <div class="mt-8 flex justify-between items-center gap-2 px-4">
+        <div>
+            <a class="secondary-white-button px-3 py-2.5 overflow-x-auto" th:href="@{/ui/projects/create}">Create a new
+                project</a>
+        </div>
+        <form class="max-w-md">
+            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input type="text"
+                       id="default-search"
+                       class="block w-80 py-3 px-12 ps-10 default-white-input"
+                       placeholder="Search projects..."
+                       required
+                       maxlength="22"
+                />
+                <button type="submit"
+                        th:attr="onclick=|searchProject(event)|"
+                        class="primary-button p-[0.45rem] absolute end-2.5 bottom-[0.20rem]">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+    <div>
+        <div class="mt-8 grid grid-cols-1 gap-6">
+            <div th:each="project: ${userProjects}"
+                 class="flex flex-col items-center max-h-52 bg-white rounded-lg shadow-md md:flex-row relative">
+                <!-- Project image -->
+                <img class="object-cover w-full rounded-t-lg h-52 md:w-48 md:rounded-none md:rounded-s-lg cursor-pointer"
+                     th:src="${project.logo != null} ? ${project.logo.url} : '/default-image.jpg'"
+                     alt="Project logo"
+                     th:attr="onclick=|redirectToSingleProjectPage('${project.id}')|"
+                >
+
+                <!-- Project details -->
+                <div class="flex flex-col justify-between p-5 leading-normal w-full">
+                    <h5 th:attr="onclick=|redirectToSingleProjectPage('${project.id}')|"
+                        th:text="${project.name}"
+                        class="mb-3 text-2xl font-bold tracking-tight text-gray-900 cursor-pointer hover:underline">
+                    </h5>
+                    <p th:text="${project.shortDescription}" class="mb-2 font-normal break-all">
+                    </p>
+                    <p class="group text-gray-600 slow-animation-300 ease-in-out">
+                        Made by: <a th:text="${project.creator.fullName}" href="/ui/main"
+                                    class="slow-animation-300 group-hover:underline ease-out"></a>
+                    </p>
+                </div>
+
+                <!-- Delete icon -->
+                <button th:attr="onclick=|deleteProject('${project.id}')|"
+                        class="absolute top-5 right-5 text-red-500 hover:text-red-700 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 7l-1 12a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7m5 4v6m4-6v6m1-10V5a1 1 0 00-1-1h-4a1 1 0 00-1 1v2m5 0H6"/>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+</main>
+
+<footer th:replace="~{layout/footer :: footer}"></footer>
+
+<script>
+    function redirectToSingleProjectPage(id) {
+        window.location.href = `/ui/projects/${id}`;
+    }
+
+    function deleteProject(projectId) {
+        if (confirm("Are you sure you want to delete this project?")) {
+            fetch(`/ui/projects/${projectId}/delete`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                        alert('Project deleted successfully!');
+                    } else {
+                        alert('Failed to delete the project.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting project:', error);
+                    alert('An error occurred. Please try again.');
+                });
+        }
+    }
+
+</script>
+
+</body>
+</html>

@@ -38,7 +38,7 @@ import java.util.List;
 @Setter
 public class ProjectEntity extends IdentifiableEntity {
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 30, unique = true)
     String name;
 
     @Column(nullable = false, length = 250)

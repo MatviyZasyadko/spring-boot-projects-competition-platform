@@ -2,14 +2,21 @@ package com.ukma.competition.platform.auth;
 
 import com.ukma.competition.platform.auth.dto.LoginRequestDto;
 import com.ukma.competition.platform.auth.dto.RegistrationRequestDto;
+import com.ukma.competition.platform.competitions.business_layer.CompetitionService;
+import com.ukma.competition.platform.projects.ProjectService;
+import com.ukma.competition.platform.projects.dto.ProjectListDto;
 import com.ukma.competition.platform.reports.ReportService;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
+import com.ukma.competition.platform.users.UserEntity;
+import com.ukma.competition.platform.users.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +35,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
+    ProjectService projectService;
+    CompetitionService competitionService;
     ReportService reportService;
+    UserService userService;
 
     @GetMapping("/registration")
     public String registrationPage(Model model) {
@@ -136,5 +146,15 @@ public class AuthenticationController {
     public String adminPage(Model model) {
         model.addAttribute("allReports", reportService.findAll());
         return "admin-page";
+    }
+
+    @GetMapping("/user-page")
+    public String userPage(Model model) {
+        Authentication principal = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = userService.findByEmail(principal.getName()).orElse(null);
+
+        model.addAttribute("userProjects", projectService.findAllByCreator(user));
+        model.addAttribute("userCompetitions", competitionService.findAllByOrganizer(user));
+        return "user-page";
     }
 }

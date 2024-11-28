@@ -91,6 +91,11 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
         );
     }
 
+    public List<ProjectListItemDto> findAllByCreator(UserEntity user) {
+        List<ProjectEntity> projectEntities = repository.findAllByCreator(user);
+        return projectEntities.stream().map(this::convertToDto).toList();
+    }
+
     @Override
     public ProjectListItemDto findOneAsDtoById(String id) {
         return super.findById(id).map(this::convertToDto).orElseThrow();

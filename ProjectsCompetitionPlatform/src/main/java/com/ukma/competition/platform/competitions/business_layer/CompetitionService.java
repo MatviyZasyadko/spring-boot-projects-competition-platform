@@ -25,4 +25,6 @@ public interface CompetitionService extends GenericService<CompetitionEntity, St
     String findProjectIdWithVoteFromUser(String competitionId, UserEntity user);
 
     boolean addOrChangeVote(CompetitionEntity competition, ProjectEntity project, UserEntity user);
+
+    List<CompetitionItemDto> findAllByOrganizer(UserEntity user);
 }
