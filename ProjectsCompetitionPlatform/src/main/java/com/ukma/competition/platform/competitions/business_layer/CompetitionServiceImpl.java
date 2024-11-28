@@ -42,8 +42,6 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity, String, CompetitionRepository> implements CompetitionService {
-
-    private static final Marker COMPETITION_MARKER = MarkerManager.getMarker("COMPETITION");
     CompetitionProperties competitionProperties;
     ProjectService projectService;
     UserService userService;
@@ -105,16 +103,14 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
                         .logoUrl(entity.getOrganizer().getLogoUrl())
                         .build()
         );
-        competitionDto.setTotalVotesAmount(Integer.valueOf(entity.getVotes().size()).doubleValue());
+        competitionDto.setTotalVotesAmount((double) entity.getVotes().size());
 
         return competitionDto;
     }
 
     private ProjectListItemDto countVotes(CompetitionEntity competition, ProjectListItemDto projectDto) {
         projectDto.setVotesAmount(
-                Long.valueOf(
-                        competition.getVotes().stream().filter(vote -> vote.getProject().getId().equals(projectDto.getId())).count()
-                ).intValue()
+                (int) competition.getVotes().stream().filter(vote -> vote.getProject().getId().equals(projectDto.getId())).count()
         );
 
         return projectDto;

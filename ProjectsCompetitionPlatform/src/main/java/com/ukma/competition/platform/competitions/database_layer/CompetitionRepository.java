@@ -1,6 +1,5 @@
 package com.ukma.competition.platform.competitions.database_layer;
 
-import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.users.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

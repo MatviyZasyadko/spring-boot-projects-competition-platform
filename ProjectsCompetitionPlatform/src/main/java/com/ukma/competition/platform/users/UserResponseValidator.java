@@ -20,10 +20,6 @@ public class UserResponseValidator {
             return false;
         }
 
-        if (userResponseDto.getId() == null) {
-            return false;
-        }
-
-        return true;
+        return userResponseDto.getId() != null;
     }
 }

@@ -29,10 +29,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -116,5 +113,15 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
         return Optional.ofNullable(this.getLogo())
             .map(ImageEntity::getUrl)
             .orElse(null);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, fullName, password, userRole, authenticationProvider, payments, projects, votes, competitions, images);
     }
 }

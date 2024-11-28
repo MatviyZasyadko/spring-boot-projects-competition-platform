@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Objects;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
@@ -27,4 +28,14 @@ public class User extends IdentifiableEntity {
     List<ProjectEntity> projects;
 
     List<ImageEntity> images;
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, fullName, password, payments, projects, images);
+    }
 }

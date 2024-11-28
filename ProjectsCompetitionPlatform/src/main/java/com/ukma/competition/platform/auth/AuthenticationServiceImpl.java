@@ -12,7 +12,6 @@ import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +29,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public Cookie login(LoginRequestDto authDto) {
         UserEntity userCheck = userRepository.findByEmail(authDto.getEmail()).orElse(null);
-        if (userCheck != null) {
-            if (passwordEncoder.matches(authDto.getPassword(), userCheck.getPassword())) {
-                return this.jwtService.generateTokenWithCookie(userCheck);
-            }
+        if (userCheck != null && passwordEncoder.matches(authDto.getPassword(), userCheck.getPassword())) {
+            return this.jwtService.generateTokenWithCookie(userCheck);
         }
         throw new AuthenticationException("Username or password is not correct!");
     }
@@ -42,12 +39,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Optional<UserEntity> userCheck = userRepository.findByEmail(authDto.getEmail());
         if (userCheck.isEmpty()) {
             UserEntity newUser = UserEntity.builder()
-                .fullName(authDto.getFullName())
-                .email(authDto.getEmail())
-                .password(passwordEncoder.encode(authDto.getPassword()))
-                .userRole(UserRole.USER)
-                .authenticationProvider(AuthenticationProvider.NATIVE)
-                .build();
+                    .fullName(authDto.getFullName())
+                    .email(authDto.getEmail())
+                    .password(passwordEncoder.encode(authDto.getPassword()))
+                    .userRole(UserRole.USER)
+                    .authenticationProvider(AuthenticationProvider.NATIVE)
+                    .build();
             userRepository.save(newUser);
 
             return this.jwtService.generateTokenWithCookie(newUser);

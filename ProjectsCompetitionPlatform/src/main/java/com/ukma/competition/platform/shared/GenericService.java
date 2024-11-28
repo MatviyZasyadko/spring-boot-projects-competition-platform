@@ -7,7 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 import java.util.Optional;
 
-public interface GenericService<T, ID> {
+public interface GenericService<T, I> {
 
     T save(T entity);
 
@@ -15,9 +15,9 @@ public interface GenericService<T, ID> {
 
     Page<T> findAll(Specification<T> specifications, Pageable pageable);
 
-    Optional<T> findById(ID id);
+    Optional<T> findById(I id);
 
-    boolean existsById(ID id);
+    boolean existsById(I id);
 
-    void deleteById(ID id);
+    void deleteById(I id);
 }

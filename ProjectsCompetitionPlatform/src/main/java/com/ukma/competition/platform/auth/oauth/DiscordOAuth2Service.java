@@ -3,15 +3,10 @@ package com.ukma.competition.platform.auth.oauth;
 import com.ukma.competition.platform.auth.JwtService;
 import com.ukma.competition.platform.auth.oauth.dto.DiscordOAuth2UserInfoDto;
 import com.ukma.competition.platform.auth.oauth.dto.OAuth2TokensResponseDto;
-import com.ukma.competition.platform.images.ImageEntity;
-import com.ukma.competition.platform.shared.exception.AuthenticationException;
-import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
-import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,32 +20,31 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 public class DiscordOAuth2Service extends AbstractOAuth2Service {
 
-    String DISCORD_API_TOKEN_URL;
-    String DISCORD_API_USER_INFO;
+    String discordApiTokenUrl;
+    String discordApiUserInfo;
 
     public DiscordOAuth2Service(
-        @Value("${oauth2.provider.discord.url.apis.token}") String DISCORD_API_TOKEN_URL,
-        @Value("${oauth2.provider.discord.url.apis.user-info}") String DISCORD_API_USER_INFO,
-        @Value("${oauth2.provider.discord.url.authPage}") String DISCORD_AUTH_PAGE_URL,
-        @Value("${oauth2.provider.discord.client.id}") String CLIENT_ID,
-        @Value("${oauth2.provider.discord.client.secret}") String CLIENT_SECRET,
-        @Value("${oauth2.provider.discord.scope}") String SCOPE,
-        @Value("${oauth2.state}") String STATE,
-        @Value("oauth2.provider.discord.url.avatars") String AVATARS_URL,
+        @Value("${oauth2.provider.discord.url.apis.token}") String discordApiTokenUrl,
+        @Value("${oauth2.provider.discord.url.apis.user-info}") String discordApiUserInfo,
+        @Value("${oauth2.provider.discord.url.authPage}") String discordAuthPageUrl,
+        @Value("${oauth2.provider.discord.client.id}") String clientId,
+        @Value("${oauth2.provider.discord.client.secret}") String clientSecret,
+        @Value("${oauth2.provider.discord.scope}") String scope,
+        @Value("${oauth2.state}") String state,
         JwtService jwtService,
         UserService userService
     ) {
         super(
-            DISCORD_AUTH_PAGE_URL,
-            CLIENT_ID,
-            CLIENT_SECRET,
-            STATE,
-            SCOPE,
+            discordAuthPageUrl,
+            clientId,
+            clientSecret,
+            state,
+            scope,
             userService,
             jwtService
         );
-        this.DISCORD_API_TOKEN_URL = DISCORD_API_TOKEN_URL;
-        this.DISCORD_API_USER_INFO = DISCORD_API_USER_INFO;
+        this.discordApiTokenUrl = discordApiTokenUrl;
+        this.discordApiUserInfo = discordApiUserInfo;
     }
 
     @Override
@@ -63,7 +57,7 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
         RestClient restClient = RestClient.create();
 
         return restClient.post()
-            .uri(DISCORD_API_TOKEN_URL, generateBodyForTokenRequest(code))
+            .uri(discordApiTokenUrl, generateBodyForTokenRequest(code))
             .body(generateBodyForTokenRequest(code))
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .header(HttpHeaders.ACCEPT_ENCODING, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -76,7 +70,7 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
         RestClient restClient = RestClient.create();
 
         return restClient.get()
-            .uri(DISCORD_API_USER_INFO)
+            .uri(discordApiUserInfo)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .retrieve()
             .body(DiscordOAuth2UserInfoDto.class);
@@ -84,8 +78,8 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
 
     private MultiValueMap<String, String> generateBodyForTokenRequest(String code) {
         return new LinkedMultiValueMap<>() {{
-            add("client_id", CLIENT_ID);
-            add("client_secret", CLIENT_SECRET);
+            add("client_id", clientId);
+            add("client_secret", clientSecret);
             add("grant_type", "authorization_code");
             add("code", code);
             add("redirect_uri", buildApplicationRedirectUrl());

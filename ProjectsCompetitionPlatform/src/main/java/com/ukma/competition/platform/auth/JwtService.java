@@ -15,24 +15,23 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
-import java.util.function.Function;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
 public class JwtService {
 
-    Duration JWT_ACCESS_TOKEN_EXPIRATION_DURATION;
-    Duration JWT_REFRESH_TOKEN_EXPIRATION_DURATION;
+    Duration jwtAccessTokenExpirationDuration;
+    Duration jwtRefreshTokenExpirationDuration;
     AuthenticationKeyProvider keyProvider;
 
     public JwtService(
-        @Value("${jwt.expiration.duration.access}") Duration JWT_ACCESS_TOKEN_EXPIRATION_DURATION,
-        @Value("${jwt.expiration.duration.refresh}") Duration JWT_REFRESH_TOKEN_EXPIRATION_DURATION,
+        @Value("${jwt.expiration.duration.access}") Duration jwtAccessTokenExpirationDuration,
+        @Value("${jwt.expiration.duration.refresh}") Duration jwtRefreshTokenExpirationDuration,
         AuthenticationKeyProvider keyProvider
     ) {
-        this.JWT_ACCESS_TOKEN_EXPIRATION_DURATION = JWT_ACCESS_TOKEN_EXPIRATION_DURATION;
-        this.JWT_REFRESH_TOKEN_EXPIRATION_DURATION = JWT_REFRESH_TOKEN_EXPIRATION_DURATION;
+        this.jwtAccessTokenExpirationDuration = jwtAccessTokenExpirationDuration;
+        this.jwtRefreshTokenExpirationDuration = jwtRefreshTokenExpirationDuration;
         this.keyProvider = keyProvider;
     }
 
@@ -40,7 +39,7 @@ public class JwtService {
         return generateToken(
             claims,
             subject,
-            Instant.now().plus(JWT_ACCESS_TOKEN_EXPIRATION_DURATION)
+            Instant.now().plus(jwtAccessTokenExpirationDuration)
         );
     }
 
@@ -79,7 +78,7 @@ public class JwtService {
         Cookie accessTokenCookie = new Cookie(AppConstants.ACCESS_TOKEN_NAME, accessToken);
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setSecure(true);
-        accessTokenCookie.setMaxAge((int) JWT_ACCESS_TOKEN_EXPIRATION_DURATION.toMillis());
+        accessTokenCookie.setMaxAge((int) jwtAccessTokenExpirationDuration.toMillis());
         accessTokenCookie.setPath("/");
         accessTokenCookie.setDomain("localhost");
 
@@ -87,6 +86,6 @@ public class JwtService {
     }
 
     public Duration getJwtAccessTokenExpirationDuration() {
-        return JWT_ACCESS_TOKEN_EXPIRATION_DURATION;
+        return jwtAccessTokenExpirationDuration;
     }
 }

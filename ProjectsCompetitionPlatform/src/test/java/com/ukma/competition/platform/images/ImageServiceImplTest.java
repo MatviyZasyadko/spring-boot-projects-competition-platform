@@ -37,10 +37,10 @@ class ImageServiceImplTest {
     private ImageServiceImpl imageService;
 
     @Value("${spring.cloudinary.folder}")
-    private String CLOUDINARY_FOLDER;
+    private String cloudinaryFolder;
 
-    private final static String IMAGE_ID = "imageId123";
-    private final static String IMAGE_URL = "http://example.com/image.jpg";
+    private static final String IMAGE_ID = "imageId123";
+    private static final String IMAGE_URL = "http://example.com/image.jpg";
 
     @BeforeEach
     void setUp() {
@@ -69,7 +69,7 @@ class ImageServiceImplTest {
         when(mockFile.isEmpty()).thenReturn(true);
 
         assertThatThrownBy(() -> imageService.uploadImage(imageRequestDto))
-            .isInstanceOf(FileEmptyException.class);
+                .isInstanceOf(FileEmptyException.class);
         verify(imageRepository, never()).save(any(ImageEntity.class));
     }
 
@@ -101,8 +101,8 @@ class ImageServiceImplTest {
         when(imageRepository.findById(IMAGE_ID)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> imageService.findByIdAsDto(IMAGE_ID))
-            .isInstanceOf(ImageNotFoundException.class)
-            .hasMessageContaining("Image is not found!");
+                .isInstanceOf(ImageNotFoundException.class)
+                .hasMessageContaining("Image is not found!");
     }
 
     @Test
@@ -124,7 +124,7 @@ class ImageServiceImplTest {
         when(imageRepository.findById(IMAGE_ID)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> imageService.updateById(IMAGE_ID, imageUpdateDto))
-            .isInstanceOf(ImageNotFoundException.class)
-            .hasMessageContaining("Image is not found!");
+                .isInstanceOf(ImageNotFoundException.class)
+                .hasMessageContaining("Image is not found!");
     }
 }

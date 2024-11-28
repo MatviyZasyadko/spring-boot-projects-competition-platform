@@ -4,18 +4,11 @@ import com.ukma.competition.platform.competitions.database_layer.CompetitionEnti
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.users.UserEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Objects;
 
 
 @Entity
@@ -39,4 +32,14 @@ public class VoteEntity extends IdentifiableEntity {
     @JoinColumn(nullable = false, name = "project_id")
     @ManyToOne(fetch = FetchType.LAZY)
     ProjectEntity project;
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, competition, project);
+    }
 }

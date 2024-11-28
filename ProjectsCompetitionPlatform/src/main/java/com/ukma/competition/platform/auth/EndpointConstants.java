@@ -14,14 +14,14 @@ public class EndpointConstants {
         return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
     }
 
-    public static List<String> PUBLIC_ENDPOINTS = List.of(
+    public static final List<String> PUBLIC_ENDPOINTS = List.of(
         "/resources/**",
         "/*.css",
         "/*.js",
         "/*.jpg",
         "/*.png",
         "/error.html",
-        "/ui/login",
+        LOGIN_PAGE_ENDPOINT,
         "/ui/registration",
         "/favicon.ico",
         "/content/**",

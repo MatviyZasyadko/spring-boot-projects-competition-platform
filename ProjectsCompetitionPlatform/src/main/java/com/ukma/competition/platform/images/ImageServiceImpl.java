@@ -29,7 +29,7 @@ public class ImageServiceImpl extends GenericServiceImpl<ImageEntity, String, Im
     private static final Marker IMAGE_MARKER = MarkerManager.getMarker("IMAGE");
 
     @Value("${spring.cloudinary.folder}")
-    String CLOUDINARY_FOLDER;
+    String cloudinaryFolder;
 
     ObjectMapper objectMapper;
 
@@ -55,7 +55,7 @@ public class ImageServiceImpl extends GenericServiceImpl<ImageEntity, String, Im
         } else {
             ThreadContext.put("imageName", imageFromRequest.getOriginalFilename());
 
-            String url = cloudinaryService.upload(imageFromRequest, CLOUDINARY_FOLDER);
+            String url = cloudinaryService.upload(imageFromRequest, cloudinaryFolder);
             ImageEntity newImage = ImageEntity.builder()
                 .url(url)
                 .build();

@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "performance_tracker_records")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -33,4 +35,14 @@ public class PerformanceTrackerRecordEntity extends IdentifiableEntity {
 
     @Column(nullable = false)
     Boolean isSuccessful;
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(processTime, methodName, className, isSuccessful);
+    }
 }

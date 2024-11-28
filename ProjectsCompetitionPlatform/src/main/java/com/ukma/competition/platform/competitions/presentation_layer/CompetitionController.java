@@ -40,6 +40,9 @@ public class CompetitionController {
     ProjectService projectService;
     UserService userService;
 
+    static final String ERROR = "error";
+    static final String REDIRECT_UI_COMPETITIONS = "redirect:/ui/competitions/";
+
     @GetMapping
     public String findAllAsDto(Model model) {
         model.addAttribute("competitions", competitionService.findAllAsDto());
@@ -91,10 +94,10 @@ public class CompetitionController {
             redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
             redirectAttributes.addFlashAttribute("message", "Failed to submit vote. Please try again.");
-            redirectAttributes.addFlashAttribute("messageType", "error");
+            redirectAttributes.addFlashAttribute("messageType", ERROR);
         }
 
-        return "redirect:/ui/competitions/" + competitionId;
+        return REDIRECT_UI_COMPETITIONS + competitionId;
     }
 
 
@@ -108,7 +111,7 @@ public class CompetitionController {
             model.addAttribute("competitionCreateDto", new CompetitionCreateDto());
         }
         if (error != null) {
-            model.addAttribute("error", error);
+            model.addAttribute(ERROR, error);
         }
 
         return "competitions/create-competition";
@@ -155,10 +158,10 @@ public class CompetitionController {
     ) {
         try {
             competitionService.applyProjectToCompetition(projectApplyToCompetitionDto, competitionId);
-            return "redirect:/ui/competitions/" + competitionId;
+            return REDIRECT_UI_COMPETITIONS + competitionId;
         } catch (Exception exception) {
-            redirectAttributes.addAttribute("error", "Error occured while applying project to a competition: " + exception.getMessage());
-            return "redirect:/ui/competitions/" + competitionId;
+            redirectAttributes.addAttribute(ERROR, "Error occured while applying project to a competition: " + exception.getMessage());
+            return REDIRECT_UI_COMPETITIONS + competitionId;
         }
     }
 

@@ -4,7 +4,6 @@ import com.ukma.competition.platform.auth.dto.LoginRequestDto;
 import com.ukma.competition.platform.auth.dto.RegistrationRequestDto;
 import com.ukma.competition.platform.competitions.business_layer.CompetitionService;
 import com.ukma.competition.platform.projects.ProjectService;
-import com.ukma.competition.platform.projects.dto.ProjectListDto;
 import com.ukma.competition.platform.reports.ReportService;
 import com.ukma.competition.platform.shared.exception.AuthenticationException;
 import com.ukma.competition.platform.users.UserEntity;
@@ -21,11 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -39,6 +34,10 @@ public class AuthenticationController {
     CompetitionService competitionService;
     ReportService reportService;
     UserService userService;
+
+    static final String REDIRECT = "redirect:";
+    static final String AUTH_DTO = "org.springframework.validation.BindingResult.authDto";
+    static final String GLOBAL_ERROR = "globalError";
 
     @GetMapping("/registration")
     public String registrationPage(Model model) {
@@ -58,7 +57,7 @@ public class AuthenticationController {
     ) {
         if (authDto == null || bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute(
-                "org.springframework.validation.BindingResult.authDto",
+                AUTH_DTO,
                 bindingResult
             );
             return "redirect:/ui/registration";
@@ -67,15 +66,15 @@ public class AuthenticationController {
             response.addCookie(authenticationService.register(authDto));
             return "redirect:/ui/main";
         } catch (AuthenticationException exception) {
-            ObjectError error = new ObjectError("globalError", exception.getMessage());
+            ObjectError error = new ObjectError(GLOBAL_ERROR, exception.getMessage());
             bindingResult.addError(error);
         } catch (Exception exception) {
-            ObjectError error = new ObjectError("globalError", "Internal error occurred");
+            ObjectError error = new ObjectError(GLOBAL_ERROR, "Internal error occurred");
             bindingResult.addError(error);
         }
 
         redirectAttributes.addFlashAttribute(
-            "org.springframework.validation.BindingResult.authDto",
+            AUTH_DTO,
             bindingResult
         );
         return "redirect:/ui/registration";
@@ -107,33 +106,33 @@ public class AuthenticationController {
     ) {
         if (authDto == null || bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute(
-                "org.springframework.validation.BindingResult.authDto",
+                AUTH_DTO,
                 bindingResult
             );
-            return "redirect:" + EndpointConstants.LOGIN_PAGE_ENDPOINT;
+            return REDIRECT + EndpointConstants.LOGIN_PAGE_ENDPOINT;
         }
         try {
             response.addCookie(authenticationService.login(authDto));
             return "redirect:/ui/main";
         } catch (AuthenticationException exception) {
-            ObjectError error = new ObjectError("globalError", exception.getMessage());
+            ObjectError error = new ObjectError(GLOBAL_ERROR, exception.getMessage());
             bindingResult.addError(error);
         } catch (Exception exception) {
-            ObjectError error = new ObjectError("globalError", "Internal error occurred");
+            ObjectError error = new ObjectError(GLOBAL_ERROR, "Internal error occurred");
             bindingResult.addError(error);
         }
 
         redirectAttributes.addFlashAttribute(
-            "org.springframework.validation.BindingResult.authDto",
+            AUTH_DTO,
             bindingResult
         );
-        return "redirect:" + EndpointConstants.LOGIN_PAGE_ENDPOINT;
+        return REDIRECT + EndpointConstants.LOGIN_PAGE_ENDPOINT;
     }
 
     @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
         response.addCookie(this.authenticationService.logout());
-        return "redirect:" + EndpointConstants.LOGIN_PAGE_ENDPOINT;
+        return REDIRECT + EndpointConstants.LOGIN_PAGE_ENDPOINT;
     }
 
     @GetMapping("/main")

@@ -19,30 +19,30 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public abstract class AbstractOAuth2Service {
 
-    String REDIRECT_URI_PREFIX = "/api/oauth/callback/";
-    String EXTERNAL_AUTH_PAGE;
-    String CLIENT_ID;
-    String CLIENT_SECRET;
-    String STATE;
-    String SCOPE;
+    String redirectUriPrefix = "/api/oauth/callback/";
+    String externalAuthPage;
+    String clientId;
+    String clientSecret;
+    String state;
+    String scope;
 
     UserService userService;
     JwtService jwtService;
 
     public AbstractOAuth2Service(
-        String EXTERNAL_AUTH_PAGE,
-        String CLIENT_ID,
-        String CLIENT_SECRET,
-        String STATE,
-        String SCOPE,
+        String externalAuthPage,
+        String clientId,
+        String clientSecret,
+        String state,
+        String scope,
         UserService userService,
         JwtService jwtService
     ) {
-        this.EXTERNAL_AUTH_PAGE = EXTERNAL_AUTH_PAGE;
-        this.CLIENT_ID = CLIENT_ID;
-        this.CLIENT_SECRET = CLIENT_SECRET;
-        this.STATE = STATE;
-        this.SCOPE = SCOPE;
+        this.externalAuthPage = externalAuthPage;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.state = state;
+        this.scope = scope;
         this.userService = userService;
         this.jwtService = jwtService;
     }
@@ -56,10 +56,10 @@ public abstract class AbstractOAuth2Service {
     public String buildAuthenticationRedirectUrl() {
         return "%s?client_id=%s&response_type=code&scope=%s&state=%s&redirect_uri=%s"
             .formatted(
-                EXTERNAL_AUTH_PAGE,
-                CLIENT_ID,
-                URLEncoder.encode(SCOPE, StandardCharsets.UTF_8),
-                STATE,
+                    externalAuthPage,
+                    clientId,
+                URLEncoder.encode(scope, StandardCharsets.UTF_8),
+                    state,
                 URLEncoder.encode(buildApplicationRedirectUrl(), StandardCharsets.UTF_8)
             );
     }
@@ -99,7 +99,7 @@ public abstract class AbstractOAuth2Service {
 
     protected String buildApplicationRedirectUrl() {
         return EndpointConstants.getContextPath()
-               + REDIRECT_URI_PREFIX
+               + redirectUriPrefix
                + getOAuth2AuthenticationProvider().toString().toLowerCase();
     }
 

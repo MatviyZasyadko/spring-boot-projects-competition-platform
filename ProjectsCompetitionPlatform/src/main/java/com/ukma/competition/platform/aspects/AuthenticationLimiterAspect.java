@@ -20,12 +20,12 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public class AuthenticationLimiterAspect {
 
-    final Integer METHOD_CALL_LIMIT_VALUE;
+    final Integer methodCallLimitValue;
     ConcurrentMap<String, Integer> methodsCallsAmountMap;
 
     public AuthenticationLimiterAspect() {
         this.methodsCallsAmountMap = new ConcurrentHashMap<>();
-        this.METHOD_CALL_LIMIT_VALUE = 1000;
+        this.methodCallLimitValue = 1000;
     }
 
     @Pointcut("within(com.ukma.competition.platform.auth.AuthenticationService+)")
@@ -40,7 +40,7 @@ public class AuthenticationLimiterAspect {
 
         log.info("Before calling a {} method from {} class", methodName, className);
 
-        if (methodCallsAmount >= METHOD_CALL_LIMIT_VALUE) {
+        if (methodCallsAmount >= methodCallLimitValue) {
             String errorMessage = "Exceeded max limit of calls for method " + methodName + " from class " + className;
             log.error(errorMessage);
             throw new RuntimeException(errorMessage);

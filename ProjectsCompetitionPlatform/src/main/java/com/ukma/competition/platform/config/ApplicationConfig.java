@@ -21,9 +21,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableSpringDataWebSupport
 public class ApplicationConfig {
 
-    @Autowired
-    UserService userService;
-
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -34,8 +31,9 @@ public class ApplicationConfig {
         return new CustomCacheManager();
     }
 
+    @Autowired
     @Bean
-    public UserDetailsService userDetailsService() {
-        return (email) -> this.userService.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User with such email not found"));
+    public UserDetailsService userDetailsService(UserService userService) {
+        return email -> userService.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User with such email not found"));
     }
 }

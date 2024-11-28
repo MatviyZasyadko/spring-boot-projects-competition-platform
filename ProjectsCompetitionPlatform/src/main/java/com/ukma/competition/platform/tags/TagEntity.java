@@ -16,6 +16,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tags")
@@ -35,4 +36,14 @@ public class TagEntity extends IdentifiableEntity {
 
     @ManyToMany(mappedBy = "tags")
     List<CompetitionEntity> competitionEntities;
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, projects, competitionEntities);
+    }
 }

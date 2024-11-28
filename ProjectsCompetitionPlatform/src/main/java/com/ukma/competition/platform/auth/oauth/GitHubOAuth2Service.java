@@ -21,31 +21,31 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GitHubOAuth2Service extends AbstractOAuth2Service {
 
-    String GITHUB_API_TOKEN_URL;
-    String GITHUB_API_USER_INFO_BASE_URL;
+    String githubApiTokenUrl;
+    String githubApiUserInfoBaseUrl;
 
     public GitHubOAuth2Service(
-        @Value("${oauth2.provider.github.url.apis.token}") String GITHUB_API_TOKEN_BASE_URL,
-        @Value("${oauth2.provider.github.url.apis.user-info}") String GITHUB_API_USER_INFO_BASE_URL,
-        @Value("${oauth2.provider.github.url.authPage}") String EXTERNAL_AUTH_PAGE,
-        @Value("${oauth2.provider.github.client.id}") String CLIENT_ID,
-        @Value("${oauth2.provider.github.client.secret}") String CLIENT_SECRET,
-        @Value("${oauth2.state}") String STATE,
-        @Value("${oauth2.provider.github.scope}") String SCOPE,
+        @Value("${oauth2.provider.github.url.apis.token}") String githubApiTokenBaseUrl,
+        @Value("${oauth2.provider.github.url.apis.user-info}") String githubApiUserInfoBaseUrl,
+        @Value("${oauth2.provider.github.url.authPage}") String externalAuthPage,
+        @Value("${oauth2.provider.github.client.id}") String clientId,
+        @Value("${oauth2.provider.github.client.secret}") String clientSecret,
+        @Value("${oauth2.state}") String state,
+        @Value("${oauth2.provider.github.scope}") String scope,
         UserService userService,
         JwtService jwtService
     ) {
         super(
-            EXTERNAL_AUTH_PAGE,
-            CLIENT_ID,
-            CLIENT_SECRET,
-            STATE,
-            SCOPE,
+            externalAuthPage,
+            clientId,
+            clientSecret,
+            state,
+            scope,
             userService,
             jwtService
         );
-        this.GITHUB_API_TOKEN_URL = GITHUB_API_TOKEN_BASE_URL;
-        this.GITHUB_API_USER_INFO_BASE_URL = GITHUB_API_USER_INFO_BASE_URL;
+        this.githubApiTokenUrl = githubApiTokenBaseUrl;
+        this.githubApiUserInfoBaseUrl = githubApiUserInfoBaseUrl;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class GitHubOAuth2Service extends AbstractOAuth2Service {
         RestClient restClient = RestClient.create();
 
          return restClient.post()
-            .uri(GITHUB_API_TOKEN_URL)
+            .uri(githubApiTokenUrl)
             .body(buildOAuth2RequestBody(code))
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
             .header(HttpHeaders.ACCEPT_ENCODING, MediaType.APPLICATION_JSON_VALUE)
@@ -68,8 +68,8 @@ public class GitHubOAuth2Service extends AbstractOAuth2Service {
 
     private OAuth2TokensRequestDto buildOAuth2RequestBody(String code) {
         return OAuth2TokensRequestDto.builder()
-            .clientId(CLIENT_ID)
-            .clientSecret(CLIENT_SECRET)
+            .clientId(clientId)
+            .clientSecret(clientSecret)
             .code(code)
             .redirectUri(this.buildApplicationRedirectUrl())
             .build();
@@ -80,7 +80,7 @@ public class GitHubOAuth2Service extends AbstractOAuth2Service {
         RestClient restClient = RestClient.create();
 
         GitHubOAuth2UserInfoDto userInfo = restClient.get()
-            .uri(GITHUB_API_USER_INFO_BASE_URL + "/user")
+            .uri(githubApiUserInfoBaseUrl + "/user")
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
             .header(HttpHeaders.ACCEPT_ENCODING, MediaType.APPLICATION_JSON_VALUE)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -88,7 +88,7 @@ public class GitHubOAuth2Service extends AbstractOAuth2Service {
             .body(GitHubOAuth2UserInfoDto.class);
 
         List<GitHubOAuth2EmailResponseDto> userEmails = restClient.get()
-            .uri(GITHUB_API_USER_INFO_BASE_URL + "/user/emails")
+            .uri(githubApiUserInfoBaseUrl + "/user/emails")
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
             .header(HttpHeaders.ACCEPT_ENCODING, MediaType.APPLICATION_JSON_VALUE)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -96,10 +96,11 @@ public class GitHubOAuth2Service extends AbstractOAuth2Service {
             .body(new ParameterizedTypeReference<>() {});
 
         if (userEmails != null) {
+            assert userInfo != null;
             userEmails.stream().filter(email -> email.getPrimary() && email.getVerified())
                 .map(GitHubOAuth2EmailResponseDto::getEmail)
                 .findFirst()
-                .ifPresent(email -> userInfo.setEmail(email));
+                .ifPresent(userInfo::setEmail);
         }
 
         return userInfo;

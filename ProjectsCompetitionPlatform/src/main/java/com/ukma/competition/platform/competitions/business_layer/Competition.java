@@ -31,4 +31,14 @@ public class Competition extends IdentifiableEntity {
     List<TagEntity> tags;
     List<PaymentEntity> payments;
     UserEntity creator;
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

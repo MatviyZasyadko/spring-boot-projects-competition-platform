@@ -5,6 +5,7 @@ import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginElement;
@@ -20,7 +21,7 @@ public class CustomFileAppender extends AbstractAppender {
     private FileWriter fileWriter;
 
     protected CustomFileAppender(String name, String filePath, Layout<? extends Serializable> layout, Filter filter) {
-        super(name, filter, layout, true);
+        super(name, filter, layout, true, new Property[0]);
 
         try {
             fileWriter = new FileWriter(filePath, true);

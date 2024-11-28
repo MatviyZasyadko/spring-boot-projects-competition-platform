@@ -1,10 +1,9 @@
 package com.ukma.competition.platform.config;
 
 import com.ukma.competition.platform.auth.CustomAuthenticationProvider;
-import com.ukma.competition.platform.auth.JwtAuthenticationFilter;
 import com.ukma.competition.platform.auth.EndpointConstants;
+import com.ukma.competition.platform.auth.JwtAuthenticationFilter;
 import com.ukma.competition.platform.users.UserRole;
-import com.ukma.competition.platform.users.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

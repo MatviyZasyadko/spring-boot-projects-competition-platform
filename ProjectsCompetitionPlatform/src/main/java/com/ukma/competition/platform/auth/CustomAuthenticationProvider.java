@@ -4,7 +4,6 @@ import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,9 +13,9 @@ import org.springframework.stereotype.Component;
 public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     @Override
-    protected void additionalAuthenticationChecks(
-        UserDetails userDetails,
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {}
+    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        // method should be present to extend abstract class
+    }
 
     @Override
     protected UserDetails retrieveUser(String username,
@@ -30,8 +29,5 @@ public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticat
         return UserEntity.builder().email(username).userRole(userRole).build();
     }
 
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return super.authenticate(authentication);
-    }
+
 }

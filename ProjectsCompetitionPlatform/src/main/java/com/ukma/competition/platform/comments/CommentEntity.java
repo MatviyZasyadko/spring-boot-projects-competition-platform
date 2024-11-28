@@ -1,12 +1,13 @@
 package com.ukma.competition.platform.comments;
 
-import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "comments")
@@ -27,4 +28,14 @@ public class CommentEntity extends IdentifiableEntity {
     @JoinColumn(name = "project_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     ProjectEntity project;
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(author, text, project);
+    }
 }

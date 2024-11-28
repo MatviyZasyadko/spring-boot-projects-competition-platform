@@ -44,6 +44,11 @@ public abstract class IdentifiableEntity {
         return obj instanceof IdentifiableEntity && equalsHelper((IdentifiableEntity) obj, this);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createdAt, updatedAt);
+    }
+
     private boolean equalsHelper(IdentifiableEntity i1, IdentifiableEntity i2) {
         if (i1 == i2) {
             return true;

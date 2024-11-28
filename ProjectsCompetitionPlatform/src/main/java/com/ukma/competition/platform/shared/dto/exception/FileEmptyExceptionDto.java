@@ -1,11 +1,6 @@
 package com.ukma.competition.platform.shared.dto.exception;
 
-import com.ukma.competition.platform.shared.dto.exception.ExceptionDto;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;

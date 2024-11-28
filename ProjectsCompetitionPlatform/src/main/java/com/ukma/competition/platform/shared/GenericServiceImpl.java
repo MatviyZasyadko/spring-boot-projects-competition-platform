@@ -16,8 +16,8 @@ import java.util.Optional;
 
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 @RequiredArgsConstructor
-public abstract class GenericServiceImpl<T extends IdentifiableEntity, ID extends Serializable, R extends JpaRepository<T, ID> & JpaSpecificationExecutor<T>>
-    implements GenericService<T, ID> {
+public abstract class GenericServiceImpl<T extends IdentifiableEntity, I extends Serializable, R extends JpaRepository<T, I> & JpaSpecificationExecutor<T>>
+    implements GenericService<T, I> {
 
     R repository;
 
@@ -40,17 +40,17 @@ public abstract class GenericServiceImpl<T extends IdentifiableEntity, ID extend
     }
 
     @Override
-    public Optional<T> findById(ID id) {
+    public Optional<T> findById(I id) {
         return repository.findById(id);
     }
 
     @Override
-    public boolean existsById(ID id) {
+    public boolean existsById(I id) {
         return repository.existsById(id);
     }
 
     @Override
-    public void deleteById(ID id) {
+    public void deleteById(I id) {
         if (!this.existsById(id)) {
             throw new NoSuchElementException("Record is not found while trying to delete");
         }

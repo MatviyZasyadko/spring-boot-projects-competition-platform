@@ -18,31 +18,31 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 public class GoogleOAuth2Service extends AbstractOAuth2Service {
 
-    final String GOOGLE_API_TOKEN_URL;
-    final String GOOGLE_API_USER_INFO_BASE_URL;
+    final String googleApiTokenUrl;
+    final String googleApiUserInfoBaseUrl;
 
     public GoogleOAuth2Service(
-        @Value("${oauth2.provider.google.url.apis.token}") String GOOGLE_API_TOKEN_BASE_URL,
-        @Value("${oauth2.provider.google.url.apis.user-info}") String GOOGLE_API_USER_INFO_BASE_URL,
-        @Value("${oauth2.provider.google.url.authPage}") String GOOGLE_AUTH_PAGE,
-        @Value("${oauth2.provider.google.client.id}") String CLIENT_ID,
-        @Value("${oauth2.provider.google.client.secret}") String CLIENT_SECRET,
-        @Value("${oauth2.provider.google.scope}") String SCOPE,
-        @Value("${oauth2.state}") String STATE,
+        @Value("${oauth2.provider.google.url.apis.token}") String googleApiTokenBaseUrl,
+        @Value("${oauth2.provider.google.url.apis.user-info}") String googleApiUserInfoBaseUrl,
+        @Value("${oauth2.provider.google.url.authPage}") String googleAuthPage,
+        @Value("${oauth2.provider.google.client.id}") String clientId,
+        @Value("${oauth2.provider.google.client.secret}") String clientSecret,
+        @Value("${oauth2.provider.google.scope}") String scope,
+        @Value("${oauth2.state}") String state,
         JwtService jwtService,
         UserService userService
     ) {
         super(
-            GOOGLE_AUTH_PAGE,
-            CLIENT_ID,
-            CLIENT_SECRET,
-            STATE,
-            SCOPE,
+            googleAuthPage,
+            clientId,
+            clientSecret,
+            state,
+            scope,
             userService,
             jwtService
         );
-        this.GOOGLE_API_TOKEN_URL = GOOGLE_API_TOKEN_BASE_URL;
-        this.GOOGLE_API_USER_INFO_BASE_URL = GOOGLE_API_USER_INFO_BASE_URL;
+        this.googleApiTokenUrl = googleApiTokenBaseUrl;
+        this.googleApiUserInfoBaseUrl = googleApiUserInfoBaseUrl;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
         RestClient restClient = RestClient.create();
 
         return restClient.get()
-            .uri(GOOGLE_API_USER_INFO_BASE_URL + "/userinfo")
+            .uri(googleApiUserInfoBaseUrl + "/userinfo")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .retrieve()
             .body(GoogleOAuth2UserInfoDto.class);
@@ -60,15 +60,15 @@ public class GoogleOAuth2Service extends AbstractOAuth2Service {
     public OAuth2TokensResponseDto requestOAuth2Tokens(String code) {
         RestClient restClient = RestClient.create();
         OAuth2TokensRequestDto googleOAuth2RequestTokensDto = OAuth2TokensRequestDto.builder()
-            .clientId(this.CLIENT_ID)
-            .clientSecret(this.CLIENT_SECRET)
+            .clientId(this.clientId)
+            .clientSecret(this.clientSecret)
             .redirectUri(buildApplicationRedirectUrl())
             .grantType("authorization_code")
             .code(code)
             .build();
 
         return restClient.post()
-            .uri(GOOGLE_API_TOKEN_URL)
+            .uri(googleApiTokenUrl)
             .body(googleOAuth2RequestTokensDto)
             .retrieve()
             .body(OAuth2TokensResponseDto.class);

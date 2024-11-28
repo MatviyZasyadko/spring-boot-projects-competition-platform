@@ -28,18 +28,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -63,7 +58,7 @@ class AuthenticationIntegrationTest {
 
     MockMvc mockMvc;
 
-    final String ACCESS_TOKEN_COOKIE_NAME = "COMPETITORS_ACCESS_TOKEN";
+    static final String ACCESS_TOKEN_COOKIE_NAME = "COMPETITORS_ACCESS_TOKEN";
 
     @BeforeEach
     public void setUp() {
@@ -74,7 +69,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void registrationWithCorrectDataIsSuccessful() throws Exception {
+    void registrationWithCorrectDataIsSuccessful() throws Exception {
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto(
             "Vova Havryliuk",
             "Vova@mail.com",
@@ -102,7 +97,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void registrationIsFailedIfUserWithSuchUsernameAlreadyExists() throws Exception {
+    void registrationIsFailedIfUserWithSuchUsernameAlreadyExists() throws Exception {
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto(
             "Vova Havryliuk",
             "Vova@mail.com",
@@ -129,7 +124,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void loginIsSuccessfulIfUserRegistered() throws Exception {
+    void loginIsSuccessfulIfUserRegistered() throws Exception {
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto(
             "Vova Havryliuk",
             "Vova@mail.com",
@@ -180,7 +175,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void loginIsFailedIfUserIsNotRegistered() throws Exception {
+    void loginIsFailedIfUserIsNotRegistered() throws Exception {
         LoginRequestDto registrationRequestDto = new LoginRequestDto(
             "Vova@mail.com",
             "vova123"
@@ -199,7 +194,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void simpleUserCanAccessAuthenticatedResources() throws Exception {
+    void simpleUserCanAccessAuthenticatedResources() throws Exception {
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto(
             "Vova Havryliuk",
             "Vova@mail.com",
@@ -244,7 +239,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void adminCanAccessAuthenticatedResources() throws Exception {
+    void adminCanAccessAuthenticatedResources() throws Exception {
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto(
             "Vova Havryliuk",
             "Vova@mail.com",
@@ -289,7 +284,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void adminCanAccessAuthenticatedResourcesOnlyForAdmins() throws Exception {
+    void adminCanAccessAuthenticatedResourcesOnlyForAdmins() throws Exception {
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto(
             "Vova Havryliuk",
             "Vova@mail.com",
@@ -334,7 +329,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void simpleUserCanNotAccessAuthenticatedResourcesOnlyForAdmins() throws Exception {
+    void simpleUserCanNotAccessAuthenticatedResourcesOnlyForAdmins() throws Exception {
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto(
             "Vova Havryliuk",
             "Vova@mail.com",
@@ -370,7 +365,7 @@ class AuthenticationIntegrationTest {
     }
 
     @Test
-    public void unauthenticatedUserCanNotAccessAuthenticatedResources() throws Exception {
+    void unauthenticatedUserCanNotAccessAuthenticatedResources() throws Exception {
         //accessing authenticated resource without jwt in cookies
         mockMvc.perform(
                 get("/api/auth/profile")

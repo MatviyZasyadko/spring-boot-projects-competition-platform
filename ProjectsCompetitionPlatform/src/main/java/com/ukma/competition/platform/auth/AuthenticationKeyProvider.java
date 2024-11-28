@@ -17,16 +17,16 @@ import java.util.Base64;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationKeyProvider {
 
-    final PrivateKey PRIVATE_KEY;
-    final PublicKey PUBLIC_KEY;
-    final KeyFactory KEY_FACTORY;
-    ResourceLoader resourceLoader;
+    final PrivateKey privateKey;
+    final PublicKey publicKey;
+    final KeyFactory keyFactory;
+    final ResourceLoader resourceLoader;
 
     public AuthenticationKeyProvider(ResourceLoader resourceLoader) throws Exception {
         this.resourceLoader = resourceLoader;
-        this.KEY_FACTORY = KeyFactory.getInstance("RSA");
-        this.PRIVATE_KEY = loadPrivateKey();
-        this.PUBLIC_KEY = loadPublicKey();
+        this.keyFactory = KeyFactory.getInstance("RSA");
+        this.privateKey = loadPrivateKey();
+        this.publicKey = loadPublicKey();
     }
 
     private PrivateKey loadPrivateKey() throws Exception {
@@ -37,7 +37,7 @@ public class AuthenticationKeyProvider {
         byte[] keyBytes = Base64.getDecoder().decode(key);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
 
-        return KEY_FACTORY.generatePrivate(spec);
+        return keyFactory.generatePrivate(spec);
     }
 
     private PublicKey loadPublicKey() throws Exception {
@@ -48,14 +48,14 @@ public class AuthenticationKeyProvider {
         byte[] keyBytes = Base64.getDecoder().decode(key);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
 
-        return KEY_FACTORY.generatePublic(spec);
+        return keyFactory.generatePublic(spec);
     }
 
     public PrivateKey getPrivateKey() {
-        return PRIVATE_KEY;
+        return privateKey;
     }
 
     public PublicKey getPublicKey() {
-        return PUBLIC_KEY;
+        return publicKey;
     }
 }

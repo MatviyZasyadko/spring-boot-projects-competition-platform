@@ -19,6 +19,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Table(name = "reports")
@@ -49,4 +50,14 @@ public class ReportEntity extends IdentifiableEntity {
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     UserEntity user;
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(topic, description, adminComment, reportStatus, approveDate, user);
+    }
 }

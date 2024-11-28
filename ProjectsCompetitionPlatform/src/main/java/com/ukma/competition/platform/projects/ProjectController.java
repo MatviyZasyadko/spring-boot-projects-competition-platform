@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ukma.competition.platform.comments.dto.CommentCreateDto;
 import com.ukma.competition.platform.projects.dto.ProjectCreateUpdateDto;
 import com.ukma.competition.platform.projects.dto.ProjectListDto;
-import com.ukma.competition.platform.projects.dto.ProjectListItemDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +27,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProjectController {
 
     ProjectService projectService;
+
+    static final String ERROR_ATTRIBUTE_NAME = "error";
+    static final String PROJECT_CREATE_UPDATE_DTO = "org.springframework.validation.BindingResult.projectCreateUpdateDto";
+    static final String REDIRECT_UI_PROJECTS_CREATE = "redirect:/ui/projects/create";
+    static final String GLOBAL_ERROR = "globalError";
 
     @GetMapping
     public String getProjectList(Model model, @PageableDefault(value = 5) Pageable pageable, @RequestParam(value = "search", required = false) String search) {
@@ -80,7 +84,7 @@ public class ProjectController {
             redirectAttributes.addFlashAttribute("messageType", "success");
         } else {
             redirectAttributes.addFlashAttribute("message", "Failed to add comment. Please try again.");
-            redirectAttributes.addFlashAttribute("messageType", "error");
+            redirectAttributes.addFlashAttribute("messageType", ERROR_ATTRIBUTE_NAME);
         }
 
         return "redirect:/ui/projects/" + commentCreateDto.getProjectId();
@@ -96,7 +100,7 @@ public class ProjectController {
             model.addAttribute("projectCreateUpdateDto", new ProjectCreateUpdateDto());
         }
         if (error != null) {
-            model.addAttribute("error", error);
+            model.addAttribute(ERROR_ATTRIBUTE_NAME, error);
         }
 
         return "projects/create-project";
@@ -112,33 +116,33 @@ public class ProjectController {
     ) {
         if (projectCreateUpdateDto == null || bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult.projectCreateUpdateDto",
+                    PROJECT_CREATE_UPDATE_DTO,
                     bindingResult
             );
-            return "redirect:/ui/projects/create";
+            return REDIRECT_UI_PROJECTS_CREATE;
         }
 
         try {
             if (projectCreateUpdateDto.getImages() == null || projectCreateUpdateDto.getImages().isEmpty()) {
-                ObjectError error = new ObjectError("globalError", "You should provide at least one image for project");
+                ObjectError error = new ObjectError(GLOBAL_ERROR, "You should provide at least one image for project");
                 bindingResult.addError(error);
 
                 redirectAttributes.addFlashAttribute(
-                        "org.springframework.validation.BindingResult.projectCreateUpdateDto",
+                        PROJECT_CREATE_UPDATE_DTO,
                         bindingResult
                 );
-                return "redirect:/ui/projects/create";
+                return REDIRECT_UI_PROJECTS_CREATE;
             }
             projectService.saveFromDto(projectCreateUpdateDto, userDetails.getUsername());
         } catch (Exception exception) {
-            ObjectError error = new ObjectError("globalError", exception.getMessage());
+            ObjectError error = new ObjectError(GLOBAL_ERROR, exception.getMessage());
             bindingResult.addError(error);
 
             redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult.projectCreateUpdateDto",
+                    PROJECT_CREATE_UPDATE_DTO,
                     bindingResult
             );
-            return "redirect:/ui/projects/create";
+            return REDIRECT_UI_PROJECTS_CREATE;
         }
 
         return "redirect:/ui/projects";
@@ -155,7 +159,7 @@ public class ProjectController {
         if (model.asMap().isEmpty()) {
             model.addAttribute("projectCreateUpdateDto", projectService.buildUpdateDto(id));
             if (error != null) {
-                model.addAttribute("error", error);
+                model.addAttribute(ERROR_ATTRIBUTE_NAME, error);
             }
         }
         return "projects/create-project";
@@ -172,7 +176,7 @@ public class ProjectController {
     ) {
         if (projectCreateUpdateDto == null || bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult.projectCreateUpdateDto",
+                    PROJECT_CREATE_UPDATE_DTO,
                     bindingResult
             );
             return "redirect:/ui/projects/update/" + id;
@@ -181,11 +185,11 @@ public class ProjectController {
         try {
             projectService.saveFromDto(projectCreateUpdateDto, userDetails.getUsername());
         } catch (Exception exception) {
-            ObjectError error = new ObjectError("globalError", exception.getMessage());
+            ObjectError error = new ObjectError(GLOBAL_ERROR, exception.getMessage());
             bindingResult.addError(error);
 
             redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult.projectCreateUpdateDto",
+                    PROJECT_CREATE_UPDATE_DTO,
                     bindingResult
             );
             return "redirect:/ui/projects/update/" + id;
