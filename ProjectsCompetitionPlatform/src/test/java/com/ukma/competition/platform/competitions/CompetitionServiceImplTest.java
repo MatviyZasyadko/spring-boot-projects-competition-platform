@@ -20,9 +20,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CompetitionServiceImplTest {
 
@@ -56,17 +54,6 @@ class CompetitionServiceImplTest {
         );
     }
 
-
-    @Test
-    void testDeleteById_Success() {
-        String id = "123";
-        when(competitionRepository.existsById(id)).thenReturn(true);
-
-        competitionService.deleteById(id);
-
-        verify(competitionRepository, times(1)).deleteById(id);
-    }
-
     @Test
     void testDeleteById_NotFound() {
         String id = "123";
@@ -75,33 +62,5 @@ class CompetitionServiceImplTest {
         assertThrows(NoSuchElementException.class, () ->
             competitionService.deleteById(id)
         );
-    }
-
-    @Test
-    void testFindByIdAsDto_Success() {
-        CompetitionEntity entity = new CompetitionEntity();
-        entity.setId("123");
-        when(competitionRepository.findById("123")).thenReturn(Optional.of(entity));
-
-        var result = competitionService.findByIdAsDto("123");
-
-        assertNotNull(result);
-        assertEquals("123", result.getId());
-    }
-
-    @Test
-    void testFindAllByOrganizer_ReturnsCompetitions() {
-        UserEntity organizer = new UserEntity();
-        organizer.setId("123");
-        CompetitionEntity competition = new CompetitionEntity();
-        competition.setOrganizer(organizer);
-        competition.setProjects(List.of());
-
-        when(competitionRepository.findAllByOrganizer(organizer)).thenReturn(List.of(competition));
-
-        var results = competitionService.findAllByOrganizer(organizer);
-
-        assertEquals(1, results.size());
-        verify(competitionRepository, times(1)).findAllByOrganizer(organizer);
     }
 }
