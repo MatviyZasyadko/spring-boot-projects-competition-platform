@@ -4,6 +4,7 @@ import com.ukma.competition.platform.images.dto.ImageResponseDto;
 import com.ukma.competition.platform.projects.dto.ProjectListItemDto;
 import com.ukma.competition.platform.shared.dto.BaseDto;
 import com.ukma.competition.platform.users.dto.UserDto;
+import com.ukma.competition.platform.votes.dto.VoteDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,4 +25,5 @@ public class CompetitionItemDto extends BaseDto {
     boolean finished;
     UserDto organizer;
     Double totalVotesAmount;
+    VoteDto voteDto;
 }

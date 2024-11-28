@@ -5,6 +5,7 @@ import com.ukma.competition.platform.competitions.business_layer.CompetitionServ
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.projects.ProjectService;
+import com.ukma.competition.platform.projects.dto.ProjectListItemDto;
 import com.ukma.competition.platform.projects.dto.SelectedProjectDto;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
@@ -56,7 +57,8 @@ public class CompetitionController {
         @PathVariable("id") String competitionId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        model.addAttribute("competition", competitionService.findByIdAsDto(competitionId));
+        CompetitionItemDto competitionItemDto = competitionService.findByIdAsDto(competitionId, userDetails.getUsername());
+        model.addAttribute("competition", competitionItemDto);
 
         Authentication principal = SecurityContextHolder.getContext().getAuthentication();
         UserEntity user = userService.findByEmail(principal.getName()).orElse(null);
@@ -67,6 +69,10 @@ public class CompetitionController {
         ));
 
         model.addAttribute("projectApplyToCompetitionDto", new ProjectApplyToCompetitionDto());
+        model.addAttribute("isEmpty",
+            competitionItemDto.getProjects().isEmpty()
+            || competitionItemDto.getProjects().stream().mapToInt(ProjectListItemDto::getVotesAmount).sum() == 0
+        );
 
         String projectId = competitionService.findProjectIdWithVoteFromUser(competitionId, user);
         model.addAttribute("selectedProjectDto", new SelectedProjectDto(projectId));
@@ -163,6 +169,12 @@ public class CompetitionController {
             redirectAttributes.addAttribute(ERROR, "Error occured while applying project to a competition: " + exception.getMessage());
             return REDIRECT_UI_COMPETITIONS + competitionId;
         }
+    }
+
+    @GetMapping("/{id}/finish")
+    public String finishCompetition(@PathVariable("id") String id) {
+        this.competitionService.finishCompetition(id);
+        return REDIRECT_UI_COMPETITIONS + id;
     }
 
     @InitBinder

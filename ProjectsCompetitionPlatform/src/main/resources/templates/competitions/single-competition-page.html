@@ -127,9 +127,29 @@
                                 Apply a project
                             </button>
                         </div>
+                        <div th:if="${#authentication.principal.id == competition.organizer.id && not competition.finished}">
+                            <form th:action="'/ui/competitions/' + ${competition.id} + '/finish'">
+                                <button type="submit" data-modal-target="apply-project-modal"
+                                        data-modal-toggle="apply-project-modal"
+                                        class="primary-button font-medium p-1.5">
+                                    Finish a competition
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="page-block mt-10" th:if="${competition.finished}">
+        <div class="flex justify-center">
+            <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">Results</h2>
+        </div>
+        <div class="flex justify-center items-center" th:if="${isEmpty}">
+            <p class="w-80 h-40 text-xl  text-gray-500">
+                Competition does not have applied projects or votes
+            </p>
         </div>
     </div>
 
@@ -157,6 +177,10 @@
                                        th:field="*{projectId}">
                                 <label th:for="'projectOption_' + ${participant.id}" class="text-sm">
                                     <span th:text="${participant.name}"></span>
+                                    <span class="ml-2 text-gray-700"
+                                          th:if="${competition.voteDto != null && competition.voteDto.projectId == participant.id}">
+                                        (You voted for this project)
+                                    </span>
                                 </label>
                             </div>
                         </label>
@@ -175,7 +199,9 @@
 
                 <div class="mt-10">
                     <button th:if="${not competition.finished}" type="submit" class="primary-button p-1.5">
-                        Submit Vote
+                        <span>
+                            Submit a vote
+                        </span>
                     </button>
                 </div>
             </form>

@@ -16,6 +16,7 @@ import com.ukma.competition.platform.users.UserService;
 import com.ukma.competition.platform.users.dto.UserDto;
 import com.ukma.competition.platform.votes.VoteEntity;
 import com.ukma.competition.platform.votes.VoteService;
+import com.ukma.competition.platform.votes.dto.VoteDto;
 import com.ukma.edu.spring.boot.starter.cloudinary.service.CloudinaryService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -202,13 +203,41 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
             .toList();
     }
 
+    public void finishCompetition(String id) {
+        super.findById(id).orElseThrow().setVotingEndDate(Instant.now());
+    }
+
     @Override
-    public CompetitionItemDto findByIdAsDto(String id) {
+    public CompetitionItemDto findByIdAsDto(String id, String username) {
         CompetitionEntity competitionEntity = repository.findById(id).orElseThrow();
+        UserEntity userEntity = this.userService.findByEmail(username).orElseThrow();
+        VoteEntity voteEntity = competitionEntity.getVotes()
+            .stream()
+            .filter(vote -> vote.getUser().getId().equals(userEntity.getId()))
+            .findFirst()
+            .orElse(null);
+        VoteDto voteDto = voteEntity == null
+            ? null
+            : new VoteDto(
+                new UserDto(
+                    userEntity.getId(),
+                    userEntity.getFullName(),
+                    userEntity.getEmail(),
+                    userEntity.getLogoUrl()
+                ),
+                voteEntity.getProject().getId()
+            );
+
+
         Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
         logger.info(findMarker, "Searching for competition");
 
-        return convertEntityToDto(competitionEntity);
+        CompetitionItemDto competitionItemDto = convertEntityToDto(competitionEntity);
+        competitionItemDto.setVoteDto(
+            voteDto
+        );
+
+        return competitionItemDto;
     }
 
     @Override

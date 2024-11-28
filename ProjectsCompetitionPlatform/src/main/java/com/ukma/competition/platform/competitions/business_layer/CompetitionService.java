@@ -19,7 +19,7 @@ public interface CompetitionService extends GenericService<CompetitionEntity, St
 
     List<CompetitionItemDto> findAllAsDto();
 
-    CompetitionItemDto findByIdAsDto(String id);
+    CompetitionItemDto findByIdAsDto(String id, String username);
 
     void applyProjectToCompetition(ProjectApplyToCompetitionDto projectApplyToCompetitionDto, String competitionId);
 
@@ -28,4 +28,6 @@ public interface CompetitionService extends GenericService<CompetitionEntity, St
     boolean addOrChangeVote(CompetitionEntity competition, ProjectEntity project, UserEntity user);
 
     List<CompetitionItemDto> findAllByOrganizer(UserEntity user);
+
+    void finishCompetition(String id);
 }
