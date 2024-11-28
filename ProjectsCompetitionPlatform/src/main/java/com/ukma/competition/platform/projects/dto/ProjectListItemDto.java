@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ProjectListItemDto {
-
     String id;
     String name;
     String shortDescription;
@@ -25,4 +24,5 @@ public class ProjectListItemDto {
     UserDto creator;
     Instant createdAt;
     List<CommentDto> comments;
+    Integer votesAmount = 0;
 }

@@ -26,7 +26,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @Getter
 @Setter
-public class Vote extends IdentifiableEntity {
+public class VoteEntity extends IdentifiableEntity {
 
     @JoinColumn(nullable = false, name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,7 +34,7 @@ public class Vote extends IdentifiableEntity {
 
     @JoinColumn(nullable = false, name = "competition_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    CompetitionEntity competitionEntity;
+    CompetitionEntity competition;
 
     @JoinColumn(nullable = false, name = "project_id")
     @ManyToOne(fetch = FetchType.LAZY)

@@ -114,7 +114,8 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
                 project.getComments().stream()
                         .sorted(Comparator.comparing(CommentEntity::getCreatedAt).reversed())
                         .map(commentService::convertToDto)
-                        .toList());
+                        .toList(),
+                0);
     }
 
     private ImageResponseDto buildImageResponseDto(ImageEntity image) {

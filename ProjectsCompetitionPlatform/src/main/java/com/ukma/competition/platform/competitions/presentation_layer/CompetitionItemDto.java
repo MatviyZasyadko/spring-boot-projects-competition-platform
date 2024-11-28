@@ -24,4 +24,5 @@ public class CompetitionItemDto extends BaseDto {
     List<ProjectListItemDto> projects;
     boolean finished;
     UserDto organizer;
+    Double totalVotesAmount;
 }

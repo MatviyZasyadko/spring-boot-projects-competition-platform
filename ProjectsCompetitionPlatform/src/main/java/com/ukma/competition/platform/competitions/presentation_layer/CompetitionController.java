@@ -2,11 +2,13 @@ package com.ukma.competition.platform.competitions.presentation_layer;
 
 import com.ukma.competition.platform.competitions.business_layer.CompetitionCreateDto;
 import com.ukma.competition.platform.competitions.business_layer.CompetitionService;
+import com.ukma.competition.platform.projects.ProjectService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,7 @@ import java.time.LocalDate;
 public class CompetitionController {
 
     CompetitionService competitionService;
+    ProjectService projectService;
 
     @GetMapping
     public String findAllAsDto(Model model) {
@@ -37,8 +40,17 @@ public class CompetitionController {
     }
 
     @GetMapping("/{id}")
-    public String singleCompetitionPage(Model model, @PathVariable("id") String id) {
+    public String singleCompetitionPage(
+        Model model,
+        @PathVariable("id") String id,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
         model.addAttribute("competition", competitionService.findByIdAsDto(id));
+        model.addAttribute("usersProjects", projectService.findAll(
+            ((root, query, cb) -> cb.equal(root.get("creator").get("email"), userDetails.getUsername())),
+            PageRequest.of(0, Integer.MAX_VALUE)
+        ));
+        model.addAttribute("projectApplyToCompetitionDto", new ProjectApplyToCompetitionDto());
         return "competitions/single-competition-page";
     }
 
@@ -90,16 +102,32 @@ public class CompetitionController {
         return "redirect:/ui/competitions";
     }
 
+    @PostMapping("/{id}/apply")
+    public String applyProject(
+        @ModelAttribute("projectApplyToCompetitionDto")
+        ProjectApplyToCompetitionDto projectApplyToCompetitionDto,
+        @PathVariable("id") String competitionId,
+        RedirectAttributes redirectAttributes
+    ) {
+        try {
+            competitionService.applyProjectToCompetition(projectApplyToCompetitionDto, competitionId);
+            return "redirect:/ui/competitions/" + competitionId;
+        } catch (Exception exception) {
+            redirectAttributes.addAttribute("error", "Error occured while applying project to a competition: " + exception.getMessage());
+            return "redirect:/ui/competitions/" + competitionId;
+        }
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true));
     }
 
-    //  @DeleteMapping("/{id}")
-    //  @ResponseStatus(HttpStatus.NO_CONTENT)
-    //  public void deleteById(@PathVariable("id") String id) {
-    //      competitionService.deleteById(id);
-    //  }
-//
-//
+    @GetMapping("/delete/{id}")
+    public String deleteById(@PathVariable("id") String id) {
+        competitionService.deleteById(id);
+
+        return "redirect:/ui/competitions";
+    }
+
 }

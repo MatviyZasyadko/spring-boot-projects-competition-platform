@@ -38,11 +38,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         throw new AuthenticationException("Username or password is not correct!");
     }
 
-
     public Cookie register(RegistrationRequestDto authDto) {
         Optional<UserEntity> userCheck = userRepository.findByEmail(authDto.getEmail());
         if (userCheck.isEmpty()) {
             UserEntity newUser = UserEntity.builder()
+                .fullName(authDto.getFullName())
                 .email(authDto.getEmail())
                 .password(passwordEncoder.encode(authDto.getPassword()))
                 .userRole(UserRole.USER)

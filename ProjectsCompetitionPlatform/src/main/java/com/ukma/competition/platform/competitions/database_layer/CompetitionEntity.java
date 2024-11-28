@@ -6,6 +6,7 @@ import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.tags.TagEntity;
 import com.ukma.competition.platform.users.UserEntity;
+import com.ukma.competition.platform.votes.VoteEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
@@ -83,6 +84,10 @@ public class CompetitionEntity extends IdentifiableEntity {
     @Builder.Default
     List<PaymentEntity> payments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<VoteEntity> votes = new ArrayList<>();
+
     public ImageEntity getLogo() {
         return images.stream().filter(ImageEntity::getMain).findFirst()
             .orElse(null);
@@ -97,5 +102,10 @@ public class CompetitionEntity extends IdentifiableEntity {
     public void addImage(ImageEntity image) {
         this.images.add(image);
         image.getCompetitions().add(this);
+    }
+
+    public void addProject(ProjectEntity project) {
+        this.getProjects().add(project);
+        project.getCompetitions().add(this);
     }
 }

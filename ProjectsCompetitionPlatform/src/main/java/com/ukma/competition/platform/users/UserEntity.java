@@ -7,6 +7,7 @@ import com.ukma.competition.platform.payments.PaymentEntity;
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 
+import com.ukma.competition.platform.votes.VoteEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,6 +69,10 @@ public class UserEntity extends IdentifiableEntity implements UserDetails {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     List<ProjectEntity> projects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<VoteEntity> votes = new ArrayList<>();
 
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

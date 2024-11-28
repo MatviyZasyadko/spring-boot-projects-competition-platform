@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VoteRepository extends JpaRepository<Vote, String>, JpaSpecificationExecutor<Vote> {
+public interface VoteRepository extends JpaRepository<VoteEntity, String>, JpaSpecificationExecutor<VoteEntity> {
 
     @Query("SELECT v.project, COUNT(v) AS voteCount " +
-            "FROM Vote v " +
+            "FROM VoteEntity v " +
             "GROUP BY v.project " +
             "ORDER BY voteCount DESC")
     List<Object[]> findTop5ProjectsByVoteCount(Pageable pageable);

@@ -3,10 +3,12 @@ package com.ukma.competition.platform.competitions.business_layer;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionRepository;
 import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.competitions.presentation_layer.CompetitionItemDto;
+import com.ukma.competition.platform.competitions.presentation_layer.ProjectApplyToCompetitionDto;
 import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.images.dto.ImageResponseDto;
 import com.ukma.competition.platform.projects.ProjectEntity;
 import com.ukma.competition.platform.projects.ProjectService;
+import com.ukma.competition.platform.projects.dto.ProjectListItemDto;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
 import com.ukma.competition.platform.shared.constants.AppConstants;
 import com.ukma.competition.platform.users.UserEntity;
@@ -17,6 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -64,29 +67,6 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         return currentProjects < competitionProperties.getMaxProjects();
     }
 
-    public void addProjectToCompetition(String competitionId, ProjectEntity project) {
-        Optional<CompetitionEntity> optionalCompetitionEntity = repository.findById(competitionId);
-
-        if (optionalCompetitionEntity.isPresent()) {
-            CompetitionEntity competitionEntity = optionalCompetitionEntity.get();
-
-            // Competition competition = convertEntityToCompetition(competitionEntity);
-
-            //if (!canAddProject(competition)) {
-            //    throw new IllegalArgumentException("Cannot add more projects: limit reached");
-            //}
-
-            competitionEntity.getProjects().add(project);
-
-            repository.save(competitionEntity);
-
-            //return convertEntityToCompetition(competitionEntity);
-        } else {
-            throw new EntityNotFoundException("Competition not found with ID: " + competitionId);
-        }
-    }
-
-
     private CompetitionItemDto convertEntityToDto(CompetitionEntity entity) {
         CompetitionItemDto competitionDto = new CompetitionItemDto();
         competitionDto.setId(entity.getId());
@@ -102,7 +82,15 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
                 entity.getLogo().getName()
             )
         );
-        competitionDto.setProjects(entity.getProjects().stream().map(projectService::convertToDto).toList());
+        competitionDto.setProjects(entity.getProjects()
+            .stream()
+            .map(projectService::convertToDto)
+            .map(projectDto -> countVotes(entity, projectDto))
+            .sorted(
+                (first, second) -> Integer.compare(second.getVotesAmount(), first.getVotesAmount())
+            )
+            .toList()
+        );
         competitionDto.setFinished(entity.getVotingEndDate().isBefore(Instant.now()) || entity.getVotingEndDate().equals(Instant.now()));
         competitionDto.setOrganizer(
             UserDto.builder()
@@ -112,8 +100,19 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
                 .logoUrl(entity.getOrganizer().getLogoUrl())
                 .build()
         );
+        competitionDto.setTotalVotesAmount(Integer.valueOf(entity.getVotes().size()).doubleValue());
 
         return competitionDto;
+    }
+
+    private ProjectListItemDto countVotes(CompetitionEntity competition, ProjectListItemDto projectDto) {
+        projectDto.setVotesAmount(
+            Long.valueOf(
+                competition.getVotes().stream().filter(vote -> vote.getProject().getId().equals(projectDto.getId())).count()
+            ).intValue()
+        );
+
+        return projectDto;
     }
 
     @Override
@@ -126,7 +125,7 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
                 .votingEndDate(competitionCreateDto.getEndDate().toInstant(ZoneOffset.UTC))
                 .organizer(competitionOrganizer)
                 .build();
-            System.out.println(competitionCreateDto.getEndDate().toInstant(ZoneOffset.UTC) + ": time)");
+
             if (competitionCreateDto.getLogo() != null && !competitionCreateDto.getLogo().isEmpty()) {
                 saveImage(competitionEntity, competitionCreateDto.getLogo(), true);
             }
@@ -139,6 +138,22 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         }
     }
 
+    public void applyProjectToCompetition(ProjectApplyToCompetitionDto projectApplyToCompetitionDto, String competitionId) {
+        if (StringUtils.isBlank(projectApplyToCompetitionDto.getProjectId())) {
+            throw new IllegalArgumentException("You should provide project with correct id!");
+        }
+
+        CompetitionEntity competition = super.findById(competitionId).orElseThrow();
+        ProjectEntity project = this.projectService.findById(projectApplyToCompetitionDto.getProjectId()).orElseThrow();
+
+        if (competition.getProjects().contains(project)) {
+            throw new IllegalArgumentException("This project is already participating in this competition!");
+        }
+
+        competition.addProject(project);
+        super.save(competition);
+    }
+
     public List<CompetitionItemDto> findAllAsDto() {
         Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
         logger.info(findMarker, "Retrieving all competitions");
@@ -149,7 +164,6 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
             .map(this::convertEntityToDto)
             .toList();
     }
-
 
     @Override
     public CompetitionItemDto findByIdAsDto(String id) {
