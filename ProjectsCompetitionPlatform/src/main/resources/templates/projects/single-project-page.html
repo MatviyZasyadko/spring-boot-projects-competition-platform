@@ -12,6 +12,11 @@
 <body class="bg-gray-50">
 <header th:replace="~{layout/header :: header}"></header>
 <main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-screen">
+    <!--    <div th:if="${message}"-->
+    <!--         th:classappend="${messageType == 'success' ? 'alert alert-success' : 'alert alert-danger'}">-->
+    <!--        <p th:text="${message}"></p>-->
+    <!--    </div>-->
+
     <div class="page-block">
         <div class="flex justify-center">
             <div id="default-carousel" class="relative w-full" data-carousel="static">
@@ -94,12 +99,28 @@
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-900">Discussion</h2>
                 </div>
-                <form class="mt-8">
+
+                <!--                change action here-->
+                <form th:action="@{/ui/projects/add-comment}"
+                      th:object="${commentCreateDto}"
+                      method="POST"
+                      enctype="multipart/form-data"
+                      onsubmit="handleSubmit(event);"
+                      class="mt-8">
+
+                    <input type="hidden" th:field="*{projectId}"/>
+
+                    <div th:if="${#fields.hasAnyErrors()}"
+                         class="p-4 mt-8 text-sm text-red-800 rounded-lg bg-red-50"
+                         role="alert">
+                        <span class="font-medium">Error!</span> <span th:text="${#fields.allErrors().get(0)}"></span>
+                    </div>
+
                     <div>
                         <label for="comment" class="sr-only">Your comment</label>
-                        <textarea id="comment" rows="6"
+                        <textarea id="comment" rows="6" type="text"
                                   class="default-input rounded-lg rounded-t-lg w-full"
-                                  placeholder="Write a comment..." required></textarea>
+                                  placeholder="Write a comment..." required th:field="*{text}"></textarea>
                     </div>
                     <button type="submit"
                             class="primary-button py-2.5 px-4 w-auto mt-5">
@@ -107,10 +128,28 @@
                     </button>
                 </form>
             </div>
+
+            <div th:each="comment: ${project.comments}" class="mt-5 p-4 border rounded-lg shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <p th:text="${comment.author.username}" class="font-semibold text-lg"></p>
+                    <p th:text="${comment.createdAt}" class="text-sm text-gray-500"></p>
+                </div>
+                <p th:text="${comment.text}" class="text-base text-gray-700"></p>
+            </div>
+
         </div>
     </div>
 </main>
 
 <footer th:replace="~{layout/footer :: footer}"></footer>
+
+<script>
+    function handleSubmit(event) {
+        const commentTextArea = document.getElementById("comment")
+        commentTextArea.innerText = ""
+
+        // todo add comment to the end maybe or just reload
+    }
+</script>
 </body>
 </html>

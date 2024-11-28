@@ -1,5 +1,7 @@
 package com.ukma.competition.platform.projects;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ukma.competition.platform.comments.CommentService;
 import com.ukma.competition.platform.projects.dto.ProjectCreateUpdateDto;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
@@ -29,10 +31,16 @@ class ProjectServiceImplTest {
     private ProjectRepository projectRepository;
 
     @Mock
+    private ObjectMapper objectMapper;
+
+    @Mock
     private UserService userService;
 
     @Mock
     private CloudinaryService cloudinaryService;
+
+    @Mock
+    private CommentService commentService;
 
     @InjectMocks
     private ProjectServiceImpl projectService;
@@ -48,7 +56,7 @@ class ProjectServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        projectService = new ProjectServiceImpl(projectRepository, userService, cloudinaryService);
+        projectService = new ProjectServiceImpl(projectRepository, userService, cloudinaryService, objectMapper, commentService);
         projectCreator = UserEntity.builder().email(USER_EMAIL).build();
     }
 

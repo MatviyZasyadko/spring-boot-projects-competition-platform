@@ -1,12 +1,9 @@
 package com.ukma.competition.platform.projects.dto;
 
+import com.ukma.competition.platform.comments.dto.CommentDto;
 import com.ukma.competition.platform.images.dto.ImageResponseDto;
 import com.ukma.competition.platform.users.dto.UserDto;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
@@ -27,4 +24,5 @@ public class ProjectListItemDto {
     List<ImageResponseDto> images;
     UserDto creator;
     Instant createdAt;
+    List<CommentDto> comments;
 }
