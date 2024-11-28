@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class VoteServiceImpl extends GenericServiceImpl<Vote, String, VoteRepository> implements VoteService {
+public class VoteServiceImpl extends GenericServiceImpl<VoteEntity, String, VoteRepository> implements VoteService {
     @Autowired
     public VoteServiceImpl(VoteRepository repository) {
         super(repository);

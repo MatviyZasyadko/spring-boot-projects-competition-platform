@@ -27,4 +27,5 @@ public class ProjectListItemDto {
     List<ImageResponseDto> images;
     UserDto creator;
     Instant createdAt;
+    Integer votesAmount = 0;
 }

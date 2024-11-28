@@ -99,7 +99,8 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
                 project.getCreator().getEmail(),
                 project.getCreator().getLogoUrl()
             ),
-            project.getCreatedAt()
+            project.getCreatedAt(),
+            0
         );
     }
 

@@ -5,6 +5,7 @@ import com.ukma.competition.platform.images.ImageEntity;
 import com.ukma.competition.platform.shared.IdentifiableEntity;
 import com.ukma.competition.platform.tags.TagEntity;
 import com.ukma.competition.platform.users.UserEntity;
+import com.ukma.competition.platform.votes.VoteEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -69,6 +71,10 @@ public class ProjectEntity extends IdentifiableEntity {
     )
     @Builder.Default
     List<TagEntity> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<VoteEntity> votes = new ArrayList<>();
 
     public ImageEntity getLogo() {
         return images.stream().filter(ImageEntity::getMain).findFirst()
