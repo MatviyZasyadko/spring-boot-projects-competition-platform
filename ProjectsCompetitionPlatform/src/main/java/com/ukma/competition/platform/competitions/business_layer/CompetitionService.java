@@ -30,4 +30,6 @@ public interface CompetitionService extends GenericService<CompetitionEntity, St
     List<CompetitionItemDto> findAllByOrganizer(UserEntity user);
 
     void finishCompetition(String id);
+
+    int countMaxVotesAmount(String competitionId);
 }

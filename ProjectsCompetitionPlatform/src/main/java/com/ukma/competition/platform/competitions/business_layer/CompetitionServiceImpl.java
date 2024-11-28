@@ -207,6 +207,23 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         super.findById(id).orElseThrow().setVotingEndDate(Instant.now());
     }
 
+    public int countMaxVotesAmount(String competitionId) {
+        CompetitionEntity competitionEntity = super.findById(competitionId).orElseThrow();
+        int result = 0;
+        for (ProjectEntity project : competitionEntity.getProjects()) {
+            int votesForProjectsCount = (int) (competitionEntity.getVotes()
+                .stream()
+                .filter(vote -> vote.getProject().getId().equals(project.getId()))
+                .count());
+
+            if (votesForProjectsCount > result) {
+                result = votesForProjectsCount;
+            }
+        }
+
+        return result;
+    }
+
     @Override
     public CompetitionItemDto findByIdAsDto(String id, String username) {
         CompetitionEntity competitionEntity = repository.findById(id).orElseThrow();

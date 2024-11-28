@@ -76,6 +76,15 @@ public class CompetitionController {
 
         String projectId = competitionService.findProjectIdWithVoteFromUser(competitionId, user);
         model.addAttribute("selectedProjectDto", new SelectedProjectDto(projectId));
+        if (competitionItemDto.isFinished()) {
+            int maxVoteAmount = this.competitionService.countMaxVotesAmount(competitionId);
+            model.addAttribute("winners",
+                competitionItemDto.getProjects()
+                    .stream()
+                    .filter(project -> project.getVotesAmount() == maxVoteAmount)
+                    .toList()
+            );
+        }
 
         return "competitions/single-competition-page";
     }

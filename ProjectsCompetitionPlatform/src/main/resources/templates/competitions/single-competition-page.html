@@ -50,6 +50,14 @@
                             <p th:text="${competition.projects.size()}" class="mt-2">
                             </p>
                         </div>
+
+                        <div class="mt-5">
+                            <p class="border-b border-gray-300 py-1">
+                                Votes amount
+                            </p>
+                            <p th:text="${competition.totalVotesAmount.intValue()}" class="mt-2">
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -146,10 +154,26 @@
         <div class="flex justify-center">
             <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">Results</h2>
         </div>
-        <div class="flex justify-center items-center" th:if="${isEmpty}">
-            <p class="w-80 h-40 text-xl  text-gray-500">
+        <div class="flex justify-center items-center">
+            <p th:if="${isEmpty}" class="w-80 h-40 text-xl text-gray-500">
                 Competition does not have applied projects or votes
             </p>
+            <div class="flex justify-center gap-20" th:if="${!isEmpty}">
+                <div th:each="winner: ${winners}" class="flex flex-col items-center mt-5">
+                    <div class="w-32 h-32 rounded-full border-2 border-yellow-200">
+                        <a th:href="'/ui/projects/' + ${winner.id}">
+                            <img class="w-32 h-32 rounded-full object-cover"
+                                 th:src="${winner.logo == null} ? '/default-image.jpg' : ${winner.logo.url}"
+                                 alt="image">
+                        </a>
+                    </div>
+                    <p class="mt-3 font-bold text-xl">
+                        Winner
+                    </p>
+                    <p th:text="${winner.name}" class="mt-3">
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -175,13 +199,15 @@
                                        th:name="projectOption"
                                        th:value="${participant.id}"
                                        th:field="*{projectId}">
-                                <label th:for="'projectOption_' + ${participant.id}" class="text-sm">
-                                    <span th:text="${participant.name}"></span>
-                                    <span class="ml-2 text-gray-700"
-                                          th:if="${competition.voteDto != null && competition.voteDto.projectId == participant.id}">
+                                <a th:href="'/ui/projects/' + ${participant.id}">
+                                    <label th:for="'projectOption_' + ${participant.id}" class="text-sm">
+                                        <span th:text="${participant.name}"></span>
+                                        <span class="ml-2 text-gray-700"
+                                              th:if="${competition.voteDto != null && competition.voteDto.projectId == participant.id}">
                                         (You voted for this project)
                                     </span>
-                                </label>
+                                    </label>
+                                </a>
                             </div>
                         </label>
 
