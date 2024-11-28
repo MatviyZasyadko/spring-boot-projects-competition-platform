@@ -23,8 +23,12 @@ repositories {
     mavenLocal()
 }
 
+val cloudinaryVersion = "0.0.1-SNAPSHOT"
+val log4j2Version = "3.3.4"
+val jjwtVersion = "0.12.6"
+val openApiVersion = "2.6.0"
+
 dependencies {
-    //implementation("com.h2database:h2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -33,11 +37,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
     implementation("org.springframework.boot:spring-boot-starter-mail")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
-    implementation("com.ukma.edu:spring-boot-starter-cloudinary:0.0.1-SNAPSHOT")
-    implementation("org.springframework.boot:spring-boot-starter-log4j2:3.3.4")
-    implementation("com.mysql:mysql-connector-j:9.1.0")
-    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApiVersion")
+    implementation("com.ukma.edu:spring-boot-starter-cloudinary:$cloudinaryVersion")
+    implementation("org.springframework.boot:spring-boot-starter-log4j2:$log4j2Version")
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
 
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -49,8 +52,8 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
     modules {
         module("org.springframework.boot:spring-boot-starter-logging") {
             replacedBy("org.springframework.boot:spring-boot-starter-log4j2", "Use Log4j2 instead of Logback")

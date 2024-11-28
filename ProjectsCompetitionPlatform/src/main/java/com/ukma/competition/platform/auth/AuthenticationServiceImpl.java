@@ -55,7 +55,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Cookie logout() {
-        Cookie resetAccessTokenCookie = new Cookie(AppConstants.ACCESS_TOKEN_NAME, "");
+        Cookie resetAccessTokenCookie = new Cookie(AppConstants.accessTokenName, "");
         resetAccessTokenCookie.setHttpOnly(true);
         resetAccessTokenCookie.setSecure(true);
         resetAccessTokenCookie.setMaxAge(0);

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppConstants {
 
-    public static String DISCORD_AVATAR_BASE_URL;
+    public static String discordAvatarBaseUrl = null;
 
-    public static String ACCESS_TOKEN_NAME;
+    public static String accessTokenName;
 
     public static String cloudinaryFolder;
 
@@ -16,12 +16,12 @@ public class AppConstants {
 
     @Value("${oauth2.provider.discord.url.avatars}")
     public void setDiscordAvatarBaseUrl(String value) {
-        DISCORD_AVATAR_BASE_URL = value;
+        discordAvatarBaseUrl = value;
     }
 
     @Value("${spring.security.access.token.name}")
     public void setAccessTokenName(String value) {
-        ACCESS_TOKEN_NAME = value;
+        accessTokenName = value;
     }
 
     @Value("${spring.cloudinary.folder}")

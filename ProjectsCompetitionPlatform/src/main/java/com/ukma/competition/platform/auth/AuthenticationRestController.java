@@ -9,10 +9,12 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,11 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationRestController {
 
     AuthenticationService authenticationService;
@@ -33,12 +37,21 @@ public class AuthenticationRestController {
     @GetMapping("/profile")
     public UserResponseDto profile(HttpServletResponse response) {
         try {
+            log.info("started process of getting a user profile with id");
             Authentication principal = SecurityContextHolder.getContext().getAuthentication();
+            Optional<? extends GrantedAuthority> authorityOptional = principal.getAuthorities().stream().findFirst();
+            String authority = null;
+
+            if (authorityOptional.isPresent()) {
+                authority = authorityOptional.get().getAuthority();
+            } else {
+                log.warn("User has null authority!");
+            }
 
             return UserResponseDto.builder()
                 .id(principal.getName())
                 .email(principal.getName())
-                .role(principal.getAuthorities().stream().findFirst().get().getAuthority())
+                .role(authority)
                 .build();
         } catch (Exception exception) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -51,11 +64,17 @@ public class AuthenticationRestController {
     public UserResponseDto adminProfile(HttpServletResponse response) {
         try {
             Authentication principal = SecurityContextHolder.getContext().getAuthentication();
+            Optional<? extends GrantedAuthority> authorityOptional = principal.getAuthorities().stream().findFirst();
+            String authority = null;
+
+            if (authorityOptional.isPresent()) {
+                authority = authorityOptional.get().getAuthority();
+            }
 
             return UserResponseDto.builder()
                 .id(principal.getName())
                 .email(principal.getName())
-                .role(principal.getAuthorities().stream().findFirst().get().getAuthority())
+                .role(authority)
                 .build();
         } catch (Exception exception) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());

@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface ProjectService extends GenericService<ProjectEntity, String> {
 
-    void saveFromDto(ProjectCreateUpdateDto projectCreateDto, String userEmail) throws Exception;
+    void saveFromDto(ProjectCreateUpdateDto projectCreateDto, String userEmail) throws IOException;
 
     ProjectListDto findAllWithSearch(Pageable pageable, String search);
 

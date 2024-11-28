@@ -168,13 +168,13 @@
                     </div>
 
                     <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-600 h-2.5 rounded-full"
+                        <div class="bg-gray-600 h-2.5 rounded-full"
                              th:style="'width:' + ${competition.totalVotesAmount == 0 ? 0 : (participant.votesAmount / competition.totalVotesAmount) * 100} + '%'"></div>
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                <div class="mt-10">
+                    <button type="submit" class="primary-button p-1.5">
                         Submit Vote
                     </button>
                 </div>

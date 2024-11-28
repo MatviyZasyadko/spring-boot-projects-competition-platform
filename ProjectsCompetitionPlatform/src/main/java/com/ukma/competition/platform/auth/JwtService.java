@@ -75,7 +75,7 @@ public class JwtService {
     public Cookie generateTokenWithCookie(UserEntity user) {
         String accessToken = this.generateTokenFromUser(user);
 
-        Cookie accessTokenCookie = new Cookie(AppConstants.ACCESS_TOKEN_NAME, accessToken);
+        Cookie accessTokenCookie = new Cookie(AppConstants.accessTokenName, accessToken);
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setSecure(true);
         accessTokenCookie.setMaxAge((int) jwtAccessTokenExpirationDuration.toMillis());

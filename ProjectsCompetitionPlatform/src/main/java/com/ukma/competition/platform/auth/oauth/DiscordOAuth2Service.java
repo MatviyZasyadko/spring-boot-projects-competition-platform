@@ -77,12 +77,14 @@ public class DiscordOAuth2Service extends AbstractOAuth2Service {
     }
 
     private MultiValueMap<String, String> generateBodyForTokenRequest(String code) {
-        return new LinkedMultiValueMap<>() {{
-            add("client_id", clientId);
-            add("client_secret", clientSecret);
-            add("grant_type", "authorization_code");
-            add("code", code);
-            add("redirect_uri", buildApplicationRedirectUrl());
-        }};
+        LinkedMultiValueMap<String, String> tokenRequestMap = new LinkedMultiValueMap<>();
+
+        tokenRequestMap.add("client_id", clientId);
+        tokenRequestMap.add("client_secret", clientSecret);
+        tokenRequestMap.add("grant_type", "authorization_code");
+        tokenRequestMap.add("code", code);
+        tokenRequestMap.add("redirect_uri", buildApplicationRedirectUrl());
+
+        return tokenRequestMap;
     }
 }

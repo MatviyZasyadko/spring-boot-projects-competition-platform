@@ -39,8 +39,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import static org.yaml.snakeyaml.events.Event.ID.Comment;
-
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -218,7 +216,7 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
 
     @Override
     @Transactional
-    public void saveFromDto(ProjectCreateUpdateDto projectCreateDto, String userEmail) throws Exception {
+    public void saveFromDto(ProjectCreateUpdateDto projectCreateDto, String userEmail) throws IOException {
         try {
             UserEntity projectCreator = userService.findByEmail(userEmail).orElseThrow();
             ProjectEntity project = ProjectEntity.builder()

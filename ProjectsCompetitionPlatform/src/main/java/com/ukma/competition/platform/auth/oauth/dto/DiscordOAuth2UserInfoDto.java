@@ -24,6 +24,6 @@ public class DiscordOAuth2UserInfoDto implements OAuth2UserInfo {
     public String getAvatar() {
         return this.avatar == null
             ? null
-            : AppConstants.DISCORD_AVATAR_BASE_URL + this.id + "/" + this.avatar;
+            : AppConstants.discordAvatarBaseUrl + this.id + "/" + this.avatar;
     }
 }

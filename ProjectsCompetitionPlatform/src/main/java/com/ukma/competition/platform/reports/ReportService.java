@@ -12,5 +12,5 @@ public interface ReportService extends GenericService<ReportEntity, String> {
 
     List<ReportEntity> findAllByUser(UserEntity user);
 
-    void saveFromDto(ReportCreateDto reportCreateDto, String userEmail) throws Exception;
+    void saveFromDto(ReportCreateDto reportCreateDto, String userEmail);
 }

@@ -29,7 +29,7 @@ public abstract class AbstractOAuth2Service {
     UserService userService;
     JwtService jwtService;
 
-    public AbstractOAuth2Service(
+    protected AbstractOAuth2Service(
         String externalAuthPage,
         String clientId,
         String clientSecret,

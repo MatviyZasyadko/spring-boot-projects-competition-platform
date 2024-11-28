@@ -36,7 +36,7 @@ public class ReportServiceImpl extends GenericServiceImpl<ReportEntity, String, 
     }
 
     @Transactional
-    public void saveFromDto(ReportCreateDto reportCreateDto, String userEmail) throws Exception {
+    public void saveFromDto(ReportCreateDto reportCreateDto, String userEmail) {
         try {
             UserEntity reportCreator = userService.findByEmail(userEmail).orElseThrow();
             ReportEntity report = ReportEntity.builder()

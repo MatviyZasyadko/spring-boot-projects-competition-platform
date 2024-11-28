@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             if (request.getCookies() != null) {
                 Cookie accessTokenCookie = Arrays.stream(request.getCookies())
-                    .filter(item -> item.getName().contains(AppConstants.ACCESS_TOKEN_NAME))
+                    .filter(item -> item.getName().contains(AppConstants.accessTokenName))
                     .findFirst()
                     .orElse(null);
                 if (accessTokenCookie != null) {

@@ -41,7 +41,7 @@ public abstract class IdentifiableEntity {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof IdentifiableEntity && equalsHelper((IdentifiableEntity) obj, this);
+        return obj instanceof IdentifiableEntity entity && equalsHelper(entity, this);
     }
 
     @Override
@@ -55,11 +55,10 @@ public abstract class IdentifiableEntity {
         } else if (i1 == null || !(Hibernate.getClass(i1).equals(Hibernate.getClass(i2)))) {
             return false;
         } else {
-            IdentifiableEntity other = i1;
-            if (other.getId() == null) {
+            if (i1.getId() == null) {
                 return false;
             } else {
-                return Objects.equals(i2.getId(), other.getId());
+                return Objects.equals(i2.getId(), i1.getId());
             }
         }
     }

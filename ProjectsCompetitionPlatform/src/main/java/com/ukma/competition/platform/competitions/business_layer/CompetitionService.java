@@ -9,12 +9,13 @@ import com.ukma.competition.platform.users.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CompetitionService extends GenericService<CompetitionEntity, String> {
     Logger logger = LogManager.getLogger(CompetitionServiceImpl.class);
 
-    void saveFromDto(CompetitionCreateDto competitionCreateDto, String userEmail) throws Exception;
+    void saveFromDto(CompetitionCreateDto competitionCreateDto, String userEmail) throws IOException;
 
     List<CompetitionItemDto> findAllAsDto();
 

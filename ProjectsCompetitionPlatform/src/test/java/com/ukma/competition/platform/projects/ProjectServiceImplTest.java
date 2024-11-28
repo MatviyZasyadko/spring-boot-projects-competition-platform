@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -61,36 +60,12 @@ class ProjectServiceImplTest {
     }
 
     @Test
-    void saveFromDto_SuccessWithLogo() throws Exception {
-        ProjectCreateUpdateDto projectCreateDto = new ProjectCreateUpdateDto();
-        projectCreateDto.setName("Test Project");
-        projectCreateDto.setFullDescription("Full Description");
-        projectCreateDto.setShortDescription("Short Description");
-
-        MultipartFile logoFile = mock(MultipartFile.class);
-        when(logoFile.isEmpty()).thenReturn(false);
-        projectCreateDto.setLogo(logoFile);
-
-        when(userService.findByEmail(USER_EMAIL)).thenReturn(Optional.of(projectCreator));
-        when(cloudinaryService.upload(logoFile, cloudinaryFolder)).thenReturn(IMAGE_URL);
-
-        projectService.saveFromDto(projectCreateDto, USER_EMAIL);
-
-        ArgumentCaptor<ProjectEntity> projectCaptor = ArgumentCaptor.forClass(ProjectEntity.class);
-        verify(projectRepository, times(1)).saveAndFlush(projectCaptor.capture());
-
-        ProjectEntity savedProject = projectCaptor.getValue();
-
-        assertThat(savedProject.getName()).isEqualTo("Test Project");
-        assertThat(savedProject.getImages()).hasSize(1);
-    }
-
-    @Test
     void saveFromDto_SuccessWithoutLogo() throws Exception {
         ProjectCreateUpdateDto projectCreateDto = new ProjectCreateUpdateDto();
         projectCreateDto.setName("Test Project");
         projectCreateDto.setFullDescription("Full Description");
         projectCreateDto.setShortDescription("Short Description");
+        projectCreateDto.setImages(List.of());
 
         when(userService.findByEmail(USER_EMAIL)).thenReturn(Optional.of(projectCreator));
 
@@ -122,7 +97,7 @@ class ProjectServiceImplTest {
         List<ProjectEntity> result = projectService.findAll();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getId()).isEqualTo(PROJECT_ID);
+        assertThat(result.getFirst().getId()).isEqualTo(PROJECT_ID);
     }
 
     @Test

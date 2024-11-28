@@ -43,7 +43,7 @@ public class AuthenticationLimiterAspect {
         if (methodCallsAmount >= methodCallLimitValue) {
             String errorMessage = "Exceeded max limit of calls for method " + methodName + " from class " + className;
             log.error(errorMessage);
-            throw new RuntimeException(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
 
         methodsCallsAmountMap.put(methodName, methodsCallsAmountMap.getOrDefault(methodName, 0) + 1);

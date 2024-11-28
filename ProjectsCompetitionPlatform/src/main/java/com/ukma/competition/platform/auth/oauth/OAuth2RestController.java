@@ -62,7 +62,7 @@ public class OAuth2RestController {
         String accessToken = oAuthServiceFactory.get(AuthenticationProvider.valueOf(provider.toUpperCase()))
             .authenticationCallback(code);
         response.addCookie(
-            cookieService.generateSecuredHttpOnlyCookie(AppConstants.ACCESS_TOKEN_NAME, accessToken, this.jwtService.getJwtAccessTokenExpirationDuration())
+            cookieService.generateSecuredHttpOnlyCookie(AppConstants.accessTokenName, accessToken, this.jwtService.getJwtAccessTokenExpirationDuration())
         );
         response.sendRedirect(EndpointConstants.getContextPath() + "/ui/main");
     }

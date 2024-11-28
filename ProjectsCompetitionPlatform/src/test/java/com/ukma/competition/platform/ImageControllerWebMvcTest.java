@@ -106,7 +106,7 @@ class ImageControllerWebMvcTest {
 
     @Test
     void findImageByIdThrowsNotFoundError() throws Exception {
-        Mockito.when(imageService.findByIdAsDto(anyString())).thenThrow(new ImageNotFoundException("Image not found"));
+        Mockito.when(imageService.findByIdAsDto(anyString())).thenThrow(new ImageNotFoundException("Image not found", "id"));
 
         mockMvc.perform(get("/api/images/invalid-id"))
             .andExpect(status().isNotFound())
