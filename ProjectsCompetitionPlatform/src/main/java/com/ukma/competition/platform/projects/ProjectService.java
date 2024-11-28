@@ -29,4 +29,6 @@ public interface ProjectService extends GenericService<ProjectEntity, String> {
     boolean addComment(CommentCreateDto commentCreateDto);
 
     List<ProjectListItemDto> findAllByCreator(UserEntity user);
+
+    List<ProjectListItemDto> findLastFiveProjects();
 }

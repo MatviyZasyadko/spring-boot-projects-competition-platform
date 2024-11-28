@@ -136,7 +136,8 @@ public class AuthenticationController {
     }
 
     @GetMapping("/main")
-    public String mainPage() {
+    public String mainPage(Model model) {
+        model.addAttribute("lastProjects", projectService.findLastFiveProjects());
         return "index";
     }
 

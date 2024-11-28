@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -87,6 +88,15 @@ public class ProjectServiceImpl extends GenericServiceImpl<ProjectEntity, String
                 paginationDtoList,
                 projectPage.getTotalPages()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectListItemDto> findLastFiveProjects() {
+        return this.repository.findAll(Sort.by(Sort.Order.desc("createdAt")))
+            .stream()
+            .limit(5)
+            .map(this::convertToDto)
+            .toList();
     }
 
     public List<ProjectListItemDto> findAllByCreator(UserEntity user) {
