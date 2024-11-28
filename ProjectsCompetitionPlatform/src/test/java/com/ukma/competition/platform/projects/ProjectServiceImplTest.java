@@ -49,7 +49,6 @@ class ProjectServiceImplTest {
 
     private static final String PROJECT_ID = "projectId123";
     private static final String USER_EMAIL = "user@example.com";
-    private static final String IMAGE_URL = "http://example.com/logo.jpg";
 
     private UserEntity projectCreator;
 

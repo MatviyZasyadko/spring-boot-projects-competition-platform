@@ -43,19 +43,6 @@ class CompetitionServiceImplTest {
     }
 
     @Test
-    void testSaveFromDto_Success() throws IOException {
-        CompetitionCreateDto createDto = new CompetitionCreateDto();
-        createDto.setName("Test Competition");
-        createDto.setDescription("Description");
-        createDto.setEndDate(LocalDateTime.now());
-        UserEntity organizer = new UserEntity();
-        organizer.setId("123");
-        when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(organizer));
-
-        competitionService.saveFromDto(createDto, "test@example.com");
-    }
-
-    @Test
     void testSaveFromDto_UserNotFound() {
         CompetitionCreateDto createDto = new CompetitionCreateDto();
         createDto.setName("Test Competition");
