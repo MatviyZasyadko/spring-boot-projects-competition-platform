@@ -174,7 +174,7 @@
                 </div>
 
                 <div class="mt-10">
-                    <button th:disabled="${competition.finished}" type="submit" class="primary-button p-1.5">
+                    <button th:if="${not competition.finished}" type="submit" class="primary-button p-1.5">
                         Submit Vote
                     </button>
                 </div>
