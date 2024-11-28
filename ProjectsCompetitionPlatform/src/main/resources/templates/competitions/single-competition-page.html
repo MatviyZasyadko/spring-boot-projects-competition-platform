@@ -14,7 +14,7 @@
 <main class="p-5 md:w-[85%] md:p-0 mx-auto min-h-screen">
     <div class="page-block">
         <div class="flex justify-center">
-            <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">All competitions</h2>
+            <h2 class="text-3xl text-center leading-[3.75rem] font-bold font-palanquin">Competition</h2>
         </div>
         <div class="flex justify-center">
             <div class="mt-6 flex gap-16 items-start max-w-2/3">
@@ -76,7 +76,7 @@
                                 Finish date
                             </p>
 
-                            <p class="text-xs"
+                            <p class="text-sm"
                                th:text="${competition.votingEndDate.toString().replaceAll('T', ' ').substring(0, 16)}">
                             </p>
 
@@ -96,7 +96,7 @@
                                 Description
                             </p>
 
-                            <p class="text-xs" th:text="${competition.description}"></p>
+                            <p class="text-sm" th:text="${competition.description}"></p>
                         </div>
                     </div>
 
@@ -144,22 +144,41 @@
         </div>
 
         <div th:if="${competition.projects.size() != 0}">
-            <div class="mt-5" th:each="participant :${competition.getProjects()}">
-                <div class="flex justify-between mb-1">
-                    <a th:href="'/ui/projects/' + participant.id" class="text-base font-medium text-black"
-                       th:text="${participant.name}"></a>
-                    <span>
-                        <span class="text-sm font-medium text-black"
-                              th:text="${competition.totalVotesAmount == 0 ? 0 : ((participant.votesAmount / competition.totalVotesAmount) * 100) / 100}"></span>
-                    <span>%</span>
-                    </span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div class="bg-gray-600 h-2.5 rounded-full"
-                         th:style="'width:' + ${competition.totalVotesAmount == 0 ? 0 : (participant.votesAmount / competition.totalVotesAmount)} + '%'"></div>
-                </div>
-            </div>
+            <form th:action="@{/ui/competitions/{competitionId}/vote(competitionId=${competition.id})}"
+                  th:object="${selectedProjectDto}"
+                  method="POST">
+                <div class="mt-5" th:each="participant : ${competition.projects}">
+                    <div class="flex justify-between mb-4">
+                        <label class="text-base font-medium text-black">
+                            <div class="flex items-center">
+                                <input type="radio" th:id="'projectOption_' + ${participant.id}" class="mr-2"
+                                       th:name="projectOption"
+                                       th:value="${participant.id}"
+                                       th:field="*{projectId}">
+                                <label th:for="'projectOption_' + ${participant.id}" class="text-sm">
+                                    <span th:text="${participant.name}"></span>
+                                </label>
+                            </div>
+                        </label>
 
+                        <span class="text-sm font-medium text-black">
+                    <span th:text="${competition.totalVotesAmount == 0 ? 0 : ((participant.votesAmount / competition.totalVotesAmount) * 100)}"></span>
+                    <span>%</span>
+                </span>
+                    </div>
+
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full"
+                             th:style="'width:' + ${competition.totalVotesAmount == 0 ? 0 : (participant.votesAmount / competition.totalVotesAmount) * 100} + '%'"></div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                        Submit Vote
+                    </button>
+                </div>
+            </form>
         </div>
 
     </div>

@@ -1,6 +1,8 @@
 package com.ukma.competition.platform.votes;
 
+import com.ukma.competition.platform.competitions.database_layer.CompetitionEntity;
 import com.ukma.competition.platform.shared.GenericServiceImpl;
+import com.ukma.competition.platform.users.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,5 +22,9 @@ public class VoteServiceImpl extends GenericServiceImpl<VoteEntity, String, Vote
             return new ArrayList<>();
         }
         return repository.findTop5ProjectsByVoteCount(PageRequest.of(0, topCount));
+    }
+
+    public List<VoteEntity> findByUserAndCompetition(UserEntity user, CompetitionEntity competition) {
+        return repository.findByUserAndCompetition(user, competition);
     }
 }

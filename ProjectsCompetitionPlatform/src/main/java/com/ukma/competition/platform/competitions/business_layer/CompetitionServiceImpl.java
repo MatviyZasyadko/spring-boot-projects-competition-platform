@@ -14,6 +14,8 @@ import com.ukma.competition.platform.shared.constants.AppConstants;
 import com.ukma.competition.platform.users.UserEntity;
 import com.ukma.competition.platform.users.UserService;
 import com.ukma.competition.platform.users.dto.UserDto;
+import com.ukma.competition.platform.votes.VoteEntity;
+import com.ukma.competition.platform.votes.VoteService;
 import com.ukma.edu.spring.boot.starter.cloudinary.service.CloudinaryService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
@@ -46,20 +48,23 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
     ProjectService projectService;
     UserService userService;
     CloudinaryService cloudinaryService;
+    VoteService voteService;
 
     @Autowired
     public CompetitionServiceImpl(
-        CompetitionRepository repository,
-        CompetitionProperties competitionProperties,
-        ProjectService projectService,
-        UserService userService,
-        CloudinaryService cloudinaryService
+            CompetitionRepository repository,
+            CompetitionProperties competitionProperties,
+            ProjectService projectService,
+            UserService userService,
+            CloudinaryService cloudinaryService,
+            VoteService voteService
     ) {
         super(repository);
         this.competitionProperties = competitionProperties;
         this.projectService = projectService;
         this.userService = userService;
         this.cloudinaryService = cloudinaryService;
+        this.voteService = voteService;
     }
 
     public boolean canAddProject(Competition competition) {
@@ -74,31 +79,31 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         competitionDto.setDescription(entity.getDescription());
         competitionDto.setVotingEndDate(entity.getVotingEndDate());
         competitionDto.setLogo(
-            entity.getLogo() == null
-                ? null
-                : new ImageResponseDto(
-                entity.getLogo().getUrl(),
-                entity.getLogo().getPublicId(),
-                entity.getLogo().getName()
-            )
+                entity.getLogo() == null
+                        ? null
+                        : new ImageResponseDto(
+                        entity.getLogo().getUrl(),
+                        entity.getLogo().getPublicId(),
+                        entity.getLogo().getName()
+                )
         );
         competitionDto.setProjects(entity.getProjects()
-            .stream()
-            .map(projectService::convertToDto)
-            .map(projectDto -> countVotes(entity, projectDto))
-            .sorted(
-                (first, second) -> Integer.compare(second.getVotesAmount(), first.getVotesAmount())
-            )
-            .toList()
+                .stream()
+                .map(projectService::convertToDto)
+                .map(projectDto -> countVotes(entity, projectDto))
+                .sorted(
+                        (first, second) -> Integer.compare(second.getVotesAmount(), first.getVotesAmount())
+                )
+                .toList()
         );
         competitionDto.setFinished(entity.getVotingEndDate().isBefore(Instant.now()) || entity.getVotingEndDate().equals(Instant.now()));
         competitionDto.setOrganizer(
-            UserDto.builder()
-                .id(entity.getOrganizer().getId())
-                .email(entity.getOrganizer().getEmail())
-                .fullName(entity.getOrganizer().getFullName())
-                .logoUrl(entity.getOrganizer().getLogoUrl())
-                .build()
+                UserDto.builder()
+                        .id(entity.getOrganizer().getId())
+                        .email(entity.getOrganizer().getEmail())
+                        .fullName(entity.getOrganizer().getFullName())
+                        .logoUrl(entity.getOrganizer().getLogoUrl())
+                        .build()
         );
         competitionDto.setTotalVotesAmount(Integer.valueOf(entity.getVotes().size()).doubleValue());
 
@@ -107,9 +112,9 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
 
     private ProjectListItemDto countVotes(CompetitionEntity competition, ProjectListItemDto projectDto) {
         projectDto.setVotesAmount(
-            Long.valueOf(
-                competition.getVotes().stream().filter(vote -> vote.getProject().getId().equals(projectDto.getId())).count()
-            ).intValue()
+                Long.valueOf(
+                        competition.getVotes().stream().filter(vote -> vote.getProject().getId().equals(projectDto.getId())).count()
+                ).intValue()
         );
 
         return projectDto;
@@ -120,11 +125,11 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         try {
             UserEntity competitionOrganizer = userService.findByEmail(userEmail).orElseThrow();
             CompetitionEntity competitionEntity = CompetitionEntity.builder()
-                .name(competitionCreateDto.getName())
-                .description(competitionCreateDto.getDescription())
-                .votingEndDate(competitionCreateDto.getEndDate().toInstant(ZoneOffset.UTC))
-                .organizer(competitionOrganizer)
-                .build();
+                    .name(competitionCreateDto.getName())
+                    .description(competitionCreateDto.getDescription())
+                    .votingEndDate(competitionCreateDto.getEndDate().toInstant(ZoneOffset.UTC))
+                    .organizer(competitionOrganizer)
+                    .build();
 
             if (competitionCreateDto.getLogo() != null && !competitionCreateDto.getLogo().isEmpty()) {
                 saveImage(competitionEntity, competitionCreateDto.getLogo(), true);
@@ -154,6 +159,38 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         super.save(competition);
     }
 
+    public boolean addOrChangeVote(CompetitionEntity competition, ProjectEntity project, UserEntity user) {
+        VoteEntity voteEntity = VoteEntity.builder()
+                .competition(competition)
+                .project(project)
+                .user(user)
+                .build();
+
+        List<VoteEntity> alreadyExistingVotes = voteService.findByUserAndCompetition(user, competition);
+        for (VoteEntity alreadyExistingVote : alreadyExistingVotes) {
+            voteService.deleteById(alreadyExistingVote.getId());
+        }
+
+        voteService.save(voteEntity);
+        return true;
+    }
+
+    public String findProjectIdWithVoteFromUser(String competitionId, UserEntity user) {
+        CompetitionEntity competitionEntity = findById(competitionId)
+                .orElseThrow(() -> new IllegalArgumentException("Competition not found"));
+
+        var votes = competitionEntity.getVotes();
+
+        for (VoteEntity vote : votes) {
+            if (vote.getUser().equals(user)) {
+                return vote.getProject().getId();
+            }
+        }
+
+        return null;
+    }
+
+
     public List<CompetitionItemDto> findAllAsDto() {
         Marker findMarker = MarkerManager.getMarker("COMPETITION_FIND");
         logger.info(findMarker, "Retrieving all competitions");
@@ -161,8 +198,8 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
         List<CompetitionEntity> allCompetitionEntities = repository.findAll();
 
         return allCompetitionEntities.stream()
-            .map(this::convertEntityToDto)
-            .toList();
+                .map(this::convertEntityToDto)
+                .toList();
     }
 
     @Override
@@ -189,10 +226,10 @@ public class CompetitionServiceImpl extends GenericServiceImpl<CompetitionEntity
     private void saveImage(CompetitionEntity competition, MultipartFile image, boolean isMain) throws IOException {
         String publicUrl = cloudinaryService.upload(image, AppConstants.cloudinaryFolder);
         ImageEntity logo = ImageEntity.builder()
-            .url(publicUrl)
-            .main(isMain)
-            .name(image.getOriginalFilename())
-            .build();
+                .url(publicUrl)
+                .main(isMain)
+                .name(image.getOriginalFilename())
+                .build();
         competition.addImage(logo);
     }
 }
